@@ -1,0 +1,17 @@
+{
+  "name": "gi",
+  "version": "0.0.1",
+  "homepage": "https://github.com/GoIncremental/gi",
+  "authors": [
+    "David Bochenski <david@goincremental.com>"
+  ],
+  "description": "go incremental client stack",
+  "main": "./bin/gi.js",
+  "keywords": [
+    "angular",
+    "directives",
+    "go",
+    "incremental"
+  ],
+  "license": "Apache 2.0"
+}
