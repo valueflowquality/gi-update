@@ -1,0 +1,30 @@
+{
+  "name": "gi",
+  "version": "0.1.0",
+  "description": "go incremental node / angular stack",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GoIncremental/gi.git"
+  },
+  "author": "Go Incremental Limited",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/GoIncremental/gi/issues"
+  },
+  "homepage": "https://github.com/GoIncremental/gi",
+  "dependencies": {
+    "gi-security": "^1.1.0",
+    "gi-util": "^1.2.0",
+    "gi-commerce": "^0.3.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-concat": "^2.5.2",
+    "gulp-sass": "^1.3.3",
+    "gulp-sourcemaps": "^1.5.0"
+  }
+}
