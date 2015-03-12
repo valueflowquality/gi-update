@@ -2,6 +2,8 @@ gi
 ---
 
 Release Notes
+v0.2.0
+- price list support in new gi-commerce
 
 v0.1.2
 - Use latest gi-ui to support custom sass compliation in parent projects
