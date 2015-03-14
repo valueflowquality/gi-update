@@ -1,6 +1,6 @@
 {
   "name": "gi",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "homepage": "https://github.com/GoIncremental/gi",
   "authors": [
     "David Bochenski <david@goincremental.com>"
@@ -20,6 +20,6 @@
   "devDependencies": {
     "gi-commerce": "~0.4.0",
     "gi-security": "~1.1.0",
-    "gi-util": "~1.2.0"
+    "gi-util": "~1.2.1"
   }
 }

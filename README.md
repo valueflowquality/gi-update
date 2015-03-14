@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.2.1
+- client based geo ip lookup from gi-util
+
 v0.2.0
 - price list support in new gi-commerce
 
