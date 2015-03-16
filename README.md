@@ -2,6 +2,11 @@ gi
 ---
 
 Release Notes
+
+v0.3.0
+- saveMe added to gi-security client User service
+- fixed issue in gi-util crud client service where overriden api path not used
+
 v0.2.1
 - client based geo ip lookup from gi-util
 
