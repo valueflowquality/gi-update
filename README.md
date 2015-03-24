@@ -2,6 +2,8 @@ gi
 ---
 
 Release Notes
+v0.4.0
+- use gi-commerce v0.5.0
 
 v0.3.0
 - saveMe added to gi-security client User service
