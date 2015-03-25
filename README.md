@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.4.1
+- use lastest versions of gi-util and gi-security to enable mongodb 3.0 support
+
 v0.4.0
 - use gi-commerce v0.5.0
 
