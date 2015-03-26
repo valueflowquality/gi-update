@@ -2,8 +2,11 @@ gi
 ---
 
 Release Notes
+v0.4.2
+- use latest versions of gi-commerce to support territory based pricing
+
 v0.4.1
-- use lastest versions of gi-util and gi-security to enable mongodb 3.0 support
+- use latest versions of gi-util and gi-security to enable mongodb 3.0 support
 
 v0.4.0
 - use gi-commerce v0.5.0
