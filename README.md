@@ -2,8 +2,11 @@ gi
 ---
 
 Release Notes
+v0.4.3
+- use latest gi-commerce to support stripe token generation
+
 v0.4.2
-- use latest versions of gi-commerce to support territory based pricing
+- use latest versions of gi-commerce to support market based pricing
 
 v0.4.1
 - use latest versions of gi-util and gi-security to enable mongodb 3.0 support
