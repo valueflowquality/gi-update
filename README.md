@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.4.4
+- use latest gi-commerce to support stripe / quaderno tax metadata
+
 v0.4.3
 - use latest gi-commerce to support stripe token generation
 

@@ -54949,13 +54949,13 @@ rangy.createModule("SaveRestore", function(api, module) {
 @license textAngular
 Author : Austin Anderson
 License : 2013 MIT
-Version 1.3.7
+Version 1.3.11
 
 See README.md or https://github.com/fraywing/textAngular/wiki for requirements and use.
 */
 
 (function(){ // encapsulate all variables so they don't become global vars
-"Use Strict";					
+"use strict";					
 // IE version detection - http://stackoverflow.com/questions/4169160/javascript-ie-detection-why-not-use-simple-conditional-comments
 // We need this as IE sometimes plays funny tricks with the contenteditable.
 // ----------------------------------------------------------
@@ -55045,7 +55045,7 @@ function validElementString(string){
 	Custom stylesheet for the placeholders rules.
 	Credit to: http://davidwalsh.name/add-rules-stylesheets
 */
-var sheet, addCSSRule, removeCSSRule, _addCSSRule, _removeCSSRule;
+var sheet, addCSSRule, removeCSSRule, _addCSSRule, _removeCSSRule, _getRuleIndex;
 /* istanbul ignore else: IE <8 test*/
 if(_browserDetect.ie > 8 || _browserDetect.ie === undefined){
 	var _sheets = document.styleSheets;
@@ -55082,9 +55082,9 @@ if(_browserDetect.ie > 8 || _browserDetect.ie === undefined){
 	};
 	_addCSSRule = function(_sheet, selector, rules){
 		var insertIndex;
-		
+		var insertedRule;
 		// This order is important as IE 11 has both cssRules and rules but they have different lengths - cssRules is correct, rules gives an error in IE 11
-		/* istanbul ignore else: firefox catch */
+		/* istanbul ignore next: browser catches */
 		if(_sheet.cssRules) insertIndex = Math.max(_sheet.cssRules.length - 1, 0);
 		else if(_sheet.rules) insertIndex = Math.max(_sheet.rules.length - 1, 0);
 		
@@ -55095,19 +55095,35 @@ if(_browserDetect.ie > 8 || _browserDetect.ie === undefined){
 		else {
 			_sheet.addRule(selector, rules, insertIndex);
 		}
-		// return the index of the stylesheet rule
-		return insertIndex;
+		/* istanbul ignore next: browser catches */
+		if(sheet.rules) insertedRule = sheet.rules[insertIndex];
+		else if(sheet.cssRules) insertedRule = sheet.cssRules[insertIndex];
+		// return the inserted stylesheet rule
+		return insertedRule;
 	};
 
-	removeCSSRule = function(index){
-		_removeCSSRule(sheet, index);
+	_getRuleIndex = function(rule, rules) {
+		var i, ruleIndex;
+		for (i=0; i < rules.length; i++) {
+			/* istanbul ignore else: check for correct rule */
+			if (rules[i].cssText === rule.cssText) {
+				ruleIndex = i;
+				break;
+			}
+		}
+		return ruleIndex;
 	};
-	_removeCSSRule = function(sheet, index){
-		/* istanbul ignore else: untestable IE option */
+
+	removeCSSRule = function(rule){
+		_removeCSSRule(sheet, rule);
+	};
+	/* istanbul ignore next: tests are browser specific */
+	_removeCSSRule = function(sheet, rule){
+		var ruleIndex = _getRuleIndex(rule, sheet.cssRules || sheet.rules);
 		if(sheet.removeRule){
-			sheet.removeRule(index);
+			sheet.removeRule(ruleIndex);
 		}else{
-			sheet.deleteRule(index);
+			sheet.deleteRule(ruleIndex);
 		}
 	};
 }
@@ -55174,7 +55190,7 @@ angular.module('textAngular.factories', [])
 		} else return html;
 	};
 	return taFixChrome;
-}).factory('taSanitize', ['$sanitize', 'taDOM', function taSanitizeFactory($sanitize, taDOM){
+}).factory('taSanitize', ['$sanitize', function taSanitizeFactory($sanitize){
 
 	var convert_infos = [
 		{
@@ -55192,7 +55208,7 @@ angular.module('textAngular.factories', [])
 	var styleMatch = [];
 	for(var i = 0; i < convert_infos.length; i++){
 		var _partialStyle = '(' + convert_infos[i].property + ':\\s*(';
-		for(j = 0; j < convert_infos[i].values.length; j++){
+		for(var j = 0; j < convert_infos[i].values.length; j++){
 			/* istanbul ignore next: not needed to be tested yet */
 			if(j > 0) _partialStyle += '|';
 			_partialStyle += convert_infos[i].values[j];
@@ -55223,9 +55239,9 @@ angular.module('textAngular.factories', [])
 	
 	function transformLegacyStyles(html){
 		if(!html || !angular.isString(html) || html.length <= 0) return html;
-		var i, j;
+		var i;
 		var styleElementMatch = /<([^>\/]+?)style=("([^"]+)"|'([^']+)')([^>]*)>/ig;
-		var match, styleVal, newTag, lastNewTag = '', newHtml, finalHtml = '', lastIndex = 0;
+		var match, subMatch, styleVal, newTag, lastNewTag = '', newHtml, finalHtml = '', lastIndex = 0;
 		while(match = styleElementMatch.exec(html)){
 			// one of the quoted values ' or "
 			/* istanbul ignore next: quotations match */
@@ -55281,7 +55297,7 @@ angular.module('textAngular.factories', [])
 			// record last index after this tag
 			lastIndex = match.index + match[0].length;
 			// construct tag without the align attribute
-			newTag = '<' + match[1] + match[5];
+			var newTag = '<' + match[1] + match[5];
 			// add the style attribute
 			if(/style=("([^"]+)"|'([^']+)')/ig.test(newTag)){
 				/* istanbul ignore next: quotations match */
@@ -55324,7 +55340,7 @@ angular.module('textAngular.factories', [])
 		// Do processing for <pre> tags, removing tabs and return carriages outside of them
 		
 		var _preTags = safe.match(/(<pre[^>]*>.*?<\/pre[^>]*>)/ig);
-		processedSafe = safe.replace(/(&#(9|10);)*/ig, '');
+		var processedSafe = safe.replace(/(&#(9|10);)*/ig, '');
 		var re = /<pre[^>]*>.*?<\/pre[^>]*>/ig;
 		var index = 0;
 		var lastIndex = 0;
@@ -55685,7 +55701,7 @@ function($window, $document, taDOM){
 		// from http://stackoverflow.com/questions/6690752/insert-html-at-caret-in-a-contenteditable-div
 		// topNode is the contenteditable normally, all manipulation MUST be inside this.
 		insertHtml: function(html, topNode){
-			var parent, secondParent, _childI, nodes, startIndex, startNodes, endNodes, i, lastNode, _tempFrag;
+			var parent, secondParent, _childI, nodes, i, lastNode, _tempFrag;
 			var element = angular.element("<div>" + html + "</div>");
 			var range = rangy.getSelection().getRangeAt(0);
 			var frag = _document.createDocumentFragment();
@@ -55989,6 +56005,15 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 			
 			var _blankTest = _taBlankTest(_defaultTest);
 			
+			var _ensureContentWrapped = function(value){
+				if(_blankTest(value)) return value;
+				var domTest = angular.element("<div>" + value + "</div>");
+				if(domTest.children().length === 0){
+					value = "<" + attrs.taDefaultWrap + ">" + value + "</" + attrs.taDefaultWrap + ">";
+				}
+				return value;
+			};
+			
 			if(attrs.taPaste) _pasteHandler = $parse(attrs.taPaste);
 			
 			element.addClass('ta-bind');
@@ -56149,7 +56174,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 						_html += '\n' + _repeat('\t', tablevel-1) + listNode.outerHTML.substring(listNode.outerHTML.lastIndexOf('<'));
 						return _html;
 					};
-					
+					ngModel.$formatters.unshift(_ensureContentWrapped);
 					ngModel.$formatters.unshift(function(htmlValue){
 						// tabulate the HTML so it looks nicer
 						var _children = angular.element('<div>' + htmlValue + '</div>')[0].childNodes;
@@ -56323,7 +56348,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 						element.addClass('processing-paste');
 						var pastedContent;
 						var clipboardData = (e.originalEvent || e).clipboardData;
-						if (clipboardData && clipboardData.getData) {// Webkit - get data from clipboard, put into editdiv, cleanup, then cancel event
+						if (clipboardData && clipboardData.getData && clipboardData.types.length > 0) {// Webkit - get data from clipboard, put into editdiv, cleanup, then cancel event
 							var _types = "";
 							for(var _t = 0; _t < clipboardData.types.length; _t++){
 								_types += " " + clipboardData.types[_t];
@@ -56348,8 +56373,8 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 								// restore selection
 								$window.rangy.restoreSelection(_savedSelection);
 								processpaste(_tempDiv[0].innerHTML);
-								_tempDiv.remove();
 								element[0].focus();
+								_tempDiv.remove();
 							}, 0);
 						}
 					});
@@ -56378,6 +56403,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 								}
 							/* istanbul ignore next: difficult to test as can't seem to select */
 							}else if(event.keyCode === 13 && !event.shiftKey){
+								var $selection;
 								var selection = taSelection.getSelectionElement();
 								if(!selection.tagName.match(VALIDELEMENTS)) return;
 								var _new = angular.element(_defaultVal);
@@ -56404,6 +56430,12 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 					element.on('keyup', scope.events.keyup = function(event, eventData){
 						/* istanbul ignore else: this is for catching the jqLite testing*/
 						if(eventData) angular.extend(event, eventData);
+						/* istanbul ignore next: FF specific bug fix */
+						if (event.keyCode === 9) {
+							var _selection = taSelection.getSelection();
+							if(_selection.start.element === element[0] && element.children().length) taSelection.setSelectionToElementStart(element.children()[0]);
+							return;
+						}
 						if(_undoKeyupTimeout) $timeout.cancel(_undoKeyupTimeout);
 						if(!_isReadonly && !BLOCKED_KEYS.test(event.keyCode)){
 							// if enter - insert new taDefaultWrap, if shift+enter insert <br/>
@@ -56452,12 +56484,12 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 
 					// Placeholders not supported on ie 8 and below
 					if(attrs.placeholder && (_browserDetect.ie > 8 || _browserDetect.ie === undefined)){
-						var ruleIndex;
-						if(attrs.id) ruleIndex = addCSSRule('#' + attrs.id + '.placeholder-text:before', 'content: "' + attrs.placeholder + '"');
+						var rule;
+						if(attrs.id) rule = addCSSRule('#' + attrs.id + '.placeholder-text:before', 'content: "' + attrs.placeholder + '"');
 						else throw('textAngular Error: An unique ID is required for placeholders to work');
 
 						scope.$on('$destroy', function(){
-							removeCSSRule(ruleIndex);
+							removeCSSRule(rule);
 						});
 					}
 
@@ -56496,14 +56528,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 			ngModel.$parsers.unshift(_validity);
 			// because textAngular is bi-directional (which is awesome) we need to also sanitize values going in from the server
 			ngModel.$formatters.push(_sanitize);
-			ngModel.$formatters.unshift(function(value){
-				if(_blankTest(value)) return value;
-				var domTest = angular.element("<div>" + value + "</div>");
-				if(domTest.children().length === 0){
-					value = "<" + attrs.taDefaultWrap + ">" + value + "</" + attrs.taDefaultWrap + ">";
-				}
-				return value;
-			});
+			ngModel.$formatters.unshift(_ensureContentWrapped);
 			ngModel.$formatters.unshift(_validity);
 			ngModel.$formatters.unshift(function(value){
 				return ngModel.$undoManager.push(value || '');
@@ -56772,7 +56797,7 @@ textAngular.directive("textAngular", [
 				var _keydown, _keyup, _keypress, _mouseup, _focusin, _focusout,
 					_originalContents, _toolbars,
 					_serial = (attrs.serial) ? attrs.serial : Math.floor(Math.random() * 10000000000000000),
-					_taExecCommand, _resizeMouseDown;
+					_taExecCommand, _resizeMouseDown, _updateSelectedStylesTimeout;
 				
 				scope._name = (attrs.name) ? attrs.name : 'textAngularEditor' + _serial;
 
@@ -56872,10 +56897,10 @@ textAngular.directive("textAngular", [
 				scope.reflowPopover = function(_el){
 					/* istanbul ignore if: catches only if near bottom of editor */
 					if(scope.displayElements.text[0].offsetHeight - 51 > _el[0].offsetTop){
-						scope.displayElements.popover.css('top', _el[0].offsetTop + _el[0].offsetHeight + 'px');
+						scope.displayElements.popover.css('top', _el[0].offsetTop + _el[0].offsetHeight + scope.displayElements.scrollWindow[0].scrollTop + 'px');
 						scope.displayElements.popover.removeClass('top').addClass('bottom');
 					}else{
-						scope.displayElements.popover.css('top', _el[0].offsetTop - 54 + 'px');
+						scope.displayElements.popover.css('top', _el[0].offsetTop - 54 + scope.displayElements.scrollWindow[0].scrollTop + 'px');
 						scope.displayElements.popover.removeClass('bottom').addClass('top');
 					}
 					var _maxLeft = scope.displayElements.text[0].offsetWidth - scope.displayElements.popover[0].offsetWidth;
@@ -57237,13 +57262,15 @@ textAngular.directive("textAngular", [
 				// loop through all the tools polling their activeState function if it exists
 				scope.updateSelectedStyles = function(){
 					var _selection;
+					/* istanbul ignore next: This check is to ensure multiple timeouts don't exist */
+					if(_updateSelectedStylesTimeout) $timeout.cancel(_updateSelectedStylesTimeout);
 					// test if the common element ISN'T the root ta-text node
 					if((_selection = taSelection.getSelectionElement()) !== undefined && _selection.parentNode !== scope.displayElements.text[0]){
 						_toolbars.updateSelectedStyles(angular.element(_selection));
 					}else _toolbars.updateSelectedStyles();
 					// used to update the active state when a key is held down, ie the left arrow
 					/* istanbul ignore else: browser only check */
-					if(scope._bUpdateSelectedStyles) $timeout(scope.updateSelectedStyles, 200);
+					if(scope._bUpdateSelectedStyles) _updateSelectedStylesTimeout = $timeout(scope.updateSelectedStyles, 200);
 				};
 				// start updating on keydown
 				_keydown = function(){
@@ -58520,7 +58547,7 @@ Version 1.3.7
 See README.md or https://github.com/fraywing/textAngular/wiki for requirements and use.
 */
 angular.module('textAngularSetup', [])
-	
+
 // Here we set up the global display defaults, to set your own use a angular $provider#decorator.
 .value('taOptions',  {
 	toolbar: [
@@ -58617,7 +58644,7 @@ angular.module('textAngularSetup', [])
 		tooltip: 'Ordered List'
 	},
 	quote: {
-		tooltip: 'Quote/unqoute selection or paragraph'
+		tooltip: 'Quote/unquote selection or paragraph'
 	},
 	undo: {
 		tooltip: 'Undo'
@@ -58834,7 +58861,7 @@ angular.module('textAngularSetup', [])
 			return this.$editor().wrapSelection("indent", null);
 		},
 		activeState: function(){
-			return this.$editor().queryFormatBlockState('blockquote'); 
+			return this.$editor().queryFormatBlockState('blockquote');
 		}
 	});
 	taRegisterTool('outdent', {
@@ -58914,7 +58941,7 @@ angular.module('textAngularSetup', [])
 				if(_preLis.length === 0 || _postLis.length === 0){
 					if(_postLis.length === 0) _parent.after(newElem);
 					else _parent[0].parentNode.insertBefore(newElem[0], _parent[0]);
-					
+
 					if(_preLis.length === 0 && _postLis.length === 0) _parent.remove();
 					else angular.element(possibleNodes[0]).remove();
 				}else{
@@ -58944,7 +58971,7 @@ angular.module('textAngularSetup', [])
 			restoreSelection();
 		}
 	});
-	
+
 	var imgOnSelectAction = function(event, $element, editorScope){
 		// setup the editor toolbar
 		// Credit to the work at http://hackerwins.github.io/summernote/ for this editbar logic/display
@@ -58998,7 +59025,7 @@ angular.module('textAngularSetup', [])
 		buttonGroup.append(quartButton);
 		buttonGroup.append(resetButton);
 		container.append(buttonGroup);
-		
+
 		buttonGroup = angular.element('<div class="btn-group" style="padding-right: 6px;">');
 		var floatLeft = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" unselectable="on" tabindex="-1"><i class="fa fa-align-left"></i></button>');
 		floatLeft.on('click', function(event){
@@ -59037,7 +59064,7 @@ angular.module('textAngularSetup', [])
 		buttonGroup.append(floatNone);
 		buttonGroup.append(floatRight);
 		container.append(buttonGroup);
-		
+
 		buttonGroup = angular.element('<div class="btn-group">');
 		var remove = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" unselectable="on" tabindex="-1"><i class="fa fa-trash-o"></i></button>');
 		remove.on('click', function(event){
@@ -59047,11 +59074,11 @@ angular.module('textAngularSetup', [])
 		});
 		buttonGroup.append(remove);
 		container.append(buttonGroup);
-		
+
 		editorScope.showPopover($element);
 		editorScope.showResizeOverlay($element);
 	};
-	
+
 	taRegisterTool('insertImage', {
 		iconclass: 'fa fa-picture-o',
 		tooltiptext: taTranslations.insertImage.tooltip,
@@ -59094,7 +59121,7 @@ angular.module('textAngularSetup', [])
 			onlyWithAttrs: ['ta-insert-video'],
 			action: imgOnSelectAction
 		}
-	});	
+	});
 	taRegisterTool('insertLink', {
 		tooltiptext: taTranslations.insertLink.tooltip,
 		iconclass: 'fa fa-link',
@@ -59115,7 +59142,7 @@ angular.module('textAngularSetup', [])
 				// setup the editor toolbar
 				// Credit to the work at http://hackerwins.github.io/summernote/ for this editbar logic
 				event.preventDefault();
-				editorScope.displayElements.popover.css('width', '435px');
+				editorScope.displayElements.popover.css('width', '436px');
 				var container = editorScope.displayElements.popoverContainer;
 				container.empty();
 				container.css('line-height', '28px');
@@ -59167,18 +59194,18 @@ angular.module('textAngularSetup', [])
 		}
 	});
 	taRegisterTool('wordcount', {
-		display: '<div id="toolbarWC" style="display:block; min-width:100px;">Words:{{wordcount}}</div>',
+		display: '<div id="toolbarWC" style="display:block; min-width:100px;">Words: <span ng-bind="wordcount"></span></div>',
 		disabled: true,
 		wordcount: 0,
 		activeState: function(){ // this fires on keyup
 			var textElement = this.$editor().displayElements.text;
 			var workingHTML = textElement[0].innerHTML;
 			var sourceText = workingHTML.replace(/(<[^>]*?>)/ig, ' '); // replace all html tags with spaces
-			
+
 			// Caculate number of words
 			var sourceTextMatches = sourceText.match(/\S+/g);
 			var noOfWords = sourceTextMatches && sourceTextMatches.length || 0;
-			
+
 			//Set current scope
 			this.wordcount = noOfWords;
 			//Set editor scope
@@ -59187,13 +59214,13 @@ angular.module('textAngularSetup', [])
 		}
 	});
 	taRegisterTool('charcount', {
-		display: '<div id="toolbarCC" style="display:block; min-width:120px;">Characters:{{charcount}}</div>',
+		display: '<div id="toolbarCC" style="display:block; min-width:120px;">Characters: <span ng-bind="charcount"></span></div>',
 		disabled: true,
 		charcount: 0,
 		activeState: function(){ // this fires on keyup
 			var textElement = this.$editor().displayElements.text;
 			var sourceText = textElement[0].innerText || textElement[0].textContent; // to cover the non-jquery use case.
-			
+
 			// Caculate number of chars
 			var noOfChars = sourceText.replace(/(\r\n|\n|\r)/gm,"").replace(/^\s+/g,' ').replace(/\s+$/g, ' ').length;
 			//Set current scope
@@ -59205,24 +59232,7 @@ angular.module('textAngularSetup', [])
 	});
 }]);
 
-angular.module('gi.ui', ['gi.util']);
-
-angular.module('gi.ui').filter('giShorten', [
-  function() {
-    return function(str, len) {
-      var result;
-      result = '';
-      if (str != null) {
-        if (str.length > len) {
-          result = str.substring(0, len) + '...';
-        } else {
-          result = str;
-        }
-      }
-      return result;
-    };
-  }
-]);
+angular.module('gi.ui', ['gi.util', 'textAngular']);
 
 angular.module('gi.ui').directive('giDtproperty', [
   '$compile', '$timeout', function($compile, $timeout) {
@@ -59503,10 +59513,20 @@ angular.module('gi.ui').directive('giDatatable', [
               sortDir = true;
             }
             $scope.filteredItems = $filter('orderBy')($scope.filteredItems, function(item) {
-              var ar, prop;
+              var ar, j, len, nestedItem, p, prop, props;
               ar = $scope.options.sortProperty.split("|");
               prop = ar[0].trim();
-              return item[prop];
+              if (prop.indexOf(".") === -1) {
+                return item[prop];
+              } else {
+                nestedItem = item;
+                props = prop.split(".");
+                for (j = 0, len = props.length; j < len; j++) {
+                  p = props[j];
+                  nestedItem = nestedItem != null ? nestedItem[p] : void 0;
+                }
+                return nestedItem;
+              }
             }, sortDir);
           }
           if ($scope.options.customSort) {
@@ -60189,6 +60209,23 @@ angular.module('gi.ui').directive('giOverflow', [
   }
 ]);
 
+angular.module('gi.ui').filter('giShorten', [
+  function() {
+    return function(str, len) {
+      var result;
+      result = '';
+      if (str != null) {
+        if (str.length > len) {
+          result = str.substring(0, len) + '...';
+        } else {
+          result = str;
+        }
+      }
+      return result;
+    };
+  }
+]);
+
 angular.module('gi.ui').factory('giFileManager', [
   '$q', '$http', 'giCrud', function($q, $http, Crud) {
     var crudService, forParent, getCDN, getPath, getToken, save;
@@ -60278,6 +60315,21 @@ angular.module('gi.ui').factory('giFileManager', [
       getUploadToken: getToken,
       save: save,
       destroy: crudService.destroy
+    };
+  }
+]);
+
+angular.module('gi.ui').factory('giTextAngular', [
+  function() {
+    var options;
+    options = "[ ['h1','h2','h3','h4'], ['bold','italics','underline','ul','ol'], ['justifyLeft','justifyCenter','justifyRight'], ['html', 'insertImage'] ]";
+    return {
+      getOptions: function() {
+        return options;
+      },
+      setOptions: function(opt) {
+        return options = opt;
+      }
     };
   }
 ]);
@@ -61704,7 +61756,6 @@ angular.module('gi.commerce').directive('giCheckout', [
         return $scope.$watch('cart.getStage()', function(newVal) {
           if (newVal != null) {
             if (newVal === 3) {
-              console.log('calculating tax rate');
               return $scope.cart.calculateTaxRate();
             }
           }
@@ -61924,7 +61975,7 @@ angular.module("gi.commerce").run(["$templateCache", function($templateCache) {$
 $templateCache.put("gi.commerce.addtocart.html","<div ng-hide=\"attrs.id\">\n    <a class=\"btn btn-lg btn-primary\" ng-disabled=\"true\" ng-transclude></a>\n</div>\n<div ng-show=\"attrs.id\">\n    <div ng-hide=\"inCart()\">\n        <a class=\"btn btn-lg btn-primary\"\n           ng-click=\"addItem(item)\"\n           ng-transclude></a>\n    </div>\n    <div class=\"alert alert-info\"  ng-show=\"inCart()\">\n        This item is in your cart\n    </div>\n</div>\n");
 $templateCache.put("gi.commerce.cart.html","<div class=\"row\">\n  <div class=\"col-xs-12\" ng-show=\"giCart.totalItems() === 0\">\n      Your cart is empty\n  </div>\n  <div class=\"col-xs-12\">\n    <div class=\"table-responsive \" ng-show=\"giCart.totalItems() > 0\">\n\n        <table class=\"table table-striped giCart cart\">\n            <thead>\n            <tr>\n                <th></th>\n                <th></th>\n                <th>Quantity</th>\n                <th>SubTotal</th>\n                <th>Tax</th>\n                <th>Total</th>\n            </tr>\n            </thead>\n            <tfoot>\n            <tr ng-show=\"giCart.getShipping()\">\n                <th></th>\n                <th></th>\n                <th></th>\n                <th></th>\n                <th>Shipping:</th>\n                <th>{{ giCart.getShipping() | giCurrency:giCart.getCurrencySymbol }}</th>\n            </tr>\n            <tr ng-show=\"giCart.getTaxRate() >= 0\">\n                <th></th>\n                <th></th>\n                <th></th>\n                <th></th>\n                <th>Tax:</th>\n                <th>{{ giCart.getTaxTotal() | giCurrency:giCart.getCurrencySymbol }}</th>\n            </tr>\n            <tr>\n                <th></th>\n                <th></th>\n                <th></th>\n                <th></th>\n                <th>Total:</th>\n                <th>{{ giCart.totalCost() | giCurrency:giCart.getCurrencySymbol }}</th>\n            </tr>\n            </tfoot>\n            <tbody>\n            <tr ng-repeat=\"item in giCart.getItems() track by $index\">\n                <td><span ng-click=\"giCart.removeItem($index)\" class=\"glyphicon glyphicon-remove\"></span></td>\n                <td>{{ item.getName() }}</td>\n                <td><span class=\"glyphicon glyphicon-minus\" ng-class=\"{\'disabled\':item.getQuantity()==1}\"\n                          ng-click=\"item.setQuantity(-1, true)\"></span>&nbsp;&nbsp;\n                    {{ item.getQuantity() | number }}&nbsp;&nbsp;\n                    <span class=\"glyphicon glyphicon-plus\" ng-click=\"item.setQuantity(1, true)\"></span></td>\n                <td>{{ item.getSubTotal(giCart.getPricingInfo()) | giCurrency:giCart.getCurrencySymbol}}</td>\n                <td>{{ item.getTaxTotal(giCart.getPricingInfo()) | giCurrency:giCart.getCurrencySymbol}}</td>\n                <td>{{ item.getTotal(giCart.getPricingInfo()) | giCurrency:giCart.getCurrencySymbol}}</td>\n            </tr>\n            </tbody>\n        </table>\n    </div>\n  </div>\n</div>\n<style>\n    .giCart.cart span[ng-click] {\n        cursor: pointer;\n    }\n    .giCart.cart .glyphicon.disabled {\n        color:#aaa;\n    }\n</style>\n");
 $templateCache.put("gi.commerce.cartStage.html","<div class=\"row gi-checkout\" style=\"border-bottom:0;\">\n  <div class=\"col-xs-3 gi-checkout-stage\"\n       ng-class=\"{complete: cart.getStage()>1, active: cart.getStage()==1}\">\n    <div class=\"text-center gi-checkout-stagenum\">Review Cart</div>\n    <div class=\"progress\"><div class=\"progress-bar\"></div></div>\n    <a ng-click=\"cart.setStage(1)\" class=\"gi-checkout-dot\"></a>\n  </div>\n  <div class=\"col-xs-3 gi-checkout-stage\"\n    ng-class=\"{complete: cart.getStage()>2, active: cart.getStage()==2, disabled: cart.getStage()<2}\">\n    <div class=\"text-center gi-checkout-stagenum\">Your Details</div>\n    <div class=\"progress\"><div class=\"progress-bar\"></div></div>\n    <a ng-click=\"cart.setStage(2)\" class=\"gi-checkout-dot\"></a>\n  </div>\n  <div class=\"col-xs-3 gi-checkout-stage\"\n    ng-class=\"{complete: cart.getStage()>3, active: cart.getStage()==3, disabled: cart.getStage()<3}\">\n    <div class=\"text-center gi-checkout-stagenum\">Payment</div>\n    <div class=\"progress\"><div class=\"progress-bar\"></div></div>\n    <a ng-click=\"cart.setStage(3)\" class=\"gi-checkout-dot\"></a>\n  </div>\n  <div class=\"col-xs-3 gi-checkout-stage\"\n       ng-class=\"{complete: cart.getStage()>4, active: cart.getStage()==4, disabled: cart.getStage()<4}\">\n    <div class=\"text-center gi-checkout-stagenum\">Complete</div>\n    <div class=\"progress\"><div class=\"progress-bar\"></div></div>\n    <a ng-click=\"cart.setStage(4)\" class=\"gi-checkout-dot\"></a>\n  </div>\n</div>\n");
-$templateCache.put("gi.commerce.checkout.html","<div class=\"container\">\n  <gi-cart-stage model=\"model\"></gi-cart-stage>\n  <div class=\"small-gap\">\n    <gi-cart ng-if=\"cart.getStage() == 1\" model=\"model\" stage=\"1\"></gi-cart>\n    <gi-customer-info ng-if=\"cart.getStage() == 2\" model=\"model\" stage=\"2\">\n    </gi-customer-info>\n    <div ng-if=\"cart.getStage() == 3\" >\n      <gi-payment-info stage=\"3\"></gi-payment-info>\n      <gi-order-summary></gi-order-summary>\n\n    </div>\n    <pre ng-if=\"cart.getStage() == 4\">Thankyou message to go here</pre>\n  </div>\n  <div class=\"row\">\n    <div class=\"col-xs-6\">\n      <div ng-if=\"cart.getStage() > 1\" class=\"btn btn-primary\"\n           ng-click=\"cart.prevStage()\">Prev</div>\n    </div>\n    <div class=\"col-xs-6\">\n      <div class=\"pull-right\">\n        <div ng-if=\"cart.getStage() < 3\" class=\"btn btn-primary\"\n             ng-click=\"cart.nextStage()\"\n             ng-disabled=\"cart.isStageInvalid(cart.getStage())\"\n             >Next</div>\n        <div ng-if=\"cart.getStage() == 3\" class=\"btn btn-primary\"\n             ng-click=\"cart.payNow()\"  ng-disabled=\"cart.isStageInvalid(cart.getStage())\">Pay Now</div>\n      </div>\n    </div>\n  </div>\n  <div class=\"row medium-gap\">\n  </div>\n  <pre>{{cart | json}}</pre>\n</div>\n");
+$templateCache.put("gi.commerce.checkout.html","<div class=\"container\">\n  <gi-cart-stage model=\"model\"></gi-cart-stage>\n  <div class=\"small-gap\">\n    <gi-cart ng-if=\"cart.getStage() == 1\" model=\"model\" stage=\"1\"></gi-cart>\n    <gi-customer-info ng-if=\"cart.getStage() == 2\" model=\"model\" stage=\"2\">\n    </gi-customer-info>\n    <div ng-if=\"cart.getStage() == 3\" >\n      <gi-payment-info stage=\"3\"></gi-payment-info>\n      <gi-order-summary></gi-order-summary>\n\n    </div>\n    <pre ng-if=\"cart.getStage() == 4\">Thankyou message to go here</pre>\n  </div>\n  <div class=\"row\">\n    <div class=\"col-xs-6\">\n      <div ng-if=\"cart.getStage() > 1\" class=\"btn btn-primary\"\n           ng-click=\"cart.prevStage()\">Prev</div>\n    </div>\n    <div class=\"col-xs-6\">\n      <div class=\"pull-right\">\n        <div ng-if=\"cart.getStage() < 3\" class=\"btn btn-primary\"\n             ng-click=\"cart.nextStage()\"\n             ng-disabled=\"cart.isStageInvalid(cart.getStage())\"\n             >Next</div>\n        <div ng-if=\"cart.getStage() == 3\" class=\"btn btn-primary\"\n             ng-click=\"cart.payNow()\"  ng-disabled=\"cart.isStageInvalid(cart.getStage())\">Pay Now</div>\n      </div>\n    </div>\n  </div>\n  <div class=\"row medium-gap\">\n  </div>\n</div>\n");
 $templateCache.put("gi.commerce.countryForm.html","<div ng-form name=\"countryForm\" class=\"well form\">\n  <div class=\"form-group\">\n    <label>Name:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"countryName\"\n           ng-model=\"model.selectedItem.name\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Code:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"countryCode\"\n           ng-model=\"model.selectedItem.code\"/>\n  </div>\n  <div class=\"form-group\">\n    <label class=\"control-label\">Market:</label>\n    <ui-select ng-model=\"model.selectedItem.marketId\">\n      <ui-select-match>{{$select.selected.name}}</ui-select-match>\n      <ui-select-choices repeat=\"c._id as c in model.markets  | filter: $select.search\">\n        <div ng-bind-html=\"c.name | highlight: $select.search\"></div>\n      </ui-select-choices>\n    </ui-select>\n  </div>\n  <div class=\"form-group\">\n    <div class=\"checkbox\">\n      <label>\n        <input type=\"checkbox\" ng-model=\"model.selectedItem.default\"> Use as Default Country?\n      </label>\n    </div>\n  </div>\n  <div class=\"form-group\">\n    <button class=\"form-control btn btn-primary btn-save-asset\"\n            ng-click=\"save()\">{{submitText}}</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"countryForm.$dirty || model.selectedItem._id\">\n    <button class=\"form-control btn btn-warning\"\n            ng-click=\"clear()\">Cancel</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"model.selectedItem._id\">\n    <button class=\"form-control btn btn-danger\" ng-click=\"destroy()\">\n      Delete <span ng-if=\"confirm\">- Are you sure? Click again to confirm</span>\n    </button>\n  </div>\n</div>\n");
 $templateCache.put("gi.commerce.currencyForm.html","<div ng-form name=\"currencyForm\" class=\"well form\">\n  <div class=\"form-group\">\n    <label>Name:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"currencyName\"\n           ng-model=\"item.name\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Code:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"currencyCode\"\n           ng-model=\"item.code\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Symbol:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"currencSymbol\"\n           ng-model=\"item.symbol\"/>\n  </div>\n  <div class=\"form-group\">\n    <button class=\"form-control btn btn-primary btn-save-asset\"\n            ng-click=\"save()\">{{submitText}}</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"currencyForm.$dirty || item._id\">\n    <button class=\"form-control btn btn-warning\"\n            ng-click=\"clear()\">Cancel</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"item._id\">\n    <button class=\"form-control btn btn-danger\" ng-click=\"destroy()\">\n      Delete <span ng-if=\"confirm\">- Are you sure? Click again to confirm</span>\n    </button>\n  </div>\n</div>\n");
 $templateCache.put("gi.commerce.customerForm.html","<div ng-form name=\"customerForm\" class=\"well form\">\n  <div class=\"row\">\n    <div class=\"col-md-12\">\n      <div class=\"form-group\" ng-if=\"model.me.loggedIn\">\n        Hi {{model.me.user.firstName}} welcome back. We will e-mail confirmation of your order to your e-mail address:\n        <strong>{{model.me.user.email}}</strong>\n      </div>\n      <div class=\"form-group\" ng-if=\"!model.me.loggedIn\">\n        Already have an account? <a ng-click=\"requestLogin()\">Please Sign In</a>\n      </div>\n      <div class=\"form-group\">\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" ng-model=\"cart.business\"> Buying for a company?\n          </label>\n        </div>\n      </div>\n    </div>\n    <div class=\"col-md-6\" ng-if=\"!model.me.loggedIn\">\n      <div class=\"form-group\">\n        <label>Name:</label>\n        <input type=\"text\"\n               class=\"form-control\"\n               name=\"name\"\n               ng-model=\"model.selectedItem.name\"/>\n      </div>\n      <div class=\"form-group\">\n        <label>Email:</label>\n        <input type=\"text\"\n               class=\"form-control\"\n               name=\"email\"\n               ng-model=\"model.selectedItem.email\"/>\n      </div>\n      <div class=\"form-group\">\n        <label>Password:</label>\n        <input type=\"password\"\n               class=\"form-control\"\n               name=\"password\"\n               ng-model=\"model.selectedItem.password\"/>\n      </div>\n    </div>\n    <div class=\"col-md-6\" ng-if=\"cart.business\">\n      <div class=\"form-group\" >\n        <label>Company Name:</label>\n        <input type=\"text\"\n               class=\"form-control\"\n               name=\"countryName\"\n               ng-model=\"cart.company.Name\"/>\n      </div>\n      <div class=\"form-group\">\n        <label>VAT Number (optional):</label>\n        <input type=\"text\"\n               class=\"form-control\"\n               name=\"countryName\"\n               ng-model=\"cart.company.VAT\"/>\n      </div>\n    </div>\n  </div>\n</div>\n");
@@ -62303,6 +62354,7 @@ angular.module('gi.commerce').factory('giCart', [
     init = function() {
       cart = {
         tax: null,
+        taxName: "",
         items: [],
         stage: 1,
         validStages: {},
@@ -62335,9 +62387,11 @@ angular.module('gi.commerce').factory('giCart', [
       }
       return $http.get(uri).success(function(data) {
         cart.tax = data.rate;
+        cart.taxName = data.name;
         return cart.tax;
       }).error(function(err) {
         cart.tax = -1;
+        cart.taxName = "";
         return cart.tax;
       });
     };
@@ -62452,23 +62506,35 @@ angular.module('gi.commerce').factory('giCart', [
       },
       payNow: function() {
         var that;
-        console.log('in pay now cart service');
         that = this;
         return Payment.stripe.getToken(that.card).then(function(token) {
-          var chargeRequest;
+          var chargeRequest, item;
           chargeRequest = {
             token: token.id,
             total: that.totalCost(),
             billing: that.billingAddress,
             shipping: that.shippingAddress,
             customer: that.customer,
-            currency: that.getCurrencyCode().toLowerCase()
+            currency: that.getCurrencyCode().toLowerCase(),
+            tax: {
+              rate: cart.tax,
+              name: cart.taxName
+            },
+            items: (function() {
+              var i, len, ref, results;
+              ref = cart.items;
+              results = [];
+              for (i = 0, len = ref.length; i < len; i++) {
+                item = ref[i];
+                results.push({
+                  name: item._data.name,
+                  purchaseType: item._data.purchaseType
+                });
+              }
+              return results;
+            })()
           };
-          console.log('sending charge Request');
-          console.log(chargeRequest);
           return Payment.stripe.charge(chargeRequest).then(function(result) {
-            console.log('charge sucessful');
-            console.log(result);
             return cart.stage = 4;
           }, function(err) {
             console.log('charge failed');
