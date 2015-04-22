@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.4.5
+- use latest gi-commerce to support purchase completion events and multiple asset purchases
+
 v0.4.4
 - use latest gi-commerce to support stripe / quaderno tax metadata
 
