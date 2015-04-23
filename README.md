@@ -2,6 +2,11 @@ gi
 ---
 
 Release Notes
+v0.5.0
+- uses latest gi-util to enable loggly integration
+- uses latest gi-ui to upgrade textAngular
+- exposes log function directly on server exports api.
+
 v0.4.6
 - use latest gi-commerce which fixes country dropdowns not being populated on address fields
 

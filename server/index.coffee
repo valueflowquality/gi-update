@@ -11,3 +11,4 @@ module.exports =
   common: util.common
   configure: configure
   middleware: util.middleware
+  log: util.common.log
