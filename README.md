@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.4.6
+- use latest gi-commerce which fixes country dropdowns not being populated on address fields
+
 v0.4.5
 - use latest gi-commerce to support purchase completion events and multiple asset purchases
 
