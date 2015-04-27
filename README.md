@@ -2,6 +2,10 @@ gi
 ---
 
 Release Notes
+v0.5.1
+- uses latest gi-util to fix issue where objects were altered when logged.
+- uses latest gi-commerce to enable error messages on failed payments.
+
 v0.5.0
 - uses latest gi-util to enable loggly integration
 - uses latest gi-ui to upgrade textAngular
