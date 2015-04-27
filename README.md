@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.5.2
+- uses latest gi-commerce to fix issue where environment variables were not loaded in time.
+
 v0.5.1
 - uses latest gi-util to fix issue where objects were altered when logged.
 - uses latest gi-commerce to enable error messages on failed payments.
