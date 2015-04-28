@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.5.4
+- uses latest gi-util to fix issue with crud.Update where mongoose 4 started returning the original not the modified document
+
 v0.5.3
 - uses latest gi-ui to fix issue where giOverflow directive didn't work until the browser window was resized
 
