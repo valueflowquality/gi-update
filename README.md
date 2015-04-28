@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.5.3
+- uses latest gi-ui to fix issue where giOverflow directive didn't work until the browser window was resized
+
 v0.5.2
 - uses latest gi-commerce to fix issue where environment variables were not loaded in time.
 
