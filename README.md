@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.5.5
+- uses latest gi-commerce which adds a continue shopping button to the first cart page
+
 v0.5.4
 - uses latest gi-util to fix issue with crud.Update where mongoose 4 started returning the original not the modified document
 
