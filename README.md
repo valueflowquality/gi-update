@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.5.6
+- use latest gi-commerce which improves checkout styling
+
 v0.5.5
 - uses latest gi-commerce which adds a continue shopping button to the first cart page
 
