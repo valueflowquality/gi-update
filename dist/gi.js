@@ -32774,370 +32774,6 @@ angular.module('ngCookies', ['ng']).
 
 })(window, window.angular);
 
-/**
- * @license Angulartics v0.17.2
- * (c) 2013 Luis Farzati http://luisfarzati.github.io/angulartics
- * License: MIT
- */
-(function(angular, analytics) {
-'use strict';
-
-var angulartics = window.angulartics || (window.angulartics = {});
-angulartics.waitForVendorCount = 0;
-angulartics.waitForVendorApi = function (objectName, delay, containsField, registerFn, onTimeout) {
-  if (!onTimeout) { angulartics.waitForVendorCount++; }
-  if (!registerFn) { registerFn = containsField; containsField = undefined; }
-  if (!Object.prototype.hasOwnProperty.call(window, objectName) || (containsField !== undefined && window[objectName][containsField] === undefined)) {
-    setTimeout(function () { angulartics.waitForVendorApi(objectName, delay, containsField, registerFn, true); }, delay);
-  }
-  else {
-    angulartics.waitForVendorCount--;
-    registerFn(window[objectName]);
-  }
-};
-
-/**
- * @ngdoc overview
- * @name angulartics
- */
-angular.module('angulartics', [])
-.provider('$analytics', function () {
-  var settings = {
-    pageTracking: {
-      autoTrackFirstPage: true,
-      autoTrackVirtualPages: true,
-      trackRelativePath: false,
-      autoBasePath: false,
-      basePath: ''
-    },
-    eventTracking: {},
-    bufferFlushDelay: 1000, // Support only one configuration for buffer flush delay to simplify buffering
-    developerMode: false // Prevent sending data in local/development environment
-  };
-
-  // List of known handlers that plugins can register themselves for
-  var knownHandlers = [
-    'pageTrack',
-    'eventTrack',
-    'setAlias',
-    'setUsername',
-    'setAlias',
-    'setUserProperties',
-    'setUserPropertiesOnce',
-    'setSuperProperties',
-    'setSuperPropertiesOnce'
-  ];
-  // Cache and handler properties will match values in 'knownHandlers' as the buffering functons are installed.
-  var cache = {};
-  var handlers = {};
-
-  // General buffering handler
-  var bufferedHandler = function(handlerName){
-    return function(){
-      if(angulartics.waitForVendorCount){
-        if(!cache[handlerName]){ cache[handlerName] = []; }
-        cache[handlerName].push(arguments);
-      }
-    };
-  };
-
-  // As handlers are installed by plugins, they get pushed into a list and invoked in order.
-  var updateHandlers = function(handlerName, fn){
-    if(!handlers[handlerName]){
-      handlers[handlerName] = [];
-    }
-    handlers[handlerName].push(fn);
-    return function(){
-      var handlerArgs = arguments;
-      angular.forEach(handlers[handlerName], function(handler){
-        handler.apply(this, handlerArgs);
-      }, this);
-    };
-  };
-
-  // The api (returned by this provider) gets populated with handlers below.
-  var api = {
-    settings: settings
-  };
-
-  // Will run setTimeout if delay is > 0
-  // Runs immediately if no delay to make sure cache/buffer is flushed before anything else.
-  // Plugins should take care to register handlers by order of precedence.
-  var onTimeout = function(fn, delay){
-    if(delay){
-      setTimeout(fn, delay);
-    } else {
-      fn();
-    }
-  };
-
-  var provider = {
-    $get: function() { return api; },
-    api: api,
-    settings: settings,
-    virtualPageviews: function (value) { this.settings.pageTracking.autoTrackVirtualPages = value; },
-    firstPageview: function (value) { this.settings.pageTracking.autoTrackFirstPage = value; },
-    withBase: function (value) { this.settings.pageTracking.basePath = (value) ? angular.element('base').attr('href').slice(0, -1) : ''; },
-    withAutoBase: function (value) { this.settings.pageTracking.autoBasePath = value; },
-    developerMode: function(value) { this.settings.developerMode = value; }
-  };
-
-  // General function to register plugin handlers. Flushes buffers immediately upon registration according to the specified delay.
-  var register = function(handlerName, fn){
-    api[handlerName] = updateHandlers(handlerName, fn);
-    var handlerSettings = settings[handlerName];
-    var handlerDelay = (handlerSettings) ? handlerSettings.bufferFlushDelay : null;
-    var delay = (handlerDelay !== null) ? handlerDelay : settings.bufferFlushDelay;
-    angular.forEach(cache[handlerName], function (args, index) {
-      onTimeout(function () { fn.apply(this, args); }, index * delay);
-    });
-  };
-
-  var capitalize = function (input) {
-      return input.replace(/^./, function (match) {
-          return match.toUpperCase();
-      });
-  };
-
-  // Adds to the provider a 'register#{handlerName}' function that manages multiple plugins and buffer flushing.
-  var installHandlerRegisterFunction = function(handlerName){
-    var registerName = 'register'+capitalize(handlerName);
-    provider[registerName] = function(fn){
-      register(handlerName, fn);
-    };
-    api[handlerName] = updateHandlers(handlerName, bufferedHandler(handlerName));
-  };
-
-  // Set up register functions for each known handler
-  angular.forEach(knownHandlers, installHandlerRegisterFunction);
-  return provider;
-})
-
-.run(['$rootScope', '$window', '$analytics', '$injector', function ($rootScope, $window, $analytics, $injector) {
-  if ($analytics.settings.pageTracking.autoTrackFirstPage) {
-    $injector.invoke(['$location', function ($location) {
-      /* Only track the 'first page' if there are no routes or states on the page */
-      var noRoutesOrStates = true;
-      if ($injector.has('$route')) {
-         var $route = $injector.get('$route');
-         for (var route in $route.routes) {
-           noRoutesOrStates = false;
-           break;
-         }
-      } else if ($injector.has('$state')) {
-        var $state = $injector.get('$state');
-        for (var state in $state.get()) {
-          noRoutesOrStates = false;
-          break;
-        }
-      }
-      if (noRoutesOrStates) {
-        if ($analytics.settings.pageTracking.autoBasePath) {
-          $analytics.settings.pageTracking.basePath = $window.location.pathname;
-        }
-        if ($analytics.settings.trackRelativePath) {
-          var url = $analytics.settings.pageTracking.basePath + $location.url();
-          $analytics.pageTrack(url, $location);
-        } else {
-          $analytics.pageTrack($location.absUrl(), $location);
-        }
-      }
-    }]);
-  }
-
-  if ($analytics.settings.pageTracking.autoTrackVirtualPages) {
-    $injector.invoke(['$location', function ($location) {
-      if ($analytics.settings.pageTracking.autoBasePath) {
-        /* Add the full route to the base. */
-        $analytics.settings.pageTracking.basePath = $window.location.pathname + "#";
-      }
-      if ($injector.has('$route')) {
-        $rootScope.$on('$routeChangeSuccess', function (event, current) {
-          if (current && (current.$$route||current).redirectTo) return;
-          var url = $analytics.settings.pageTracking.basePath + $location.url();
-          $analytics.pageTrack(url, $location);
-        });
-      }
-      if ($injector.has('$state')) {
-        $rootScope.$on('$stateChangeSuccess', function (event, current) {
-          var url = $analytics.settings.pageTracking.basePath + $location.url();
-          $analytics.pageTrack(url, $location);
-        });
-      }
-    }]);
-  }
-  if ($analytics.settings.developerMode) {
-    angular.forEach($analytics, function(attr, name) {
-      if (typeof attr === 'function') {
-        $analytics[name] = function(){};
-      }
-    });
-  }
-}])
-
-.directive('analyticsOn', ['$analytics', function ($analytics) {
-  function isCommand(element) {
-    return ['a:','button:','button:button','button:submit','input:button','input:submit'].indexOf(
-      element.tagName.toLowerCase()+':'+(element.type||'')) >= 0;
-  }
-
-  function inferEventType(element) {
-    if (isCommand(element)) return 'click';
-    return 'click';
-  }
-
-  function inferEventName(element) {
-    if (isCommand(element)) return element.innerText || element.value;
-    return element.id || element.name || element.tagName;
-  }
-
-  function isProperty(name) {
-    return name.substr(0, 9) === 'analytics' && ['On', 'Event', 'If', 'Properties', 'EventType'].indexOf(name.substr(9)) === -1;
-  }
-
-  function propertyName(name) {
-    var s = name.slice(9); // slice off the 'analytics' prefix
-    if (typeof s !== 'undefined' && s!==null && s.length > 0) {
-      return s.substring(0, 1).toLowerCase() + s.substring(1);
-    }
-    else {
-      return s;
-    }
-  }
-
-  return {
-    restrict: 'A',
-    link: function ($scope, $element, $attrs) {
-      var eventType = $attrs.analyticsOn || inferEventType($element[0]);
-      var trackingData = {};
-
-      angular.forEach($attrs.$attr, function(attr, name) {
-        if (isProperty(name)) {
-          trackingData[propertyName(name)] = $attrs[name];
-          $attrs.$observe(name, function(value){
-            trackingData[propertyName(name)] = value;
-          });
-        }
-      });
-
-      angular.element($element[0]).bind(eventType, function ($event) {
-        var eventName = $attrs.analyticsEvent || inferEventName($element[0]);
-        trackingData.eventType = $event.type;
-
-        if($attrs.analyticsIf){
-          if(! $scope.$eval($attrs.analyticsIf)){
-            return; // Cancel this event if we don't pass the analytics-if condition
-          }
-        }
-        // Allow components to pass through an expression that gets merged on to the event properties
-        // eg. analytics-properites='myComponentScope.someConfigExpression.$analyticsProperties'
-        if($attrs.analyticsProperties){
-          angular.extend(trackingData, $scope.$eval($attrs.analyticsProperties));
-        }
-        $analytics.eventTrack(eventName, trackingData);
-      });
-    }
-  };
-}]);
-})(angular);
-
-/**
- * @license Angulartics v0.17.2
- * (c) 2013 Luis Farzati http://luisfarzati.github.io/angulartics
- * Universal Analytics update contributed by http://github.com/willmcclellan
- * License: MIT
- */
-(function(angular) {
-'use strict';
-
-/**
- * @ngdoc overview
- * @name angulartics.google.analytics
- * Enables analytics support for Google Analytics (http://google.com/analytics)
- */
-angular.module('angulartics.google.analytics', ['angulartics'])
-.config(['$analyticsProvider', function ($analyticsProvider) {
-
-  // GA already supports buffered invocations so we don't need
-  // to wrap these inside angulartics.waitForVendorApi
-
-  $analyticsProvider.settings.trackRelativePath = true;
-  
-  // Set the default settings for this module
-  $analyticsProvider.settings.ga = {
-    // array of additional account names (only works for analyticsjs)
-    additionalAccountNames: undefined
-  };
-
-  $analyticsProvider.registerPageTrack(function (path) {
-    if (window._gaq) _gaq.push(['_trackPageview', path]);
-    if (window.ga) {
-      ga('send', 'pageview', path);
-      angular.forEach($analyticsProvider.settings.ga.additionalAccountNames, function (accountName){
-        ga(accountName +'.send', 'pageview', path);
-      });
-    }
-  });
-
-  /**
-   * Track Event in GA
-   * @name eventTrack
-   *
-   * @param {string} action Required 'action' (string) associated with the event
-   * @param {object} properties Comprised of the mandatory field 'category' (string) and optional  fields 'label' (string), 'value' (integer) and 'noninteraction' (boolean)
-   *
-   * @link https://developers.google.com/analytics/devguides/collection/gajs/eventTrackerGuide#SettingUpEventTracking
-   *
-   * @link https://developers.google.com/analytics/devguides/collection/analyticsjs/events
-   */
-  $analyticsProvider.registerEventTrack(function (action, properties) {
-
-    // do nothing if there is no category (it's required by GA)
-    if (!properties || !properties.category) { 
-		return; 
-	}
-    // GA requires that eventValue be an integer, see:
-    // https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#eventValue
-    // https://github.com/luisfarzati/angulartics/issues/81
-    if (properties.value) {
-      var parsed = parseInt(properties.value, 10);
-      properties.value = isNaN(parsed) ? 0 : parsed;
-    }
-
-    if (window.ga) {
-
-      var eventOptions = {
-        eventCategory: properties.category || null,
-        eventAction: action || null,
-        eventLabel: properties.label ||  null,
-        eventValue: properties.value || null,
-        nonInteraction: properties.noninteraction || null
-      };
-
-      // add custom dimensions and metrics
-      for(var idx = 1; idx<=20;idx++) {
-      if (properties['dimension' +idx.toString()]) {
-        eventOptions['dimension' +idx.toString()] = properties['dimension' +idx.toString()];
-      }
-      if (properties['metric' +idx.toString()]) {
-        eventOptions['metric' +idx.toString()] = properties['metric' +idx.toString()];
-        }
-      }
-      ga('send', 'event', eventOptions);
-      angular.forEach($analyticsProvider.settings.ga.additionalAccountNames, function (accountName){
-        ga(accountName +'.send', 'event', eventOptions);
-      });
-    }
-
-    else if (window._gaq) {
-      _gaq.push(['_trackEvent', properties.category, action, properties.label, properties.value, properties.noninteraction]);
-    }
-
-  });
-
-}]);
-})(angular);
-
 // AWS SDK for JavaScript v2.1.18
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // License at https://sdk.amazonaws.com/js/BUNDLE_LICENSE.txt
@@ -44021,11 +43657,52 @@ function hasOwnProperty(obj, prop) {
 
 angular.module('gi.util', ['ngResource', 'ngCookies', 'logglyLogger']);
 
-angular.module('gi.util').factory('giAnalytics', [
-  '$window', function($window) {
-    return console.log('in giAnalytics');
+angular.module('gi.util').config([
+  'giLogProvider', function(giLogProvider) {
+    if (typeof logglyKey !== "undefined" && logglyKey !== null) {
+      return giLogProvider.setLogglyToken(logglyKey);
+    }
   }
 ]);
+
+angular.module('gi.util').provider('giAnalytics', function() {
+  var enhancedEcommerce, google;
+  google = null;
+  enhancedEcommerce = false;
+  if (typeof ga !== "undefined" && ga !== null) {
+    google = ga;
+  }
+  this.$get = [
+    'giLog', function(Log) {
+      var requireGaPlugin, sendImpression, sendPageView;
+      requireGaPlugin = function(x) {
+        Log.log('ga requiring ' + x);
+        if (google != null) {
+          return google('require', x);
+        }
+      };
+      sendImpression = function(obj) {
+        if (google != null) {
+          if (!enhancedEcommerce) {
+            requireGaPlugin('ec');
+          }
+          Log.log('ga sending impression');
+          Log.log(obj);
+          return google('ec:addImpression', obj);
+        }
+      };
+      sendPageView = function() {
+        Log.log('ga sending page view');
+        return google('send', 'pageview');
+      };
+      return {
+        Impression: sendImpression,
+        PageView: sendPageView
+      };
+    }
+  ];
+  return this;
+});
 
 angular.module('gi.util').factory('giCrud', [
   '$resource', '$q', 'giSocket', function($resource, $q, Socket) {
@@ -44376,9 +44053,19 @@ angular.module('gi.util').factory('giLocalStorage', [
   }
 ]);
 
-angular.module('gi.util').factory('giLog', [
-  '$log', function($log) {
-    return $log;
+angular.module('gi.util').provider('giLog', [
+  'LogglyLoggerProvider', function(LogglyLoggerProvider) {
+    this.setLogglyToken = function(token) {
+      if (token != null) {
+        return LogglyLoggerProvider.inputToken(token);
+      }
+    };
+    this.$get = [
+      '$log', function($log) {
+        return $log;
+      }
+    ];
+    return this;
   }
 ]);
 
@@ -62618,6 +62305,20 @@ angular.module('gi.commerce').directive('giMarketForm', [
   }
 ]);
 
+angular.module("gi.commerce").run(["$templateCache", function($templateCache) {$templateCache.put("gi.commerce.addressFormFields.html","<legend>{{title}}</legend>\n<div class=\"form-group\">\n  <label>Address Line 1:</label>\n  <input type=\"text\"\n         class=\"form-control\"\n         name=\"{{prefix}}-line1\"\n         ng-model=\"item.line1\"/>\n</div>\n<div class=\"form-group\">\n  <label>Address Line 2:</label>\n  <input type=\"text\"\n         class=\"form-control\"\n         name=\"{{prefix}}-line2\"\n         ng-model=\"item.line2\"/>\n</div>\n<div class=\"form-group\">\n  <label>City:</label>\n  <input type=\"text\"\n         class=\"form-control\"\n         name=\"{{prefix}}-city\"\n         ng-model=\"item.city\"/>\n</div>\n<div class=\"form-group\">\n  <label>State:</label>\n  <input type=\"text\"\n         class=\"form-control\"\n         name=\"{{prefix}}-state\"\n         ng-model=\"item.state\"/>\n</div>\n<div class=\"form-group\">\n  <label>Post / Zip Code:</label>\n  <input type=\"text\"\n         class=\"form-control\"\n         name=\"{{prefix}}-code\"\n         ng-model=\"item.code\"/>\n</div>\n<div class=\"form-group\">\n  <label class=\"control-label\">Country:</label>\n  <ui-select ng-model=\"item.country\">\n    <ui-select-match>{{$select.selected.name}}</ui-select-match>\n    <ui-select-choices repeat=\"t.code as t in model.countries  | filter: $select.search\">\n      <div ng-bind-html=\"t.name | highlight: $select.search\"></div>\n    </ui-select-choices>\n  </ui-select>\n</div>\n");
+$templateCache.put("gi.commerce.addtocart.html","<div ng-hide=\"attrs.id\">\n    <a class=\"btn btn-lg btn-primary\" ng-disabled=\"true\" ng-transclude></a>\n</div>\n<div ng-show=\"attrs.id\">\n    <div ng-hide=\"inCart()\">\n        <a class=\"btn btn-lg btn-primary\"\n           ng-click=\"addItem(item)\"\n           ng-transclude></a>\n    </div>\n    <div class=\"alert alert-info\"  ng-show=\"inCart()\">\n        This item is in your cart\n    </div>\n</div>\n");
+$templateCache.put("gi.commerce.cart.html","<div class=\"row\">\n  <div class=\"col-xs-12\" ng-show=\"giCart.totalItems() === 0\">\n      Your cart is empty\n  </div>\n  <div class=\"col-xs-12\">\n    <div class=\"table-responsive \" ng-show=\"giCart.totalItems() > 0\">\n\n        <table class=\"table giCart cart\">\n            <thead>\n            <tr>\n                <th></th>\n                <th></th>\n                <th>Quantity</th>\n                <th><div class=\"pull-right\">Amount</div></th>\n                <th><div class=\"pull-right\">Tax</div></th>\n                <th><div class=\"pull-right\">Total</div></th>\n            </tr>\n            </thead>\n            <tfoot>\n            <tr ng-show=\"giCart.getShipping()\">\n                <th></th>\n                <th></th>\n                <th></th>\n                <th></th>\n                <th>Shipping:</th>\n                <th><div class=\"pull-right\">{{ giCart.getShipping() | giCurrency:giCart.getCurrencySymbol }}</div></th>\n            </tr>\n            <tr ng-show=\"giCart.getTaxRate() >= 0\">\n                <th></th>\n                <th></th>\n                <th></th>\n                <th></th>\n                <th><div class=\"pull-right\">Tax:</div></th>\n                <th><div class=\"pull-right\">{{ giCart.getTaxTotal() | giCurrency:giCart.getCurrencySymbol }}</div></th>\n            </tr>\n            <tr>\n                <th></th>\n                <th></th>\n                <th></th>\n                <th></th>\n                <th><div class=\"pull-right\">Total:</div></th>\n                <th><div class=\"pull-right\">{{ giCart.totalCost() | giCurrency:giCart.getCurrencySymbol }}</div></th>\n            </tr>\n            </tfoot>\n            <tbody>\n            <tr ng-repeat=\"item in giCart.getItems() track by $index\">\n                <td><span ng-click=\"giCart.removeItem($index)\" class=\"glyphicon glyphicon-remove\"></span></td>\n                <td>{{ item.getName() }}</td>\n                <td><span class=\"glyphicon glyphicon-minus\" ng-class=\"{\'disabled\':item.getQuantity()==1}\"\n                          ng-click=\"item.setQuantity(-1, true)\"></span>&nbsp;&nbsp;\n                    {{ item.getQuantity() | number }}&nbsp;&nbsp;\n                    <span class=\"glyphicon glyphicon-plus\" ng-click=\"item.setQuantity(1, true)\"></span></td>\n                <td><div class=\"pull-right\">{{ item.getSubTotal(giCart.getPricingInfo()) | giCurrency:giCart.getCurrencySymbol}}</div></td>\n                <td><div class=\"pull-right\">{{ item.getTaxTotal(giCart.getPricingInfo()) | giCurrency:giCart.getCurrencySymbol}}</div></td>\n                <td><div class=\"pull-right\">{{ item.getTotal(giCart.getPricingInfo()) | giCurrency:giCart.getCurrencySymbol}}</div></td>\n            </tr>\n            </tbody>\n        </table>\n    </div>\n  </div>\n</div>\n<style>\n    .giCart.cart span[ng-click] {\n        cursor: pointer;\n    }\n    .giCart.cart .glyphicon.disabled {\n        color:#aaa;\n    }\n</style>\n");
+$templateCache.put("gi.commerce.cartStage.html","<div class=\"row gi-checkout\" style=\"border-bottom:0;\">\n  <div class=\"col-xs-3 gi-checkout-stage\"\n       ng-class=\"{complete: cart.getStage()>1, active: cart.getStage()==1}\">\n    <div class=\"text-center gi-checkout-stagenum\">Review Cart</div>\n    <div class=\"progress\"><div class=\"progress-bar\"></div></div>\n    <a ng-click=\"cart.setStage(1)\" class=\"gi-checkout-dot\"></a>\n  </div>\n  <div class=\"col-xs-3 gi-checkout-stage\"\n    ng-class=\"{complete: cart.getStage()>2, active: cart.getStage()==2, disabled: cart.getStage()<2}\">\n    <div class=\"text-center gi-checkout-stagenum\">Your Details</div>\n    <div class=\"progress\"><div class=\"progress-bar\"></div></div>\n    <a ng-click=\"cart.setStage(2)\" class=\"gi-checkout-dot\"></a>\n  </div>\n  <div class=\"col-xs-3 gi-checkout-stage\"\n    ng-class=\"{complete: cart.getStage()>3, active: cart.getStage()==3, disabled: cart.getStage()<3}\">\n    <div class=\"text-center gi-checkout-stagenum\">Payment</div>\n    <div class=\"progress\"><div class=\"progress-bar\"></div></div>\n    <a ng-click=\"cart.setStage(3)\" class=\"gi-checkout-dot\"></a>\n  </div>\n  <div class=\"col-xs-3 gi-checkout-stage\"\n       ng-class=\"{complete: cart.getStage()>4, active: cart.getStage()==4, disabled: cart.getStage()<4}\">\n    <div class=\"text-center gi-checkout-stagenum\">Complete</div>\n    <div class=\"progress\"><div class=\"progress-bar\"></div></div>\n    <a ng-click=\"cart.setStage(4)\" class=\"gi-checkout-dot\"></a>\n  </div>\n</div>\n");
+$templateCache.put("gi.commerce.checkout.html","<div class=\"container\">\n  <gi-cart-stage model=\"model\"></gi-cart-stage>\n  <div class=\"small-gap\">\n    <gi-cart ng-if=\"cart.getStage() == 1\" model=\"model\" stage=\"1\"></gi-cart>\n    <gi-customer-info ng-if=\"cart.getStage() == 2\" model=\"model\" stage=\"2\">\n    </gi-customer-info>\n    <div ng-if=\"cart.getStage() == 3\" >\n      <div class=\"row\">\n        <div class=\"col-md-4 col-md-push-8\">\n          <gi-order-summary></gi-order-summary>\n        </div>\n        <div class=\"col-md-8 col-md-pull-4\">\n          <gi-payment-info stage=\"3\"></gi-payment-info>\n        </div>\n      </div>\n    </div>\n    <pre ng-if=\"cart.getStage() == 4\">Thankyou message to go here</pre>\n  </div>\n  <div class=\"row\">\n    <div class=\"col-xs-6\">\n      <div ng-if=\"cart.getStage() == 1\" class=\"btn btn-primary\"\n           ng-click=\"cart.continueShopping()\">Continue Shopping</div>\n      <div ng-if=\"cart.getStage() > 1\" class=\"btn btn-primary\"\n           ng-click=\"cart.prevStage()\">Back</div>\n    </div>\n    <div class=\"col-xs-6\">\n      <div class=\"pull-right\">\n        <div ng-if=\"cart.getStage() < 3\" class=\"btn btn-primary btn-cart\"\n             ng-click=\"cart.nextStage()\"\n             ng-disabled=\"cart.isStageInvalid(cart.getStage())\"\n             >Next</div>\n        <div ng-if=\"cart.getStage() == 3\" class=\"btn btn-primary btn-cart pay-now\"\n             ng-click=\"cart.payNow()\"  ng-disabled=\"cart.isStageInvalid(cart.getStage())\">Pay Now</div>\n      </div>\n    </div>\n  </div>\n  <div class=\"row medium-gap\">\n  </div>\n</div>\n");
+$templateCache.put("gi.commerce.countryForm.html","<div ng-form name=\"countryForm\" class=\"well form\">\n  <div class=\"form-group\">\n    <label>Name:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"countryName\"\n           ng-model=\"model.selectedItem.name\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Code:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"countryCode\"\n           ng-model=\"model.selectedItem.code\"/>\n  </div>\n  <div class=\"form-group\">\n    <label class=\"control-label\">Market:</label>\n    <ui-select ng-model=\"model.selectedItem.marketId\">\n      <ui-select-match>{{$select.selected.name}}</ui-select-match>\n      <ui-select-choices repeat=\"c._id as c in model.markets  | filter: $select.search\">\n        <div ng-bind-html=\"c.name | highlight: $select.search\"></div>\n      </ui-select-choices>\n    </ui-select>\n  </div>\n  <div class=\"form-group\">\n    <div class=\"checkbox\">\n      <label>\n        <input type=\"checkbox\" ng-model=\"model.selectedItem.default\"> Use as Default Country?\n      </label>\n    </div>\n  </div>\n  <div class=\"form-group\">\n    <button class=\"form-control btn btn-primary btn-save-asset\"\n            ng-click=\"save()\">{{submitText}}</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"countryForm.$dirty || model.selectedItem._id\">\n    <button class=\"form-control btn btn-warning\"\n            ng-click=\"clear()\">Cancel</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"model.selectedItem._id\">\n    <button class=\"form-control btn btn-danger\" ng-click=\"destroy()\">\n      Delete <span ng-if=\"confirm\">- Are you sure? Click again to confirm</span>\n    </button>\n  </div>\n</div>\n");
+$templateCache.put("gi.commerce.currencyForm.html","<div ng-form name=\"currencyForm\" class=\"well form\">\n  <div class=\"form-group\">\n    <label>Name:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"currencyName\"\n           ng-model=\"item.name\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Code:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"currencyCode\"\n           ng-model=\"item.code\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Symbol:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"currencSymbol\"\n           ng-model=\"item.symbol\"/>\n  </div>\n  <div class=\"form-group\">\n    <button class=\"form-control btn btn-primary btn-save-asset\"\n            ng-click=\"save()\">{{submitText}}</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"currencyForm.$dirty || item._id\">\n    <button class=\"form-control btn btn-warning\"\n            ng-click=\"clear()\">Cancel</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"item._id\">\n    <button class=\"form-control btn btn-danger\" ng-click=\"destroy()\">\n      Delete <span ng-if=\"confirm\">- Are you sure? Click again to confirm</span>\n    </button>\n  </div>\n</div>\n");
+$templateCache.put("gi.commerce.customerForm.html","<div ng-form name=\"customerForm\" class=\"well form\">\n  <div class=\"row\">\n    <div class=\"col-md-12\">\n      <div class=\"form-group\" ng-if=\"model.me.loggedIn\">\n        Hi {{model.me.user.firstName}} welcome back. We will e-mail confirmation of your order to your e-mail address:\n        <strong>{{model.me.user.email}}</strong>\n      </div>\n      <div class=\"form-group\" ng-if=\"!model.me.loggedIn\">\n        Already have an account? <a ng-click=\"requestLogin()\">Please Sign In</a>\n      </div>\n      <div class=\"form-group\">\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" ng-model=\"cart.business\"> Buying for a company?\n          </label>\n        </div>\n      </div>\n    </div>\n    <div class=\"col-md-12\" ng-if=\"!model.me.loggedIn\">\n      <div class=\"form-group\">\n        <label>Name:</label>\n        <input type=\"text\"\n               class=\"form-control\"\n               name=\"name\"\n               ng-model=\"model.selectedItem.name\"/>\n      </div>\n      <div class=\"form-group\">\n        <label>Email:</label>\n        <input type=\"text\"\n               class=\"form-control\"\n               name=\"email\"\n               ng-model=\"model.selectedItem.email\"/>\n      </div>\n      <div class=\"form-group\">\n        <label>Password:</label>\n        <input type=\"password\"\n               class=\"form-control\"\n               name=\"password\"\n               ng-model=\"model.selectedItem.password\"/>\n      </div>\n    </div>\n    <div class=\"col-md-12\" ng-if=\"cart.business\">\n      <div class=\"form-group\" >\n        <label>Company Name:</label>\n        <input type=\"text\"\n               class=\"form-control\"\n               name=\"countryName\"\n               ng-model=\"cart.company.Name\"/>\n      </div>\n      <div class=\"form-group\">\n        <label>VAT Number (optional):</label>\n        <input type=\"text\"\n               class=\"form-control\"\n               name=\"countryName\"\n               ng-model=\"cart.company.VAT\"/>\n      </div>\n    </div>\n  </div>\n</div>\n");
+$templateCache.put("gi.commerce.customerInfo.html","<div class=\"row medium-gap\">\n  <div class=\"col-md-4 col-md-push-8\">\n    <gi-order-summary></gi-order-summary>\n  </div>\n  <div class=\"col-md-8 col-md-pull-4\">\n    <gi-customer-form model=\"model\"><gi-customer-form>\n  </div>\n</div>\n<div class=\"row\">\n  <div class=\"col-md-8\">\n    <div ng-form name=\"addressForm\" class=\"form well\">\n        <div ng-if=\"cart.needsShipping()\" class=\"col-md-12\">\n          <div class=\"form-group\">\n            <div class=\"checkbox\">\n              <label>\n                <input type=\"checkbox\" ng-model=\"cart.differentShipping\"> Ship to different address?\n              </label>\n            </div>\n          </div>\n        </div>\n        <gi-address-form-fields item=\"cart.billingAddress\"\n                         model=\"model\"\n                         title=\"Please enter your billing address\"\n                         prefix=\"billing\">\n        </gi-address-form-fields>\n\n        <div ng-if=\"cart.differentShipping\">\n          <gi-address-form-fields item=\"cart.shippingAddress\"\n                           model=\"model\"\n                           title=\"Please enter your shipping address\"\n                           prefix=\"shipping\">\n          </gi-address-form-fields>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n");
+$templateCache.put("gi.commerce.marketForm.html","<div ng-form name=\"marketForm\" class=\"well form\">\n  <div class=\"form-group\">\n    <label>Name:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"marketName\"\n           ng-model=\"model.selectedItem.name\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Code:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"marketCode\"\n           ng-model=\"model.selectedItem.code\"/>\n  </div>\n  <div class=\"form-group\">\n    <label class=\"control-label\">Currency:</label>\n    <ui-select ng-model=\"model.selectedItem.currencyId\">\n      <ui-select-match>{{$select.selected.name}}</ui-select-match>\n      <ui-select-choices repeat=\"c._id as c in model.currencies  | filter: $select.search\">\n        <div ng-bind-html=\"c.name | highlight: $select.search\"></div>\n      </ui-select-choices>\n    </ui-select>\n  </div>\n  <div class=\"form-group\">\n    <div class=\"checkbox\">\n      <label>\n        <input type=\"checkbox\" ng-model=\"model.selectedItem.default\"> Use as Default Market?\n      </label>\n    </div>\n  </div>\n  <div class=\"form-group\">\n    <button class=\"form-control btn btn-primary btn-save-asset\"\n            ng-click=\"save()\">{{submitText}}</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"countryForm.$dirty || model.selectedItem._id\">\n    <button class=\"form-control btn btn-warning\"\n            ng-click=\"clear()\">Cancel</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"model.selectedItem._id\">\n    <button class=\"form-control btn btn-danger\" ng-click=\"destroy()\">\n      Delete <span ng-if=\"confirm\">- Are you sure? Click again to confirm</span>\n    </button>\n  </div>\n</div>\n");
+$templateCache.put("gi.commerce.orderSummary.html","<div class = \"form-inline well\">\n  <div class=\"row\">\n    <div class=\"col-md-2\"></div>\n    <div class=\"col-md-8\">\n      <legend>Order Summary</legend>\n    </div>\n  </div>\n  <div class=\"row\">\n    <div class=\"col-md-2\">\n    </div>\n    <div class=\"col-md-4\">\n    <label class=\"order-summary\">Amount:</label>\n    </div>\n    <div class=\"col-md-4\">\n      <div class=\"pull-right\">\n      <label class=\"order-summary\">{{ cart.getSubTotal() | giCurrency:cart.getCurrencySymbol }}</label>\n    </div>\n    </div>\n  </div>\n  <div class=\"row\">\n    <div class=\"col-md-2\">\n    </div>\n    <div class=\"col-md-4\">\n      <label class=\"order-summary\">Tax:</label>\n    </div>\n    <div class=\"col-md-4\">\n      <div class=\"pull-right\">\n        <label class=\"order-summary\">{{ cart.getTaxTotal() | giCurrency:cart.getCurrencySymbol }}</label>\n      </div>\n    </div>\n  </div>\n  <div class=\"row\">\n    <div class=\"col-md-2\">\n    </div>\n    <div class=\"col-md-4\">\n      <label>Total:</label>\n    </div>\n    <div class=\"col-md-4\">\n      <div class=\"pull-right\">\n        <label>{{ cart.totalCost() | giCurrency:cart.getCurrencySymbol }}</label>\n      </div>\n    </div>\n  </div>\n</div>\n");
+$templateCache.put("gi.commerce.paymentInfo.html","<div class=\"row\">\n  <div class=\"col-xs-12\">\n    <div ng-form name=\"cardForm\" class=\"well form\">\n      <legend>Please enter your card details</legend>\n      <div class=\"form-group\" ng-class=\"{\'has-error\': isPropertyValidationError(\'cardNumber\'), \'has-success\': isPropertyValidationSuccess(\'cardNumber\')}\">\n        <label class=\"control-label\">Card Number:</label>\n        <div class=\"input-group\">\n          <input type=\"text\"\n               class=\"form-control\"\n               name=\"cardNumber\"\n               ng-model=\"cart.card.number\"\n               placeholder=\"Card Number\"\n               gi-cc-num\n               cc-eager-type />\n          <span class=\"input-group-addon\"><i class=\"fa fa-lg\" ng-class=\"getCreditFont()\"></i></span>\n        </div>\n        <p class=\"control-label\" ng-show=\"isPropertyValidationError(\'cardNumber\')\">\n          Not a valid card number!\n        </p>\n      </div>\n      <div class=\"form-group\" ng-class=\"{\'has-error\': isPropertyValidationError(\'cardExpiry\'), \'has-success\': isPropertyValidationSuccess(\'cardExpiry\')}\">\n        <label class=\"control-label\">Expiry Date:</label>\n        <div class=\"input-group\">\n          <input type=\"text\"\n                 class=\"form-control\"\n                 name=\"cardExpiry\"\n                 placeholder=\"MM/YY\"\n                 ng-model=\"cart.card.expiry\"\n                 gi-cc-exp />\n          <span class=\"input-group-addon\"><i class=\"fa fa-lg\" ng-class=\"getPropertyFont(\'cardExpiry\')\"></i></span>\n        </div>\n        <p class=\"control-label\" ng-show=\"isPropertyValidationError(\'cardExpiry\')\">\n          Not a valid expiry date!\n        </p>\n      </div>\n      <div class=\"form-group\"  ng-class=\"{\'has-error\': isPropertyValidationError(\'cardSecurity\'), \'has-success\': isPropertyValidationSuccess(\'cardSecurity\')}\">\n        <label class=\"control-label\">CVC:</label>\n        <div class=\"input-group\">\n          <input type=\"text\"\n                 class=\"form-control\"\n                 name=\"cardSecurity\"\n                 ng-model=\"cart.card.security\"\n                 placeholder=\"CVC\"\n                 gi-cc-cvc\n                 gi-cc-type=\"cardForm.cardNumber.$giCcType\"/>\n          <span class=\"input-group-addon\"><i class=\"fa fa-lg\" ng-class=\"getPropertyFont(\'cardSecurity\')\"></i></span>\n        </div>\n        <p class=\"control-label\" ng-show=\"isPropertyValidationError(\'cardSecurity\')\">\n          Not a valid cvc number!\n        </p>\n\n      </div>\n    </div>\n  </div>\n</div>\n");
+$templateCache.put("gi.commerce.priceForm.html","<div ng-form name=\"priceForm\" class=\"well form\">\n  <div class=\"form-group\">\n    <label>Name:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"priceListName\"\n           ng-model=\"model.selectedItem.name\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Prices:</label>\n    <div ng-repeat=\"(code, price) in model.selectedItem.prices\">\n      <div class=\"input-group\">\n         <div class=\"input-group-addon market\">{{code}}</div>\n         <input type=\"text\" class=\"form-control\" id=\"exampleInputAmount\" placeholder=\"Amount\" ng-model=\"model.selectedItem.prices[code]\"/>\n         <div class=\"input-group-addon\" ng-click=\"removePriceForMarket(code)\">  <span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></div>\n       </div>\n    </div>\n  </div>\n  <div class=\"form-group\">\n    <div class=\"input-group\">\n      <div class=\"input-group-addon market\" style=\"\">\n        <ui-select ng-model=\"local.code\">\n           <ui-select-match>{{$select.selected.code}}</ui-select-match>\n           <ui-select-choices repeat=\"c.code as c in model.markets  | filter: $select.search\">\n             <div ng-bind-html=\"c.code | highlight: $select.search\"></div>\n           </ui-select-choices>\n        </ui-select>\n      </div>\n      <input type=\"text\" class=\"form-control market-pick\" id=\"exampleInputAmount\" placeholder=\"Enter Amount\" ng-model=\"local.price\"/>\n      <div class=\"input-group-addon\" ng-click=\"savePriceForMarket(local.code)\">  <span class=\"glyphicon glyphicon-save\" aria-hidden=\"true\"></span></div>\n     </div>\n  </div>\n  <div class=\"form-group\">\n    <button class=\"form-control btn btn-success btn-save-asset\"\n            ng-click=\"save()\">{{submitText}}</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"priceForm.$dirty || model.selectedItem._id\">\n    <button class=\"form-control btn btn-warning\"\n            ng-click=\"clear()\">Cancel</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"model.selectedItem._id\">\n    <button class=\"form-control btn btn-danger\" ng-click=\"destroy()\">\n      Delete <span ng-if=\"confirm\">- Are you sure? Click again to confirm</span>\n    </button>\n  </div>\n</div>\n");
+$templateCache.put("gi.commerce.summary.html","<div class=\"row\">\n  <div class=\"col-xs-5\">\n    <span class=\"fa fa-shopping-cart fa-lg\"></span>\n  </div>\n  <div class=\"col-xs-7\">\n    <span class=\"badge\">{{ giCart.totalItems() }}</span>\n  </div>\n</div>\n");}]);
 angular.module('gi.commerce').directive('giOrderSummary', [
   'giCart', function(Cart) {
     return {
@@ -62679,20 +62380,6 @@ angular.module('gi.commerce').directive('giPaymentInfo', [
   }
 ]);
 
-angular.module("gi.commerce").run(["$templateCache", function($templateCache) {$templateCache.put("gi.commerce.addressFormFields.html","<legend>{{title}}</legend>\n<div class=\"form-group\">\n  <label>Address Line 1:</label>\n  <input type=\"text\"\n         class=\"form-control\"\n         name=\"{{prefix}}-line1\"\n         ng-model=\"item.line1\"/>\n</div>\n<div class=\"form-group\">\n  <label>Address Line 2:</label>\n  <input type=\"text\"\n         class=\"form-control\"\n         name=\"{{prefix}}-line2\"\n         ng-model=\"item.line2\"/>\n</div>\n<div class=\"form-group\">\n  <label>City:</label>\n  <input type=\"text\"\n         class=\"form-control\"\n         name=\"{{prefix}}-city\"\n         ng-model=\"item.city\"/>\n</div>\n<div class=\"form-group\">\n  <label>State:</label>\n  <input type=\"text\"\n         class=\"form-control\"\n         name=\"{{prefix}}-state\"\n         ng-model=\"item.state\"/>\n</div>\n<div class=\"form-group\">\n  <label>Post / Zip Code:</label>\n  <input type=\"text\"\n         class=\"form-control\"\n         name=\"{{prefix}}-code\"\n         ng-model=\"item.code\"/>\n</div>\n<div class=\"form-group\">\n  <label class=\"control-label\">Country:</label>\n  <ui-select ng-model=\"item.country\">\n    <ui-select-match>{{$select.selected.name}}</ui-select-match>\n    <ui-select-choices repeat=\"t.code as t in model.countries  | filter: $select.search\">\n      <div ng-bind-html=\"t.name | highlight: $select.search\"></div>\n    </ui-select-choices>\n  </ui-select>\n</div>\n");
-$templateCache.put("gi.commerce.addtocart.html","<div ng-hide=\"attrs.id\">\n    <a class=\"btn btn-lg btn-primary\" ng-disabled=\"true\" ng-transclude></a>\n</div>\n<div ng-show=\"attrs.id\">\n    <div ng-hide=\"inCart()\">\n        <a class=\"btn btn-lg btn-primary\"\n           ng-click=\"addItem(item)\"\n           ng-transclude></a>\n    </div>\n    <div class=\"alert alert-info\"  ng-show=\"inCart()\">\n        This item is in your cart\n    </div>\n</div>\n");
-$templateCache.put("gi.commerce.cart.html","<div class=\"row\">\n  <div class=\"col-xs-12\" ng-show=\"giCart.totalItems() === 0\">\n      Your cart is empty\n  </div>\n  <div class=\"col-xs-12\">\n    <div class=\"table-responsive \" ng-show=\"giCart.totalItems() > 0\">\n\n        <table class=\"table giCart cart\">\n            <thead>\n            <tr>\n                <th></th>\n                <th></th>\n                <th>Quantity</th>\n                <th><div class=\"pull-right\">Amount</div></th>\n                <th><div class=\"pull-right\">Tax</div></th>\n                <th><div class=\"pull-right\">Total</div></th>\n            </tr>\n            </thead>\n            <tfoot>\n            <tr ng-show=\"giCart.getShipping()\">\n                <th></th>\n                <th></th>\n                <th></th>\n                <th></th>\n                <th>Shipping:</th>\n                <th><div class=\"pull-right\">{{ giCart.getShipping() | giCurrency:giCart.getCurrencySymbol }}</div></th>\n            </tr>\n            <tr ng-show=\"giCart.getTaxRate() >= 0\">\n                <th></th>\n                <th></th>\n                <th></th>\n                <th></th>\n                <th><div class=\"pull-right\">Tax:</div></th>\n                <th><div class=\"pull-right\">{{ giCart.getTaxTotal() | giCurrency:giCart.getCurrencySymbol }}</div></th>\n            </tr>\n            <tr>\n                <th></th>\n                <th></th>\n                <th></th>\n                <th></th>\n                <th><div class=\"pull-right\">Total:</div></th>\n                <th><div class=\"pull-right\">{{ giCart.totalCost() | giCurrency:giCart.getCurrencySymbol }}</div></th>\n            </tr>\n            </tfoot>\n            <tbody>\n            <tr ng-repeat=\"item in giCart.getItems() track by $index\">\n                <td><span ng-click=\"giCart.removeItem($index)\" class=\"glyphicon glyphicon-remove\"></span></td>\n                <td>{{ item.getName() }}</td>\n                <td><span class=\"glyphicon glyphicon-minus\" ng-class=\"{\'disabled\':item.getQuantity()==1}\"\n                          ng-click=\"item.setQuantity(-1, true)\"></span>&nbsp;&nbsp;\n                    {{ item.getQuantity() | number }}&nbsp;&nbsp;\n                    <span class=\"glyphicon glyphicon-plus\" ng-click=\"item.setQuantity(1, true)\"></span></td>\n                <td><div class=\"pull-right\">{{ item.getSubTotal(giCart.getPricingInfo()) | giCurrency:giCart.getCurrencySymbol}}</div></td>\n                <td><div class=\"pull-right\">{{ item.getTaxTotal(giCart.getPricingInfo()) | giCurrency:giCart.getCurrencySymbol}}</div></td>\n                <td><div class=\"pull-right\">{{ item.getTotal(giCart.getPricingInfo()) | giCurrency:giCart.getCurrencySymbol}}</div></td>\n            </tr>\n            </tbody>\n        </table>\n    </div>\n  </div>\n</div>\n<style>\n    .giCart.cart span[ng-click] {\n        cursor: pointer;\n    }\n    .giCart.cart .glyphicon.disabled {\n        color:#aaa;\n    }\n</style>\n");
-$templateCache.put("gi.commerce.cartStage.html","<div class=\"row gi-checkout\" style=\"border-bottom:0;\">\n  <div class=\"col-xs-3 gi-checkout-stage\"\n       ng-class=\"{complete: cart.getStage()>1, active: cart.getStage()==1}\">\n    <div class=\"text-center gi-checkout-stagenum\">Review Cart</div>\n    <div class=\"progress\"><div class=\"progress-bar\"></div></div>\n    <a ng-click=\"cart.setStage(1)\" class=\"gi-checkout-dot\"></a>\n  </div>\n  <div class=\"col-xs-3 gi-checkout-stage\"\n    ng-class=\"{complete: cart.getStage()>2, active: cart.getStage()==2, disabled: cart.getStage()<2}\">\n    <div class=\"text-center gi-checkout-stagenum\">Your Details</div>\n    <div class=\"progress\"><div class=\"progress-bar\"></div></div>\n    <a ng-click=\"cart.setStage(2)\" class=\"gi-checkout-dot\"></a>\n  </div>\n  <div class=\"col-xs-3 gi-checkout-stage\"\n    ng-class=\"{complete: cart.getStage()>3, active: cart.getStage()==3, disabled: cart.getStage()<3}\">\n    <div class=\"text-center gi-checkout-stagenum\">Payment</div>\n    <div class=\"progress\"><div class=\"progress-bar\"></div></div>\n    <a ng-click=\"cart.setStage(3)\" class=\"gi-checkout-dot\"></a>\n  </div>\n  <div class=\"col-xs-3 gi-checkout-stage\"\n       ng-class=\"{complete: cart.getStage()>4, active: cart.getStage()==4, disabled: cart.getStage()<4}\">\n    <div class=\"text-center gi-checkout-stagenum\">Complete</div>\n    <div class=\"progress\"><div class=\"progress-bar\"></div></div>\n    <a ng-click=\"cart.setStage(4)\" class=\"gi-checkout-dot\"></a>\n  </div>\n</div>\n");
-$templateCache.put("gi.commerce.checkout.html","<div class=\"container\">\n  <gi-cart-stage model=\"model\"></gi-cart-stage>\n  <div class=\"small-gap\">\n    <gi-cart ng-if=\"cart.getStage() == 1\" model=\"model\" stage=\"1\"></gi-cart>\n    <gi-customer-info ng-if=\"cart.getStage() == 2\" model=\"model\" stage=\"2\">\n    </gi-customer-info>\n    <div ng-if=\"cart.getStage() == 3\" >\n      <div class=\"row\">\n        <div class=\"col-md-4 col-md-push-8\">\n          <gi-order-summary></gi-order-summary>\n        </div>\n        <div class=\"col-md-8 col-md-pull-4\">\n          <gi-payment-info stage=\"3\"></gi-payment-info>\n        </div>\n      </div>\n    </div>\n    <pre ng-if=\"cart.getStage() == 4\">Thankyou message to go here</pre>\n  </div>\n  <div class=\"row\">\n    <div class=\"col-xs-6\">\n      <div ng-if=\"cart.getStage() == 1\" class=\"btn btn-primary\"\n           ng-click=\"cart.continueShopping()\">Continue Shopping</div>\n      <div ng-if=\"cart.getStage() > 1\" class=\"btn btn-primary\"\n           ng-click=\"cart.prevStage()\">Back</div>\n    </div>\n    <div class=\"col-xs-6\">\n      <div class=\"pull-right\">\n        <div ng-if=\"cart.getStage() < 3\" class=\"btn btn-primary btn-cart\"\n             ng-click=\"cart.nextStage()\"\n             ng-disabled=\"cart.isStageInvalid(cart.getStage())\"\n             >Next</div>\n        <div ng-if=\"cart.getStage() == 3\" class=\"btn btn-primary btn-cart pay-now\"\n             ng-click=\"cart.payNow()\"  ng-disabled=\"cart.isStageInvalid(cart.getStage())\">Pay Now</div>\n      </div>\n    </div>\n  </div>\n  <div class=\"row medium-gap\">\n  </div>\n</div>\n");
-$templateCache.put("gi.commerce.countryForm.html","<div ng-form name=\"countryForm\" class=\"well form\">\n  <div class=\"form-group\">\n    <label>Name:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"countryName\"\n           ng-model=\"model.selectedItem.name\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Code:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"countryCode\"\n           ng-model=\"model.selectedItem.code\"/>\n  </div>\n  <div class=\"form-group\">\n    <label class=\"control-label\">Market:</label>\n    <ui-select ng-model=\"model.selectedItem.marketId\">\n      <ui-select-match>{{$select.selected.name}}</ui-select-match>\n      <ui-select-choices repeat=\"c._id as c in model.markets  | filter: $select.search\">\n        <div ng-bind-html=\"c.name | highlight: $select.search\"></div>\n      </ui-select-choices>\n    </ui-select>\n  </div>\n  <div class=\"form-group\">\n    <div class=\"checkbox\">\n      <label>\n        <input type=\"checkbox\" ng-model=\"model.selectedItem.default\"> Use as Default Country?\n      </label>\n    </div>\n  </div>\n  <div class=\"form-group\">\n    <button class=\"form-control btn btn-primary btn-save-asset\"\n            ng-click=\"save()\">{{submitText}}</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"countryForm.$dirty || model.selectedItem._id\">\n    <button class=\"form-control btn btn-warning\"\n            ng-click=\"clear()\">Cancel</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"model.selectedItem._id\">\n    <button class=\"form-control btn btn-danger\" ng-click=\"destroy()\">\n      Delete <span ng-if=\"confirm\">- Are you sure? Click again to confirm</span>\n    </button>\n  </div>\n</div>\n");
-$templateCache.put("gi.commerce.currencyForm.html","<div ng-form name=\"currencyForm\" class=\"well form\">\n  <div class=\"form-group\">\n    <label>Name:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"currencyName\"\n           ng-model=\"item.name\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Code:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"currencyCode\"\n           ng-model=\"item.code\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Symbol:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"currencSymbol\"\n           ng-model=\"item.symbol\"/>\n  </div>\n  <div class=\"form-group\">\n    <button class=\"form-control btn btn-primary btn-save-asset\"\n            ng-click=\"save()\">{{submitText}}</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"currencyForm.$dirty || item._id\">\n    <button class=\"form-control btn btn-warning\"\n            ng-click=\"clear()\">Cancel</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"item._id\">\n    <button class=\"form-control btn btn-danger\" ng-click=\"destroy()\">\n      Delete <span ng-if=\"confirm\">- Are you sure? Click again to confirm</span>\n    </button>\n  </div>\n</div>\n");
-$templateCache.put("gi.commerce.customerForm.html","<div ng-form name=\"customerForm\" class=\"well form\">\n  <div class=\"row\">\n    <div class=\"col-md-12\">\n      <div class=\"form-group\" ng-if=\"model.me.loggedIn\">\n        Hi {{model.me.user.firstName}} welcome back. We will e-mail confirmation of your order to your e-mail address:\n        <strong>{{model.me.user.email}}</strong>\n      </div>\n      <div class=\"form-group\" ng-if=\"!model.me.loggedIn\">\n        Already have an account? <a ng-click=\"requestLogin()\">Please Sign In</a>\n      </div>\n      <div class=\"form-group\">\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" ng-model=\"cart.business\"> Buying for a company?\n          </label>\n        </div>\n      </div>\n    </div>\n    <div class=\"col-md-12\" ng-if=\"!model.me.loggedIn\">\n      <div class=\"form-group\">\n        <label>Name:</label>\n        <input type=\"text\"\n               class=\"form-control\"\n               name=\"name\"\n               ng-model=\"model.selectedItem.name\"/>\n      </div>\n      <div class=\"form-group\">\n        <label>Email:</label>\n        <input type=\"text\"\n               class=\"form-control\"\n               name=\"email\"\n               ng-model=\"model.selectedItem.email\"/>\n      </div>\n      <div class=\"form-group\">\n        <label>Password:</label>\n        <input type=\"password\"\n               class=\"form-control\"\n               name=\"password\"\n               ng-model=\"model.selectedItem.password\"/>\n      </div>\n    </div>\n    <div class=\"col-md-12\" ng-if=\"cart.business\">\n      <div class=\"form-group\" >\n        <label>Company Name:</label>\n        <input type=\"text\"\n               class=\"form-control\"\n               name=\"countryName\"\n               ng-model=\"cart.company.Name\"/>\n      </div>\n      <div class=\"form-group\">\n        <label>VAT Number (optional):</label>\n        <input type=\"text\"\n               class=\"form-control\"\n               name=\"countryName\"\n               ng-model=\"cart.company.VAT\"/>\n      </div>\n    </div>\n  </div>\n</div>\n");
-$templateCache.put("gi.commerce.customerInfo.html","<div class=\"row medium-gap\">\n  <div class=\"col-md-4 col-md-push-8\">\n    <gi-order-summary></gi-order-summary>\n  </div>\n  <div class=\"col-md-8 col-md-pull-4\">\n    <gi-customer-form model=\"model\"><gi-customer-form>\n  </div>\n</div>\n<div class=\"row\">\n  <div class=\"col-md-8\">\n    <div ng-form name=\"addressForm\" class=\"form well\">\n        <div ng-if=\"cart.needsShipping()\" class=\"col-md-12\">\n          <div class=\"form-group\">\n            <div class=\"checkbox\">\n              <label>\n                <input type=\"checkbox\" ng-model=\"cart.differentShipping\"> Ship to different address?\n              </label>\n            </div>\n          </div>\n        </div>\n        <gi-address-form-fields item=\"cart.billingAddress\"\n                         model=\"model\"\n                         title=\"Please enter your billing address\"\n                         prefix=\"billing\">\n        </gi-address-form-fields>\n\n        <div ng-if=\"cart.differentShipping\">\n          <gi-address-form-fields item=\"cart.shippingAddress\"\n                           model=\"model\"\n                           title=\"Please enter your shipping address\"\n                           prefix=\"shipping\">\n          </gi-address-form-fields>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n");
-$templateCache.put("gi.commerce.marketForm.html","<div ng-form name=\"marketForm\" class=\"well form\">\n  <div class=\"form-group\">\n    <label>Name:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"marketName\"\n           ng-model=\"model.selectedItem.name\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Code:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"marketCode\"\n           ng-model=\"model.selectedItem.code\"/>\n  </div>\n  <div class=\"form-group\">\n    <label class=\"control-label\">Currency:</label>\n    <ui-select ng-model=\"model.selectedItem.currencyId\">\n      <ui-select-match>{{$select.selected.name}}</ui-select-match>\n      <ui-select-choices repeat=\"c._id as c in model.currencies  | filter: $select.search\">\n        <div ng-bind-html=\"c.name | highlight: $select.search\"></div>\n      </ui-select-choices>\n    </ui-select>\n  </div>\n  <div class=\"form-group\">\n    <div class=\"checkbox\">\n      <label>\n        <input type=\"checkbox\" ng-model=\"model.selectedItem.default\"> Use as Default Market?\n      </label>\n    </div>\n  </div>\n  <div class=\"form-group\">\n    <button class=\"form-control btn btn-primary btn-save-asset\"\n            ng-click=\"save()\">{{submitText}}</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"countryForm.$dirty || model.selectedItem._id\">\n    <button class=\"form-control btn btn-warning\"\n            ng-click=\"clear()\">Cancel</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"model.selectedItem._id\">\n    <button class=\"form-control btn btn-danger\" ng-click=\"destroy()\">\n      Delete <span ng-if=\"confirm\">- Are you sure? Click again to confirm</span>\n    </button>\n  </div>\n</div>\n");
-$templateCache.put("gi.commerce.orderSummary.html","<div class = \"form-inline well\">\n  <div class=\"row\">\n    <div class=\"col-md-2\"></div>\n    <div class=\"col-md-8\">\n      <legend>Order Summary</legend>\n    </div>\n  </div>\n  <div class=\"row\">\n    <div class=\"col-md-2\">\n    </div>\n    <div class=\"col-md-4\">\n    <label class=\"order-summary\">Amount:</label>\n    </div>\n    <div class=\"col-md-4\">\n      <div class=\"pull-right\">\n      <label class=\"order-summary\">{{ cart.getSubTotal() | giCurrency:cart.getCurrencySymbol }}</label>\n    </div>\n    </div>\n  </div>\n  <div class=\"row\">\n    <div class=\"col-md-2\">\n    </div>\n    <div class=\"col-md-4\">\n      <label class=\"order-summary\">Tax:</label>\n    </div>\n    <div class=\"col-md-4\">\n      <div class=\"pull-right\">\n        <label class=\"order-summary\">{{ cart.getTaxTotal() | giCurrency:cart.getCurrencySymbol }}</label>\n      </div>\n    </div>\n  </div>\n  <div class=\"row\">\n    <div class=\"col-md-2\">\n    </div>\n    <div class=\"col-md-4\">\n      <label>Total:</label>\n    </div>\n    <div class=\"col-md-4\">\n      <div class=\"pull-right\">\n        <label>{{ cart.totalCost() | giCurrency:cart.getCurrencySymbol }}</label>\n      </div>\n    </div>\n  </div>\n</div>\n");
-$templateCache.put("gi.commerce.paymentInfo.html","<div class=\"row\">\n  <div class=\"col-xs-12\">\n    <div ng-form name=\"cardForm\" class=\"well form\">\n      <legend>Please enter your card details</legend>\n      <div class=\"form-group\" ng-class=\"{\'has-error\': isPropertyValidationError(\'cardNumber\'), \'has-success\': isPropertyValidationSuccess(\'cardNumber\')}\">\n        <label class=\"control-label\">Card Number:</label>\n        <div class=\"input-group\">\n          <input type=\"text\"\n               class=\"form-control\"\n               name=\"cardNumber\"\n               ng-model=\"cart.card.number\"\n               placeholder=\"Card Number\"\n               gi-cc-num\n               cc-eager-type />\n          <span class=\"input-group-addon\"><i class=\"fa fa-lg\" ng-class=\"getCreditFont()\"></i></span>\n        </div>\n        <p class=\"control-label\" ng-show=\"isPropertyValidationError(\'cardNumber\')\">\n          Not a valid card number!\n        </p>\n      </div>\n      <div class=\"form-group\" ng-class=\"{\'has-error\': isPropertyValidationError(\'cardExpiry\'), \'has-success\': isPropertyValidationSuccess(\'cardExpiry\')}\">\n        <label class=\"control-label\">Expiry Date:</label>\n        <div class=\"input-group\">\n          <input type=\"text\"\n                 class=\"form-control\"\n                 name=\"cardExpiry\"\n                 placeholder=\"MM/YY\"\n                 ng-model=\"cart.card.expiry\"\n                 gi-cc-exp />\n          <span class=\"input-group-addon\"><i class=\"fa fa-lg\" ng-class=\"getPropertyFont(\'cardExpiry\')\"></i></span>\n        </div>\n        <p class=\"control-label\" ng-show=\"isPropertyValidationError(\'cardExpiry\')\">\n          Not a valid expiry date!\n        </p>\n      </div>\n      <div class=\"form-group\"  ng-class=\"{\'has-error\': isPropertyValidationError(\'cardSecurity\'), \'has-success\': isPropertyValidationSuccess(\'cardSecurity\')}\">\n        <label class=\"control-label\">CVC:</label>\n        <div class=\"input-group\">\n          <input type=\"text\"\n                 class=\"form-control\"\n                 name=\"cardSecurity\"\n                 ng-model=\"cart.card.security\"\n                 placeholder=\"CVC\"\n                 gi-cc-cvc\n                 gi-cc-type=\"cardForm.cardNumber.$giCcType\"/>\n          <span class=\"input-group-addon\"><i class=\"fa fa-lg\" ng-class=\"getPropertyFont(\'cardSecurity\')\"></i></span>\n        </div>\n        <p class=\"control-label\" ng-show=\"isPropertyValidationError(\'cardSecurity\')\">\n          Not a valid cvc number!\n        </p>\n\n      </div>\n    </div>\n  </div>\n</div>\n");
-$templateCache.put("gi.commerce.priceForm.html","<div ng-form name=\"priceForm\" class=\"well form\">\n  <div class=\"form-group\">\n    <label>Name:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"priceListName\"\n           ng-model=\"model.selectedItem.name\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Prices:</label>\n    <div ng-repeat=\"(code, price) in model.selectedItem.prices\">\n      <div class=\"input-group\">\n         <div class=\"input-group-addon market\">{{code}}</div>\n         <input type=\"text\" class=\"form-control\" id=\"exampleInputAmount\" placeholder=\"Amount\" ng-model=\"model.selectedItem.prices[code]\"/>\n         <div class=\"input-group-addon\" ng-click=\"removePriceForMarket(code)\">  <span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></div>\n       </div>\n    </div>\n  </div>\n  <div class=\"form-group\">\n    <div class=\"input-group\">\n      <div class=\"input-group-addon market\" style=\"\">\n        <ui-select ng-model=\"local.code\">\n           <ui-select-match>{{$select.selected.code}}</ui-select-match>\n           <ui-select-choices repeat=\"c.code as c in model.markets  | filter: $select.search\">\n             <div ng-bind-html=\"c.code | highlight: $select.search\"></div>\n           </ui-select-choices>\n        </ui-select>\n      </div>\n      <input type=\"text\" class=\"form-control market-pick\" id=\"exampleInputAmount\" placeholder=\"Enter Amount\" ng-model=\"local.price\"/>\n      <div class=\"input-group-addon\" ng-click=\"savePriceForMarket(local.code)\">  <span class=\"glyphicon glyphicon-save\" aria-hidden=\"true\"></span></div>\n     </div>\n  </div>\n  <div class=\"form-group\">\n    <button class=\"form-control btn btn-success btn-save-asset\"\n            ng-click=\"save()\">{{submitText}}</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"priceForm.$dirty || model.selectedItem._id\">\n    <button class=\"form-control btn btn-warning\"\n            ng-click=\"clear()\">Cancel</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"model.selectedItem._id\">\n    <button class=\"form-control btn btn-danger\" ng-click=\"destroy()\">\n      Delete <span ng-if=\"confirm\">- Are you sure? Click again to confirm</span>\n    </button>\n  </div>\n</div>\n");
-$templateCache.put("gi.commerce.summary.html","<div class=\"row\">\n  <div class=\"col-xs-5\">\n    <span class=\"fa fa-shopping-cart fa-lg\"></span>\n  </div>\n  <div class=\"col-xs-7\">\n    <span class=\"badge\">{{ giCart.totalItems() }}</span>\n  </div>\n</div>\n");}]);
 angular.module('gi.commerce').directive('giPriceForm', [
   '$q', 'giPriceList', function($q, PriceList) {
     return {
@@ -63376,6 +63063,28 @@ angular.module('gi.commerce').factory('giCountry', [
 angular.module('gi.commerce').factory('giCurrency', [
   '$filter', 'giCrud', 'giCountry', function($filter, Crud, Country) {
     return Crud.factory('currency');
+  }
+]);
+
+angular.module('gi.commerce').factory('giEcommerceAnalytics', [
+  'giLog', 'giAnalytics', function(Log, Analytics) {
+    return {
+      viewProductList: function(name, items) {
+        Log.log('Product list: ' + name + ' with: ' + items.length + ' items viewed');
+        angular.forEach(items, function(item, idx) {
+          var impression;
+          Log.log(item);
+          impression = {
+            id: item.name,
+            name: item.displayName,
+            list: name,
+            position: idx + 1
+          };
+          return Analytics.Impression(impression);
+        });
+        return Analytics.PageView();
+      }
+    };
   }
 ]);
 

@@ -2,6 +2,10 @@ gi
 ---
 
 Release Notes
+v0.5.7
+- use latest gi-commerce and gi-util which gives client side loggly
+and analytics capabilities
+
 v0.5.6
 - use latest gi-commerce which improves checkout styling
 
