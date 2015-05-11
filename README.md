@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.5.8
+- use latest gi-util to provide consistent logging across servers and clients
+
 v0.5.7
 - use latest gi-commerce and gi-util which gives client side loggly
 and analytics capabilities
