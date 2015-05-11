@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.5.9
+- use latests gi-commerce, updates to customer info capture form.
+
 v0.5.8
 - use latest gi-util to provide consistent logging across servers and clients
 
