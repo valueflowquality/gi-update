@@ -19,7 +19,7 @@ gulp.task 'build', ['styles', 'fonts'], () ->
   gulp.src([
     'bower_components/gi-util/dist/gi-util.js'
     'bower_components/gi-ui/dist/gi-ui.js'
-    'bower_components/gi-security/bin/gi-security.js'
+    'bower_components/gi-security/dist/gi-security.js'
     'bower_components/gi-commerce/dist/gi-commerce.js'
     ])
   .pipe(concat(moduleName + '.js'))

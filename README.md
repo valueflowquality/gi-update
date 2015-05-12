@@ -2,6 +2,11 @@ gi
 ---
 
 Release Notes
+v0.5.10
+- use latest gi-util which introduces giMatch validation
+- use latest gi-commerce which uses giMatch validation to validate customer info entry in checkout
+- use latest gi-security which provides password validation / strength checking (and changes the User service to giUser)
+
 v0.5.9
 - use latests gi-commerce, updates to customer info capture form.
 
