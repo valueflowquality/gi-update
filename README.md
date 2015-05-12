@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.5.11
+- use latest gi-commerce (fixes issue where <pre> tag was left in)
+
 v0.5.10
 - use latest gi-util which introduces giMatch validation
 - use latest gi-commerce which uses giMatch validation to validate customer info entry in checkout
