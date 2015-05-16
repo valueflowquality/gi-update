@@ -2,8 +2,11 @@ gi
 ---
 
 Release Notes
+v0.5.12
+- use latest gi-ui for improved giOverflow api
+
 v0.5.11
-- use latest gi-commerce (fixes issue where <pre> tag was left in)
+- use latest gi-commerce (fixes issue where ``<pre>`` tag was left in)
 
 v0.5.10
 - use latest gi-util which introduces giMatch validation
