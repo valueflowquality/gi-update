@@ -2,6 +2,10 @@ gi
 ---
 
 Release Notes
+v0.6.1
+- use latest gi-commerce for account creation as part of checkout
+- use latest gi-security which removes surplus logging
+
 v0.6.0
 - use latest gi-commerce gi-security and gi-util for username validation during checkout
 
