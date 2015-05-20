@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.6.3
+- use latest gi-commerce for mobile responsive cart
+
 v0.6.2
 - binary was missing in previous version
 

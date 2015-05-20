@@ -1,9 +1,10 @@
 {
   "name": "gi",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "homepage": "https://github.com/GoIncremental/gi",
   "authors": [
-    "David Bochenski <david@goincremental.com>"
+    "David Bochenski <david@goincremental.com>",
+    "Liam Giles <liam@goincremental.com"
   ],
   "description": "Go Incremental client stack",
   "main": "./dist/gi.js",
@@ -18,7 +19,7 @@
     "gi-ui": "~1.0.4"
   },
   "devDependencies": {
-    "gi-commerce": "~0.5.15",
+    "gi-commerce": "~0.5.16",
     "gi-security": "~1.4.1",
     "gi-util": "~1.4.4"
   }
