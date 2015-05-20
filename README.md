@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.6.0
+- use latest gi-commerce gi-security and gi-util for username validation during checkout
+
 v0.5.12
 - use latest gi-ui for improved giOverflow api
 
