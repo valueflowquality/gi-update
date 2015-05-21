@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.6.4
+- use latest gi-commerce for thankyou directive capability
+
 v0.6.3
 - use latest gi-commerce for mobile responsive cart
 
