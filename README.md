@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.6.5
+- use latest gi-commerce, gi-security and gi-util.
+
 v0.6.4
 - use latest gi-commerce for thankyou directive capability
 
