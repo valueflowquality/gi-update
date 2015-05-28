@@ -2,6 +2,10 @@ gi
 ---
 
 Release Notes
+v0.6.6
+- use latest gi-security for giUsername conditional
+- use latest gi-commerce for improved e-mail validation
+
 v0.6.5
 - use latest gi-commerce, gi-security and gi-util.
 
