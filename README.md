@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.6.7
+- use latest gi-util to fix giMatch issue
+
 v0.6.6
 - use latest gi-security for giUsername conditional
 - use latest gi-commerce for improved e-mail validation
