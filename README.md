@@ -2,6 +2,8 @@ gi
 ---
 
 Release Notes
+v0.6.9
+- make gi-ui a dev dependency
 v0.6.8
 - use latest gi-util for ngTouch and ngRoute
 - use latest gi-ui for ngProgress integration
