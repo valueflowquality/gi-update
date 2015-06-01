@@ -21,6 +21,7 @@ gulp.task 'build', ['styles', 'fonts'], () ->
     'bower_components/gi-ui/dist/gi-ui.js'
     'bower_components/gi-security/dist/gi-security.js'
     'bower_components/gi-commerce/dist/gi-commerce.js'
+    'client/gi.js'
     ])
   .pipe(concat(moduleName + '.js'))
   .pipe(gulp.dest(buildDir))

@@ -2,6 +2,10 @@ gi
 ---
 
 Release Notes
+v0.6.8
+- use latest gi-util for ngTouch and ngRoute
+- use latest gi-ui for ngProgress integration
+
 v0.6.7
 - use latest gi-util to fix giMatch issue
 
