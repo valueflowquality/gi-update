@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.6.10
+- use latest gi-util for addition to counters model
+
 v0.6.9
 - make gi-ui a dev dependency
 v0.6.8
