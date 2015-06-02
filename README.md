@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.6.11
+- use latest gi-util to fix issue with counters.getNext
+
 v0.6.10
 - use latest gi-util for addition to counters model
 
