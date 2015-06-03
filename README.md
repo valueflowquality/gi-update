@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.6.12
+- use latest gi-security to improve Auth service login change firing logic.
+
 v0.6.11
 - use latest gi-util to fix issue with counters.getNext
 
