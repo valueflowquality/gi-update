@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.6.13
+- use latest gi-commerce to have company info in checkout process
+
 v0.6.12
 - use latest gi-security to improve Auth service login change firing logic.
 
