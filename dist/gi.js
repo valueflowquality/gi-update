@@ -63337,7 +63337,6 @@ angular.module('gi.security').provider('Auth', function() {
           $http = $http || $injector.get('$http');
           $http.get('/api/logout').success(function() {
             return loginChanged().then(function() {
-              console.log('resolving Auth.Logout()');
               return deferred.resolve();
             });
           });

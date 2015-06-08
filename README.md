@@ -2,6 +2,10 @@ gi
 ---
 
 Release Notes
+
+v0.6.14
+- use latest gi-security changes timing of promise resolution for Auth.logout()
+
 v0.6.13
 - use latest gi-commerce to have company info in checkout process
 
