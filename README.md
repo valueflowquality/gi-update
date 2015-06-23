@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.7.1
+- use latest gi-util (missed off previous release)
+
 v0.7.0
 - use latest gi-ui, gi-commerce and gi-util
 
