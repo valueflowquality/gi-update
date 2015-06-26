@@ -2,6 +2,9 @@ gi
 ---
 
 Release Notes
+v0.7.2
+- use latest gi-ui (fixes issue with glyphicons)
+
 v0.7.1
 - use latest gi-util (missed off previous release)
 
