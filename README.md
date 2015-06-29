@@ -1,9 +1,16 @@
-gi
+# gi
 ---
 
-Release Notes
-v0.7.2
+### Release Notes
+
+v0.7.6
+- use latest gi-commerce
+
+v0.7.5
 - use latest gi-ui (fixes issue with glyphicons)
+
+v0.7.2 - v0.7.4
+- there were build issues with these versions
 
 v0.7.1
 - use latest gi-util (missed off previous release)
