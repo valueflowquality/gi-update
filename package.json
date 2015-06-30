@@ -1,6 +1,6 @@
 {
   "name": "goinc",
-  "version": "0.7.9",
+  "version": "0.7.10",
   "description": "go incremental node / angular stack",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,7 @@
   "dependencies": {
     "gi-security": "~1.4.6",
     "gi-util": "~1.8.0",
-    "gi-commerce": "~0.6.10"
+    "gi-commerce": "~0.7.0"
   },
   "devDependencies": {
     "gulp": "^3.8.11",

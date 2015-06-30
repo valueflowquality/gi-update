@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.7.10
+- use latest gi-commerce for custom call to action text
+
 v0.7.9
 - use latest gi-commerce for anchor scroll fixes on cart
 
