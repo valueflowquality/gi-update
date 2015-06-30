@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.7.9
+- use latest gi-commerce for anchor scroll fixes on cart
+
 v0.7.8
 - use latest gi-commerce for tab ordering fixes on cart
 
