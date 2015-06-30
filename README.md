@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.7.8
+- use latest gi-commerce for tab ordering fixes on cart
+
 v0.7.7
 - use latest gi-commerce, gi-util, gi-ui
 
