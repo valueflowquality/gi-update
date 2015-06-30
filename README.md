@@ -2,6 +2,8 @@
 ---
 
 ### Release Notes
+v0.7.7
+- use latest gi-commerce, gi-util, gi-ui
 
 v0.7.6
 - use latest gi-commerce
