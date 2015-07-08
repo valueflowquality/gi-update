@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.8.2
+- use latest gi-util to fix issue with geoip uri
+
 v0.8.1
 - use latest gi-util for /api/geoip improvements to x-forwarded-for
 
