@@ -44762,7 +44762,7 @@ function hasOwnProperty(obj, prop) {
         }]);
 })(angular);
 
-angular.module('gi.util', ['ngResource', 'ngCookies', 'logglyLogger', 'ngTouch', 'ngRoute', 'ng.deviceDetector']).value('version', '1.8.0').config([
+angular.module('gi.util', ['ngResource', 'ngCookies', 'logglyLogger', 'ngTouch', 'ngRoute', 'ng.deviceDetector']).value('version', '1.9.0').config([
   'giLogProvider', function(giLogProvider) {
     if (typeof loggly !== "undefined" && loggly !== null) {
       giLogProvider.setLogglyToken(loggly.key);

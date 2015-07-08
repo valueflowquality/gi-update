@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.8.0
+- use latest gi-util for /api/geoip endpoint and goinc api integration
+
 v0.7.10
 - use latest gi-commerce for custom call to action text
 
