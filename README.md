@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.9.0
+- use latest gi-ui to add ui table view support
+
 v0.8.2
 - use latest gi-util to fix issue with geoip uri
 

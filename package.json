@@ -1,6 +1,6 @@
 {
   "name": "goinc",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "description": "go incremental node / angular stack",
   "main": "index.js",
   "scripts": {
