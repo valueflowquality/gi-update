@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.8.1
+- use latest gi-util for /api/geoip improvements to x-forwarded-for
+
 v0.8.0
 - use latest gi-util for /api/geoip endpoint and goinc api integration
 
