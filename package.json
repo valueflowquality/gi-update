@@ -18,8 +18,8 @@
   "homepage": "https://github.com/GoIncremental/gi",
   "dependencies": {
     "gi-security": "~1.4.6",
-    "gi-util": "~1.9.2",
-    "gi-commerce": "~0.7.0"
+    "gi-util": "~1.9.3",
+    "gi-commerce": "~0.7.1"
   },
   "devDependencies": {
     "gulp": "^3.8.11",

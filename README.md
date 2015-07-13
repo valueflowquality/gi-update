@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.9.1
+- use latest gi-util and gi-commerce for country dropdown ordering
+
 v0.9.0
 - use latest gi-ui to add ui table view support
 
