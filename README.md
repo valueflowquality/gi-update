@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.9.2
+- use latest gi-util to fix issue with mongoose > 1.0.7 on $each
+
 v0.9.1
 - use latest gi-util and gi-commerce for country dropdown ordering
 
