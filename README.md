@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.9.4
+- use latest gi-ui for upgrade to angular-bootstrap
+
 v0.9.3
 - use latest gi-ui to fix giOverflow on firefox and ie
 
