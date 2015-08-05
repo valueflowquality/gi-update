@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.9.3
+- use latest gi-ui to fix giOverflow on firefox and ie
+
 v0.9.2
 - use latest gi-util to fix issue with mongoose > 1.0.7 on $each
 
