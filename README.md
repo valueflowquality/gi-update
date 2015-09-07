@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.9.5
+- use latest gi-util for mongo ssl authenticated connections
+
 v0.9.4
 - use latest gi-ui for upgrade to angular-bootstrap
 
