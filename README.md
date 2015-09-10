@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.10.0
+- use latest gi-ui (may break current implementations relying on ngFileUpload)
+
 v0.9.5
 - use latest gi-util for mongo ssl authenticated connections
 
