@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.10.3
+- previous version shipped with incorrect dist/gi.js file
+
 v0.10.2
 - use latest gi-util for analytics impressions
 
