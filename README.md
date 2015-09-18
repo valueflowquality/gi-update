@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.10.2
+- use latest gi-util for analytics impressions
+
 v0.10.1
 - use latest gi-commerce to support enhanced analytics
 
