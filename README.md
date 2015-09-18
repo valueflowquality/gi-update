@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.10.1
+- use latest gi-commerce to support enhanced analytics
+
 v0.10.0
 - use latest gi-ui (may break current implementations relying on ngFileUpload)
 
