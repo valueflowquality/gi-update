@@ -3567,7 +3567,7 @@
 
 /*
     json2.js
-    2015-05-03
+    2015-02-25
 
     Public Domain.
 
@@ -3584,9 +3584,7 @@
 
 
     This file creates a global JSON object containing two methods: stringify
-    and parse. This file is provides the ES5 JSON capability to ES3 systems.
-    If a project might run on IE8 or earlier, then this file should be included.
-    This file does nothing on ES5 systems.
+    and parse.
 
         JSON.stringify(value, replacer, space)
             value       any JavaScript value, usually an object or array.
@@ -3618,8 +3616,8 @@
                     function f(n) {
                         // Format integers to have at least two digits.
                         return n < 10 
-                            ? '0' + n 
-                            : n;
+                        ? '0' + n 
+                        : n;
                     }
 
                     return this.getUTCFullYear()   + '-' +
@@ -3665,9 +3663,8 @@
             // text is '[\n\t"e",\n\t{\n\t\t"pluribus": "unum"\n\t}\n]'
 
             text = JSON.stringify([new Date()], function (key, value) {
-                return this[key] instanceof Date 
-                    ? 'Date(' + this[key] + ')' 
-                    : value;
+                return this[key] instanceof Date ?
+                    'Date(' + this[key] + ')' : value;
             });
             // text is '["Date(---current time---)"]'
 
@@ -3739,19 +3736,12 @@ if (typeof JSON !== 'object') {
 
 (function () {
     'use strict';
-    
-    var rx_one = /^[\],:{}\s]*$/,
-        rx_two = /\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g,
-        rx_three = /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,
-        rx_four = /(?:^|:|,)(?:\s*\[)+/g,
-        rx_escapable = /[\\\"\u0000-\u001f\u007f-\u009f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
-        rx_dangerous = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
 
     function f(n) {
         // Format integers to have at least two digits.
         return n < 10 
-            ? '0' + n 
-            : n;
+        ? '0' + n 
+        : n;
     }
     
     function this_value() {
@@ -3763,13 +3753,13 @@ if (typeof JSON !== 'object') {
         Date.prototype.toJSON = function () {
 
             return isFinite(this.valueOf())
-                ? this.getUTCFullYear() + '-' +
-                        f(this.getUTCMonth() + 1) + '-' +
-                        f(this.getUTCDate()) + 'T' +
-                        f(this.getUTCHours()) + ':' +
-                        f(this.getUTCMinutes()) + ':' +
-                        f(this.getUTCSeconds()) + 'Z'
-                : null;
+            ? this.getUTCFullYear() + '-' +
+                    f(this.getUTCMonth() + 1) + '-' +
+                    f(this.getUTCDate()) + 'T' +
+                    f(this.getUTCHours()) + ':' +
+                    f(this.getUTCMinutes()) + ':' +
+                    f(this.getUTCSeconds()) + 'Z'
+            : null;
         };
 
         Boolean.prototype.toJSON = this_value;
@@ -3777,7 +3767,9 @@ if (typeof JSON !== 'object') {
         String.prototype.toJSON = this_value;
     }
 
-    var gap,
+    var cx,
+        escapable,
+        gap,
         indent,
         meta,
         rep;
@@ -3790,15 +3782,15 @@ if (typeof JSON !== 'object') {
 // Otherwise we must also replace the offending characters with safe escape
 // sequences.
 
-        rx_escapable.lastIndex = 0;
-        return rx_escapable.test(string) 
-            ? '"' + string.replace(rx_escapable, function (a) {
-                var c = meta[a];
-                return typeof c === 'string'
-                    ? c
-                    : '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
-            }) + '"' 
-            : '"' + string + '"';
+        escapable.lastIndex = 0;
+        return escapable.test(string) 
+        ? '"' + string.replace(escapable, function (a) {
+            var c = meta[a];
+            return typeof c === 'string'
+            ? c
+            : '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
+        }) + '"' 
+        : '"' + string + '"';
     }
 
 
@@ -3839,8 +3831,8 @@ if (typeof JSON !== 'object') {
 // JSON numbers must be finite. Encode non-finite numbers as null.
 
             return isFinite(value) 
-                ? String(value) 
-                : 'null';
+            ? String(value) 
+            : 'null';
 
         case 'boolean':
         case 'null':
@@ -3884,10 +3876,10 @@ if (typeof JSON !== 'object') {
 // brackets.
 
                 v = partial.length === 0
-                    ? '[]'
-                    : gap
-                        ? '[\n' + gap + partial.join(',\n' + gap) + '\n' + mind + ']'
-                        : '[' + partial.join(',') + ']';
+                ? '[]'
+                : gap
+                ? '[\n' + gap + partial.join(',\n' + gap) + '\n' + mind + ']'
+                : '[' + partial.join(',') + ']';
                 gap = mind;
                 return v;
             }
@@ -3903,8 +3895,8 @@ if (typeof JSON !== 'object') {
                         if (v) {
                             partial.push(quote(k) + (
                                 gap 
-                                    ? ': ' 
-                                    : ':'
+                                ? ': ' 
+                                : ':'
                             ) + v);
                         }
                     }
@@ -3919,8 +3911,8 @@ if (typeof JSON !== 'object') {
                         if (v) {
                             partial.push(quote(k) + (
                                 gap 
-                                    ? ': ' 
-                                    : ':'
+                                ? ': ' 
+                                : ':'
                             ) + v);
                         }
                     }
@@ -3931,10 +3923,10 @@ if (typeof JSON !== 'object') {
 // and wrap them in braces.
 
             v = partial.length === 0
-                ? '{}'
-                : gap
-                    ? '{\n' + gap + partial.join(',\n' + gap) + '\n' + mind + '}'
-                    : '{' + partial.join(',') + '}';
+            ? '{}'
+            : gap
+            ? '{\n' + gap + partial.join(',\n' + gap) + '\n' + mind + '}'
+            : '{' + partial.join(',') + '}';
             gap = mind;
             return v;
         }
@@ -3943,6 +3935,7 @@ if (typeof JSON !== 'object') {
 // If the JSON object does not yet have a stringify method, give it one.
 
     if (typeof JSON.stringify !== 'function') {
+        escapable = /[\\\"\u0000-\u001f\u007f-\u009f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
         meta = {    // table of character substitutions
             '\b': '\\b',
             '\t': '\\t',
@@ -3999,6 +3992,7 @@ if (typeof JSON !== 'object') {
 // If the JSON object does not yet have a parse method, give it one.
 
     if (typeof JSON.parse !== 'function') {
+        cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
         JSON.parse = function (text, reviver) {
 
 // The parse method takes a text and an optional reviver function, and returns
@@ -4033,9 +4027,9 @@ if (typeof JSON !== 'object') {
 // incorrectly, either silently deleting them, or treating them as line endings.
 
             text = String(text);
-            rx_dangerous.lastIndex = 0;
-            if (rx_dangerous.test(text)) {
-                text = text.replace(rx_dangerous, function (a) {
+            cx.lastIndex = 0;
+            if (cx.test(text)) {
+                text = text.replace(cx, function (a) {
                     return '\\u' +
                             ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
                 });
@@ -4055,11 +4049,10 @@ if (typeof JSON !== 'object') {
 // ',' or ':' or '{' or '}'. If that is so, then the text is safe for eval.
 
             if (
-                rx_one.test(
-                    text
-                        .replace(rx_two, '@')
-                        .replace(rx_three, ']')
-                        .replace(rx_four, '')
+                /^[\],:{}\s]*$/.test(
+                    text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@')
+                        .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
+                        .replace(/(?:^|:|,)(?:\s*\[)+/g, '')
                 )
             ) {
 
@@ -4074,8 +4067,8 @@ if (typeof JSON !== 'object') {
 // each name/value pair to a reviver function for possible transformation.
 
                 return typeof reviver === 'function'
-                    ? walk({'': j}, '')
-                    : j;
+                ? walk({'': j}, '')
+                : j;
             }
 
 // If the text is not JSON parseable, then a SyntaxError is thrown.
@@ -4086,12 +4079,12 @@ if (typeof JSON !== 'object') {
 }());
 
 /**
-* @preserve HTML5 Shiv 3.7.3 | @afarkas @jdalton @jon_neal @rem | MIT/GPL2 Licensed
+* @preserve HTML5 Shiv 3.7.2 | @afarkas @jdalton @jon_neal @rem | MIT/GPL2 Licensed
 */
 ;(function(window, document) {
 /*jshint evil:true */
   /** version */
-  var version = '3.7.3';
+  var version = '3.7.2';
 
   /** Preset options */
   var options = window.html5 || {};
@@ -4604,11 +4597,7 @@ if (typeof JSON !== 'object') {
   // shiv for print
   shivPrint(document);
 
-  if(typeof module == 'object' && module.exports){
-    module.exports = html5;
-  }
-
-}(typeof window !== "undefined" ? window : this, document));
+}(this, document));
 
 /**
  * @license AngularJS v1.3.15
@@ -33408,7 +33397,7 @@ makeSwipeDirective('ngSwipeRight', 1, 'swiperight');
 
 })(window, window.angular);
 
-// AWS SDK for JavaScript v2.1.50
+// AWS SDK for JavaScript v2.1.18
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // License at https://sdk.amazonaws.com/js/BUNDLE_LICENSE.txt
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -33431,67 +33420,41 @@ AWS.apiLoader.services['cloudwatch'] = {};
 AWS.CloudWatch = AWS.Service.defineService('cloudwatch', [ '2010-08-01' ]);
 
 AWS.apiLoader.services['cloudwatch']['2010-08-01'] = {"metadata":{"apiVersion":"2010-08-01","endpointPrefix":"monitoring","serviceAbbreviation":"CloudWatch","serviceFullName":"Amazon CloudWatch","signatureVersion":"v4","xmlNamespace":"http://monitoring.amazonaws.com/doc/2010-08-01/","protocol":"query"},"operations":{"DeleteAlarms":{"input":{"type":"structure","required":["AlarmNames"],"members":{"AlarmNames":{"shape":"S2"}}},"http":{}},"DescribeAlarmHistory":{"input":{"type":"structure","members":{"AlarmName":{},"HistoryItemType":{},"StartDate":{"type":"timestamp"},"EndDate":{"type":"timestamp"},"MaxRecords":{"type":"integer"},"NextToken":{}}},"output":{"resultWrapper":"DescribeAlarmHistoryResult","type":"structure","members":{"AlarmHistoryItems":{"type":"list","member":{"type":"structure","members":{"AlarmName":{},"Timestamp":{"type":"timestamp"},"HistoryItemType":{},"HistorySummary":{},"HistoryData":{}}}},"NextToken":{}}},"http":{}},"DescribeAlarms":{"input":{"type":"structure","members":{"AlarmNames":{"shape":"S2"},"AlarmNamePrefix":{},"StateValue":{},"ActionPrefix":{},"MaxRecords":{"type":"integer"},"NextToken":{}}},"output":{"resultWrapper":"DescribeAlarmsResult","type":"structure","members":{"MetricAlarms":{"shape":"Sj"},"NextToken":{}}},"http":{}},"DescribeAlarmsForMetric":{"input":{"type":"structure","required":["MetricName","Namespace"],"members":{"MetricName":{},"Namespace":{},"Statistic":{},"Dimensions":{"shape":"Sv"},"Period":{"type":"integer"},"Unit":{}}},"output":{"resultWrapper":"DescribeAlarmsForMetricResult","type":"structure","members":{"MetricAlarms":{"shape":"Sj"}}},"http":{}},"DisableAlarmActions":{"input":{"type":"structure","required":["AlarmNames"],"members":{"AlarmNames":{"shape":"S2"}}},"http":{}},"EnableAlarmActions":{"input":{"type":"structure","required":["AlarmNames"],"members":{"AlarmNames":{"shape":"S2"}}},"http":{}},"GetMetricStatistics":{"input":{"type":"structure","required":["Namespace","MetricName","StartTime","EndTime","Period","Statistics"],"members":{"Namespace":{},"MetricName":{},"Dimensions":{"shape":"Sv"},"StartTime":{"type":"timestamp"},"EndTime":{"type":"timestamp"},"Period":{"type":"integer"},"Statistics":{"type":"list","member":{}},"Unit":{}}},"output":{"resultWrapper":"GetMetricStatisticsResult","type":"structure","members":{"Label":{},"Datapoints":{"type":"list","member":{"type":"structure","members":{"Timestamp":{"type":"timestamp"},"SampleCount":{"type":"double"},"Average":{"type":"double"},"Sum":{"type":"double"},"Minimum":{"type":"double"},"Maximum":{"type":"double"},"Unit":{}},"xmlOrder":["Timestamp","SampleCount","Average","Sum","Minimum","Maximum","Unit"]}}}},"http":{}},"ListMetrics":{"input":{"type":"structure","members":{"Namespace":{},"MetricName":{},"Dimensions":{"type":"list","member":{"type":"structure","required":["Name"],"members":{"Name":{},"Value":{}}}},"NextToken":{}}},"output":{"xmlOrder":["Metrics","NextToken"],"resultWrapper":"ListMetricsResult","type":"structure","members":{"Metrics":{"type":"list","member":{"type":"structure","members":{"Namespace":{},"MetricName":{},"Dimensions":{"shape":"Sv"}},"xmlOrder":["Namespace","MetricName","Dimensions"]}},"NextToken":{}}},"http":{}},"PutMetricAlarm":{"input":{"type":"structure","required":["AlarmName","MetricName","Namespace","Statistic","Period","EvaluationPeriods","Threshold","ComparisonOperator"],"members":{"AlarmName":{},"AlarmDescription":{},"ActionsEnabled":{"type":"boolean"},"OKActions":{"shape":"So"},"AlarmActions":{"shape":"So"},"InsufficientDataActions":{"shape":"So"},"MetricName":{},"Namespace":{},"Statistic":{},"Dimensions":{"shape":"Sv"},"Period":{"type":"integer"},"Unit":{},"EvaluationPeriods":{"type":"integer"},"Threshold":{"type":"double"},"ComparisonOperator":{}}},"http":{}},"PutMetricData":{"input":{"type":"structure","required":["Namespace","MetricData"],"members":{"Namespace":{},"MetricData":{"type":"list","member":{"type":"structure","required":["MetricName"],"members":{"MetricName":{},"Dimensions":{"shape":"Sv"},"Timestamp":{"type":"timestamp"},"Value":{"type":"double"},"StatisticValues":{"type":"structure","required":["SampleCount","Sum","Minimum","Maximum"],"members":{"SampleCount":{"type":"double"},"Sum":{"type":"double"},"Minimum":{"type":"double"},"Maximum":{"type":"double"}}},"Unit":{}}}}}},"http":{}},"SetAlarmState":{"input":{"type":"structure","required":["AlarmName","StateValue","StateReason"],"members":{"AlarmName":{},"StateValue":{},"StateReason":{},"StateReasonData":{}}},"http":{}}},"shapes":{"S2":{"type":"list","member":{}},"Sj":{"type":"list","member":{"type":"structure","members":{"AlarmName":{},"AlarmArn":{},"AlarmDescription":{},"AlarmConfigurationUpdatedTimestamp":{"type":"timestamp"},"ActionsEnabled":{"type":"boolean"},"OKActions":{"shape":"So"},"AlarmActions":{"shape":"So"},"InsufficientDataActions":{"shape":"So"},"StateValue":{},"StateReason":{},"StateReasonData":{},"StateUpdatedTimestamp":{"type":"timestamp"},"MetricName":{},"Namespace":{},"Statistic":{},"Dimensions":{"shape":"Sv"},"Period":{"type":"integer"},"Unit":{},"EvaluationPeriods":{"type":"integer"},"Threshold":{"type":"double"},"ComparisonOperator":{}},"xmlOrder":["AlarmName","AlarmArn","AlarmDescription","AlarmConfigurationUpdatedTimestamp","ActionsEnabled","OKActions","AlarmActions","InsufficientDataActions","StateValue","StateReason","StateReasonData","StateUpdatedTimestamp","MetricName","Namespace","Statistic","Dimensions","Period","Unit","EvaluationPeriods","Threshold","ComparisonOperator"]}},"So":{"type":"list","member":{}},"Sv":{"type":"list","member":{"type":"structure","required":["Name","Value"],"members":{"Name":{},"Value":{}},"xmlOrder":["Name","Value"]}}},"paginators":{"DescribeAlarmHistory":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxRecords","result_key":"AlarmHistoryItems"},"DescribeAlarms":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxRecords","result_key":"MetricAlarms"},"DescribeAlarmsForMetric":{"result_key":"MetricAlarms"},"ListMetrics":{"input_token":"NextToken","output_token":"NextToken","result_key":"Metrics"}}};
-AWS.apiLoader.services['cloudwatchlogs'] = {};
-AWS.CloudWatchLogs = AWS.Service.defineService('cloudwatchlogs', [ '2014-03-28' ]);
-
-AWS.apiLoader.services['cloudwatchlogs']['2014-03-28'] = {"version":"2.0","metadata":{"apiVersion":"2014-03-28","endpointPrefix":"logs","jsonVersion":"1.1","serviceFullName":"Amazon CloudWatch Logs","signatureVersion":"v4","targetPrefix":"Logs_20140328","protocol":"json"},"operations":{"CreateLogGroup":{"input":{"type":"structure","required":["logGroupName"],"members":{"logGroupName":{}}},"http":{}},"CreateLogStream":{"input":{"type":"structure","required":["logGroupName","logStreamName"],"members":{"logGroupName":{},"logStreamName":{}}},"http":{}},"DeleteDestination":{"input":{"type":"structure","required":["destinationName"],"members":{"destinationName":{}}},"http":{}},"DeleteLogGroup":{"input":{"type":"structure","required":["logGroupName"],"members":{"logGroupName":{}}},"http":{}},"DeleteLogStream":{"input":{"type":"structure","required":["logGroupName","logStreamName"],"members":{"logGroupName":{},"logStreamName":{}}},"http":{}},"DeleteMetricFilter":{"input":{"type":"structure","required":["logGroupName","filterName"],"members":{"logGroupName":{},"filterName":{}}},"http":{}},"DeleteRetentionPolicy":{"input":{"type":"structure","required":["logGroupName"],"members":{"logGroupName":{}}},"http":{}},"DeleteSubscriptionFilter":{"input":{"type":"structure","required":["logGroupName","filterName"],"members":{"logGroupName":{},"filterName":{}}},"http":{}},"DescribeDestinations":{"input":{"type":"structure","members":{"DestinationNamePrefix":{},"nextToken":{},"limit":{"type":"integer"}}},"output":{"type":"structure","members":{"destinations":{"type":"list","member":{"shape":"Si"}},"nextToken":{}}},"http":{}},"DescribeLogGroups":{"input":{"type":"structure","members":{"logGroupNamePrefix":{},"nextToken":{},"limit":{"type":"integer"}}},"output":{"type":"structure","members":{"logGroups":{"type":"list","member":{"type":"structure","members":{"logGroupName":{},"creationTime":{"type":"long"},"retentionInDays":{"type":"integer"},"metricFilterCount":{"type":"integer"},"arn":{},"storedBytes":{"type":"long"}}}},"nextToken":{}}},"http":{}},"DescribeLogStreams":{"input":{"type":"structure","required":["logGroupName"],"members":{"logGroupName":{},"logStreamNamePrefix":{},"orderBy":{},"descending":{"type":"boolean"},"nextToken":{},"limit":{"type":"integer"}}},"output":{"type":"structure","members":{"logStreams":{"type":"list","member":{"type":"structure","members":{"logStreamName":{},"creationTime":{"type":"long"},"firstEventTimestamp":{"type":"long"},"lastEventTimestamp":{"type":"long"},"lastIngestionTime":{"type":"long"},"uploadSequenceToken":{},"arn":{},"storedBytes":{"type":"long"}}}},"nextToken":{}}},"http":{}},"DescribeMetricFilters":{"input":{"type":"structure","required":["logGroupName"],"members":{"logGroupName":{},"filterNamePrefix":{},"nextToken":{},"limit":{"type":"integer"}}},"output":{"type":"structure","members":{"metricFilters":{"type":"list","member":{"type":"structure","members":{"filterName":{},"filterPattern":{},"metricTransformations":{"shape":"S17"},"creationTime":{"type":"long"}}}},"nextToken":{}}},"http":{}},"DescribeSubscriptionFilters":{"input":{"type":"structure","required":["logGroupName"],"members":{"logGroupName":{},"filterNamePrefix":{},"nextToken":{},"limit":{"type":"integer"}}},"output":{"type":"structure","members":{"subscriptionFilters":{"type":"list","member":{"type":"structure","members":{"filterName":{},"logGroupName":{},"filterPattern":{},"destinationArn":{},"roleArn":{},"creationTime":{"type":"long"}}}},"nextToken":{}}},"http":{}},"FilterLogEvents":{"input":{"type":"structure","required":["logGroupName"],"members":{"logGroupName":{},"logStreamNames":{"type":"list","member":{}},"startTime":{"type":"long"},"endTime":{"type":"long"},"filterPattern":{},"nextToken":{},"limit":{"type":"integer"},"interleaved":{"type":"boolean"}}},"output":{"type":"structure","members":{"events":{"type":"list","member":{"type":"structure","members":{"logStreamName":{},"timestamp":{"type":"long"},"message":{},"ingestionTime":{"type":"long"},"eventId":{}}}},"searchedLogStreams":{"type":"list","member":{"type":"structure","members":{"logStreamName":{},"searchedCompletely":{"type":"boolean"}}}},"nextToken":{}}},"http":{}},"GetLogEvents":{"input":{"type":"structure","required":["logGroupName","logStreamName"],"members":{"logGroupName":{},"logStreamName":{},"startTime":{"type":"long"},"endTime":{"type":"long"},"nextToken":{},"limit":{"type":"integer"},"startFromHead":{"type":"boolean"}}},"output":{"type":"structure","members":{"events":{"type":"list","member":{"type":"structure","members":{"timestamp":{"type":"long"},"message":{},"ingestionTime":{"type":"long"}}}},"nextForwardToken":{},"nextBackwardToken":{}}},"http":{}},"PutDestination":{"input":{"type":"structure","required":["destinationName","targetArn","roleArn"],"members":{"destinationName":{},"targetArn":{},"roleArn":{}}},"output":{"type":"structure","members":{"destination":{"shape":"Si"}}},"http":{}},"PutDestinationPolicy":{"input":{"type":"structure","required":["destinationName","accessPolicy"],"members":{"destinationName":{},"accessPolicy":{}}},"http":{}},"PutLogEvents":{"input":{"type":"structure","required":["logGroupName","logStreamName","logEvents"],"members":{"logGroupName":{},"logStreamName":{},"logEvents":{"type":"list","member":{"type":"structure","required":["timestamp","message"],"members":{"timestamp":{"type":"long"},"message":{}}}},"sequenceToken":{}}},"output":{"type":"structure","members":{"nextSequenceToken":{},"rejectedLogEventsInfo":{"type":"structure","members":{"tooNewLogEventStartIndex":{"type":"integer"},"tooOldLogEventEndIndex":{"type":"integer"},"expiredLogEventEndIndex":{"type":"integer"}}}}},"http":{}},"PutMetricFilter":{"input":{"type":"structure","required":["logGroupName","filterName","filterPattern","metricTransformations"],"members":{"logGroupName":{},"filterName":{},"filterPattern":{},"metricTransformations":{"shape":"S17"}}},"http":{}},"PutRetentionPolicy":{"input":{"type":"structure","required":["logGroupName","retentionInDays"],"members":{"logGroupName":{},"retentionInDays":{"type":"integer"}}},"http":{}},"PutSubscriptionFilter":{"input":{"type":"structure","required":["logGroupName","filterName","filterPattern","destinationArn"],"members":{"logGroupName":{},"filterName":{},"filterPattern":{},"destinationArn":{},"roleArn":{}}},"http":{}},"TestMetricFilter":{"input":{"type":"structure","required":["filterPattern","logEventMessages"],"members":{"filterPattern":{},"logEventMessages":{"type":"list","member":{}}}},"output":{"type":"structure","members":{"matches":{"type":"list","member":{"type":"structure","members":{"eventNumber":{"type":"long"},"eventMessage":{},"extractedValues":{"type":"map","key":{},"value":{}}}}}}},"http":{}}},"shapes":{"Si":{"type":"structure","members":{"destinationName":{},"targetArn":{},"roleArn":{},"accessPolicy":{},"arn":{},"creationTime":{"type":"long"}}},"S17":{"type":"list","member":{"type":"structure","required":["metricName","metricNamespace","metricValue"],"members":{"metricName":{},"metricNamespace":{},"metricValue":{}}}}},"examples":{},"paginators":{"DescribeDestinations":{"input_token":"nextToken","output_token":"nextToken","limit_key":"limit","result_key":"destinations"},"DescribeLogGroups":{"input_token":"nextToken","output_token":"nextToken","limit_key":"limit","result_key":"logGroups"},"DescribeLogStreams":{"input_token":"nextToken","output_token":"nextToken","limit_key":"limit","result_key":"logStreams"},"DescribeMetricFilters":{"input_token":"nextToken","output_token":"nextToken","limit_key":"limit","result_key":"metricFilters"},"DescribeSubscriptionFilters":{"input_token":"nextToken","output_token":"nextToken","limit_key":"limit","result_key":"subscriptionFilters"},"FilterLogEvents":{"input_token":"nextToken","output_token":"nextToken","limit_key":"limit","result_key":["events","searchedLogStreams"]},"GetLogEvents":{"input_token":"nextToken","output_token":"nextForwardToken","limit_key":"limit","result_key":"events"}}};
 AWS.apiLoader.services['cognitoidentity'] = {};
 AWS.CognitoIdentity = AWS.Service.defineService('cognitoidentity', [ '2014-06-30' ]);
 require('./services/cognitoidentity');
 
-AWS.apiLoader.services['cognitoidentity']['2014-06-30'] = {"version":"2.0","metadata":{"apiVersion":"2014-06-30","endpointPrefix":"cognito-identity","jsonVersion":"1.1","serviceFullName":"Amazon Cognito Identity","signatureVersion":"v4","targetPrefix":"AWSCognitoIdentityService","protocol":"json"},"operations":{"CreateIdentityPool":{"input":{"type":"structure","required":["IdentityPoolName","AllowUnauthenticatedIdentities"],"members":{"IdentityPoolName":{},"AllowUnauthenticatedIdentities":{"type":"boolean"},"SupportedLoginProviders":{"shape":"S4"},"DeveloperProviderName":{},"OpenIdConnectProviderARNs":{"shape":"S8"}}},"output":{"shape":"Sa"},"http":{}},"DeleteIdentities":{"input":{"type":"structure","required":["IdentityIdsToDelete"],"members":{"IdentityIdsToDelete":{"type":"list","member":{}}}},"output":{"type":"structure","members":{"UnprocessedIdentityIds":{"type":"list","member":{"type":"structure","members":{"IdentityId":{},"ErrorCode":{}}}}}},"http":{}},"DeleteIdentityPool":{"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{}}},"http":{}},"DescribeIdentity":{"input":{"type":"structure","required":["IdentityId"],"members":{"IdentityId":{}}},"output":{"shape":"Sl"},"http":{}},"DescribeIdentityPool":{"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{}}},"output":{"shape":"Sa"},"http":{}},"GetCredentialsForIdentity":{"input":{"type":"structure","required":["IdentityId"],"members":{"IdentityId":{},"Logins":{"shape":"Sq"}}},"output":{"type":"structure","members":{"IdentityId":{},"Credentials":{"type":"structure","members":{"AccessKeyId":{},"SecretKey":{},"SessionToken":{},"Expiration":{"type":"timestamp"}}}}},"http":{}},"GetId":{"input":{"type":"structure","required":["IdentityPoolId"],"members":{"AccountId":{},"IdentityPoolId":{},"Logins":{"shape":"Sq"}}},"output":{"type":"structure","members":{"IdentityId":{}}},"http":{}},"GetIdentityPoolRoles":{"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{}}},"output":{"type":"structure","members":{"IdentityPoolId":{},"Roles":{"shape":"S12"}}},"http":{}},"GetOpenIdToken":{"input":{"type":"structure","required":["IdentityId"],"members":{"IdentityId":{},"Logins":{"shape":"Sq"}}},"output":{"type":"structure","members":{"IdentityId":{},"Token":{}}},"http":{}},"GetOpenIdTokenForDeveloperIdentity":{"input":{"type":"structure","required":["IdentityPoolId","Logins"],"members":{"IdentityPoolId":{},"IdentityId":{},"Logins":{"shape":"Sq"},"TokenDuration":{"type":"long"}}},"output":{"type":"structure","members":{"IdentityId":{},"Token":{}}},"http":{}},"ListIdentities":{"input":{"type":"structure","required":["IdentityPoolId","MaxResults"],"members":{"IdentityPoolId":{},"MaxResults":{"type":"integer"},"NextToken":{},"HideDisabled":{"type":"boolean"}}},"output":{"type":"structure","members":{"IdentityPoolId":{},"Identities":{"type":"list","member":{"shape":"Sl"}},"NextToken":{}}},"http":{}},"ListIdentityPools":{"input":{"type":"structure","required":["MaxResults"],"members":{"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"IdentityPools":{"type":"list","member":{"type":"structure","members":{"IdentityPoolId":{},"IdentityPoolName":{}}}},"NextToken":{}}},"http":{}},"LookupDeveloperIdentity":{"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{},"IdentityId":{},"DeveloperUserIdentifier":{},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"IdentityId":{},"DeveloperUserIdentifierList":{"type":"list","member":{}},"NextToken":{}}},"http":{}},"MergeDeveloperIdentities":{"input":{"type":"structure","required":["SourceUserIdentifier","DestinationUserIdentifier","DeveloperProviderName","IdentityPoolId"],"members":{"SourceUserIdentifier":{},"DestinationUserIdentifier":{},"DeveloperProviderName":{},"IdentityPoolId":{}}},"output":{"type":"structure","members":{"IdentityId":{}}},"http":{}},"SetIdentityPoolRoles":{"input":{"type":"structure","required":["IdentityPoolId","Roles"],"members":{"IdentityPoolId":{},"Roles":{"shape":"S12"}}},"http":{}},"UnlinkDeveloperIdentity":{"input":{"type":"structure","required":["IdentityId","IdentityPoolId","DeveloperProviderName","DeveloperUserIdentifier"],"members":{"IdentityId":{},"IdentityPoolId":{},"DeveloperProviderName":{},"DeveloperUserIdentifier":{}}},"http":{}},"UnlinkIdentity":{"input":{"type":"structure","required":["IdentityId","Logins","LoginsToRemove"],"members":{"IdentityId":{},"Logins":{"shape":"Sq"},"LoginsToRemove":{"shape":"Sm"}}},"http":{}},"UpdateIdentityPool":{"input":{"shape":"Sa"},"output":{"shape":"Sa"},"http":{}}},"shapes":{"S4":{"type":"map","key":{},"value":{}},"S8":{"type":"list","member":{}},"Sa":{"type":"structure","required":["IdentityPoolId","IdentityPoolName","AllowUnauthenticatedIdentities"],"members":{"IdentityPoolId":{},"IdentityPoolName":{},"AllowUnauthenticatedIdentities":{"type":"boolean"},"SupportedLoginProviders":{"shape":"S4"},"DeveloperProviderName":{},"OpenIdConnectProviderARNs":{"shape":"S8"}}},"Sl":{"type":"structure","members":{"IdentityId":{},"Logins":{"shape":"Sm"},"CreationDate":{"type":"timestamp"},"LastModifiedDate":{"type":"timestamp"}}},"Sm":{"type":"list","member":{}},"Sq":{"type":"map","key":{},"value":{}},"S12":{"type":"map","key":{},"value":{}}}};
+AWS.apiLoader.services['cognitoidentity']['2014-06-30'] = {"metadata":{"apiVersion":"2014-06-30","endpointPrefix":"cognito-identity","jsonVersion":"1.1","serviceFullName":"Amazon Cognito Identity","signatureVersion":"v4","targetPrefix":"AWSCognitoIdentityService","protocol":"json"},"operations":{"CreateIdentityPool":{"input":{"type":"structure","required":["IdentityPoolName","AllowUnauthenticatedIdentities"],"members":{"IdentityPoolName":{},"AllowUnauthenticatedIdentities":{"type":"boolean"},"SupportedLoginProviders":{"shape":"S4"},"DeveloperProviderName":{},"OpenIdConnectProviderARNs":{"shape":"S8"}}},"output":{"shape":"Sa"},"http":{}},"DeleteIdentityPool":{"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{}}},"http":{}},"DescribeIdentity":{"input":{"type":"structure","required":["IdentityId"],"members":{"IdentityId":{}}},"output":{"shape":"Sf"},"http":{}},"DescribeIdentityPool":{"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{}}},"output":{"shape":"Sa"},"http":{}},"GetCredentialsForIdentity":{"input":{"type":"structure","required":["IdentityId"],"members":{"IdentityId":{},"Logins":{"shape":"Sk"}}},"output":{"type":"structure","members":{"IdentityId":{},"Credentials":{"type":"structure","members":{"AccessKeyId":{},"SecretKey":{},"SessionToken":{},"Expiration":{"type":"timestamp"}}}}},"http":{}},"GetId":{"input":{"type":"structure","required":["IdentityPoolId"],"members":{"AccountId":{},"IdentityPoolId":{},"Logins":{"shape":"Sk"}}},"output":{"type":"structure","members":{"IdentityId":{}}},"http":{}},"GetIdentityPoolRoles":{"input":{"type":"structure","members":{"IdentityPoolId":{}}},"output":{"type":"structure","members":{"IdentityPoolId":{},"Roles":{"shape":"Sw"}}},"http":{}},"GetOpenIdToken":{"input":{"type":"structure","required":["IdentityId"],"members":{"IdentityId":{},"Logins":{"shape":"Sk"}}},"output":{"type":"structure","members":{"IdentityId":{},"Token":{}}},"http":{}},"GetOpenIdTokenForDeveloperIdentity":{"input":{"type":"structure","required":["IdentityPoolId","Logins"],"members":{"IdentityPoolId":{},"IdentityId":{},"Logins":{"shape":"Sk"},"TokenDuration":{"type":"long"}}},"output":{"type":"structure","members":{"IdentityId":{},"Token":{}}},"http":{}},"ListIdentities":{"input":{"type":"structure","required":["IdentityPoolId","MaxResults"],"members":{"IdentityPoolId":{},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"IdentityPoolId":{},"Identities":{"type":"list","member":{"shape":"Sf"}},"NextToken":{}}},"http":{}},"ListIdentityPools":{"input":{"type":"structure","required":["MaxResults"],"members":{"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"IdentityPools":{"type":"list","member":{"type":"structure","members":{"IdentityPoolId":{},"IdentityPoolName":{}}}},"NextToken":{}}},"http":{}},"LookupDeveloperIdentity":{"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{},"IdentityId":{},"DeveloperUserIdentifier":{},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"IdentityId":{},"DeveloperUserIdentifierList":{"type":"list","member":{}},"NextToken":{}}},"http":{}},"MergeDeveloperIdentities":{"input":{"type":"structure","required":["SourceUserIdentifier","DestinationUserIdentifier","DeveloperProviderName","IdentityPoolId"],"members":{"SourceUserIdentifier":{},"DestinationUserIdentifier":{},"DeveloperProviderName":{},"IdentityPoolId":{}}},"output":{"type":"structure","members":{"IdentityId":{}}},"http":{}},"SetIdentityPoolRoles":{"input":{"type":"structure","required":["IdentityPoolId","Roles"],"members":{"IdentityPoolId":{},"Roles":{"shape":"Sw"}}},"http":{}},"UnlinkDeveloperIdentity":{"input":{"type":"structure","required":["IdentityId","IdentityPoolId","DeveloperProviderName","DeveloperUserIdentifier"],"members":{"IdentityId":{},"IdentityPoolId":{},"DeveloperProviderName":{},"DeveloperUserIdentifier":{}}},"http":{}},"UnlinkIdentity":{"input":{"type":"structure","required":["IdentityId","Logins","LoginsToRemove"],"members":{"IdentityId":{},"Logins":{"shape":"Sk"},"LoginsToRemove":{"shape":"Sg"}}},"http":{}},"UpdateIdentityPool":{"input":{"shape":"Sa"},"output":{"shape":"Sa"},"http":{}}},"shapes":{"S4":{"type":"map","key":{},"value":{}},"S8":{"type":"list","member":{}},"Sa":{"type":"structure","required":["IdentityPoolId","IdentityPoolName","AllowUnauthenticatedIdentities"],"members":{"IdentityPoolId":{},"IdentityPoolName":{},"AllowUnauthenticatedIdentities":{"type":"boolean"},"SupportedLoginProviders":{"shape":"S4"},"DeveloperProviderName":{},"OpenIdConnectProviderARNs":{"shape":"S8"}}},"Sf":{"type":"structure","members":{"IdentityId":{},"Logins":{"shape":"Sg"},"CreationDate":{"type":"timestamp"},"LastModifiedDate":{"type":"timestamp"}}},"Sg":{"type":"list","member":{}},"Sk":{"type":"map","key":{},"value":{}},"Sw":{"type":"map","key":{},"value":{}}}};
 AWS.apiLoader.services['cognitosync'] = {};
 AWS.CognitoSync = AWS.Service.defineService('cognitosync', [ '2014-06-30' ]);
 
-AWS.apiLoader.services['cognitosync']['2014-06-30'] = {"version":"2.0","metadata":{"apiVersion":"2014-06-30","endpointPrefix":"cognito-sync","jsonVersion":"1.1","serviceFullName":"Amazon Cognito Sync","signatureVersion":"v4","protocol":"rest-json"},"operations":{"BulkPublish":{"http":{"requestUri":"/identitypools/{IdentityPoolId}/bulkpublish","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"}}},"output":{"type":"structure","members":{"IdentityPoolId":{}}}},"DeleteDataset":{"http":{"method":"DELETE","requestUri":"/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets/{DatasetName}","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId","IdentityId","DatasetName"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"IdentityId":{"location":"uri","locationName":"IdentityId"},"DatasetName":{"location":"uri","locationName":"DatasetName"}}},"output":{"type":"structure","members":{"Dataset":{"shape":"S8"}}}},"DescribeDataset":{"http":{"method":"GET","requestUri":"/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets/{DatasetName}","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId","IdentityId","DatasetName"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"IdentityId":{"location":"uri","locationName":"IdentityId"},"DatasetName":{"location":"uri","locationName":"DatasetName"}}},"output":{"type":"structure","members":{"Dataset":{"shape":"S8"}}}},"DescribeIdentityPoolUsage":{"http":{"method":"GET","requestUri":"/identitypools/{IdentityPoolId}","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"}}},"output":{"type":"structure","members":{"IdentityPoolUsage":{"shape":"Sg"}}}},"DescribeIdentityUsage":{"http":{"method":"GET","requestUri":"/identitypools/{IdentityPoolId}/identities/{IdentityId}","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId","IdentityId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"IdentityId":{"location":"uri","locationName":"IdentityId"}}},"output":{"type":"structure","members":{"IdentityUsage":{"type":"structure","members":{"IdentityId":{},"IdentityPoolId":{},"LastModifiedDate":{"type":"timestamp"},"DatasetCount":{"type":"integer"},"DataStorage":{"type":"long"}}}}}},"GetBulkPublishDetails":{"http":{"requestUri":"/identitypools/{IdentityPoolId}/getBulkPublishDetails","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"}}},"output":{"type":"structure","members":{"IdentityPoolId":{},"BulkPublishStartTime":{"type":"timestamp"},"BulkPublishCompleteTime":{"type":"timestamp"},"BulkPublishStatus":{},"FailureMessage":{}}}},"GetCognitoEvents":{"http":{"method":"GET","requestUri":"/identitypools/{IdentityPoolId}/events","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"}}},"output":{"type":"structure","members":{"Events":{"shape":"Sq"}}}},"GetIdentityPoolConfiguration":{"http":{"method":"GET","requestUri":"/identitypools/{IdentityPoolId}/configuration","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"}}},"output":{"type":"structure","members":{"IdentityPoolId":{},"PushSync":{"shape":"Sv"},"CognitoStreams":{"shape":"Sz"}}}},"ListDatasets":{"http":{"method":"GET","requestUri":"/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets","responseCode":200},"input":{"type":"structure","required":["IdentityId","IdentityPoolId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"IdentityId":{"location":"uri","locationName":"IdentityId"},"NextToken":{"location":"querystring","locationName":"nextToken"},"MaxResults":{"location":"querystring","locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","members":{"Datasets":{"type":"list","member":{"shape":"S8"}},"Count":{"type":"integer"},"NextToken":{}}}},"ListIdentityPoolUsage":{"http":{"method":"GET","requestUri":"/identitypools","responseCode":200},"input":{"type":"structure","members":{"NextToken":{"location":"querystring","locationName":"nextToken"},"MaxResults":{"location":"querystring","locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","members":{"IdentityPoolUsages":{"type":"list","member":{"shape":"Sg"}},"MaxResults":{"type":"integer"},"Count":{"type":"integer"},"NextToken":{}}}},"ListRecords":{"http":{"method":"GET","requestUri":"/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets/{DatasetName}/records","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId","IdentityId","DatasetName"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"IdentityId":{"location":"uri","locationName":"IdentityId"},"DatasetName":{"location":"uri","locationName":"DatasetName"},"LastSyncCount":{"location":"querystring","locationName":"lastSyncCount","type":"long"},"NextToken":{"location":"querystring","locationName":"nextToken"},"MaxResults":{"location":"querystring","locationName":"maxResults","type":"integer"},"SyncSessionToken":{"location":"querystring","locationName":"syncSessionToken"}}},"output":{"type":"structure","members":{"Records":{"shape":"S1c"},"NextToken":{},"Count":{"type":"integer"},"DatasetSyncCount":{"type":"long"},"LastModifiedBy":{},"MergedDatasetNames":{"type":"list","member":{}},"DatasetExists":{"type":"boolean"},"DatasetDeletedAfterRequestedSyncCount":{"type":"boolean"},"SyncSessionToken":{}}}},"RegisterDevice":{"http":{"requestUri":"/identitypools/{IdentityPoolId}/identity/{IdentityId}/device","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId","IdentityId","Platform","Token"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"IdentityId":{"location":"uri","locationName":"IdentityId"},"Platform":{},"Token":{}}},"output":{"type":"structure","members":{"DeviceId":{}}}},"SetCognitoEvents":{"http":{"requestUri":"/identitypools/{IdentityPoolId}/events","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId","Events"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"Events":{"shape":"Sq"}}}},"SetIdentityPoolConfiguration":{"http":{"requestUri":"/identitypools/{IdentityPoolId}/configuration","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"PushSync":{"shape":"Sv"},"CognitoStreams":{"shape":"Sz"}}},"output":{"type":"structure","members":{"IdentityPoolId":{},"PushSync":{"shape":"Sv"},"CognitoStreams":{"shape":"Sz"}}}},"SubscribeToDataset":{"http":{"requestUri":"/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets/{DatasetName}/subscriptions/{DeviceId}","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId","IdentityId","DatasetName","DeviceId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"IdentityId":{"location":"uri","locationName":"IdentityId"},"DatasetName":{"location":"uri","locationName":"DatasetName"},"DeviceId":{"location":"uri","locationName":"DeviceId"}}},"output":{"type":"structure","members":{}}},"UnsubscribeFromDataset":{"http":{"method":"DELETE","requestUri":"/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets/{DatasetName}/subscriptions/{DeviceId}","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId","IdentityId","DatasetName","DeviceId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"IdentityId":{"location":"uri","locationName":"IdentityId"},"DatasetName":{"location":"uri","locationName":"DatasetName"},"DeviceId":{"location":"uri","locationName":"DeviceId"}}},"output":{"type":"structure","members":{}}},"UpdateRecords":{"http":{"requestUri":"/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets/{DatasetName}","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId","IdentityId","DatasetName","SyncSessionToken"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"IdentityId":{"location":"uri","locationName":"IdentityId"},"DatasetName":{"location":"uri","locationName":"DatasetName"},"DeviceId":{},"RecordPatches":{"type":"list","member":{"type":"structure","required":["Op","Key","SyncCount"],"members":{"Op":{},"Key":{},"Value":{},"SyncCount":{"type":"long"},"DeviceLastModifiedDate":{"type":"timestamp"}}}},"SyncSessionToken":{},"ClientContext":{"location":"header","locationName":"x-amz-Client-Context"}}},"output":{"type":"structure","members":{"Records":{"shape":"S1c"}}}}},"shapes":{"S8":{"type":"structure","members":{"IdentityId":{},"DatasetName":{},"CreationDate":{"type":"timestamp"},"LastModifiedDate":{"type":"timestamp"},"LastModifiedBy":{},"DataStorage":{"type":"long"},"NumRecords":{"type":"long"}}},"Sg":{"type":"structure","members":{"IdentityPoolId":{},"SyncSessionsCount":{"type":"long"},"DataStorage":{"type":"long"},"LastModifiedDate":{"type":"timestamp"}}},"Sq":{"type":"map","key":{},"value":{}},"Sv":{"type":"structure","members":{"ApplicationArns":{"type":"list","member":{}},"RoleArn":{}}},"Sz":{"type":"structure","members":{"StreamName":{},"RoleArn":{},"StreamingStatus":{}}},"S1c":{"type":"list","member":{"type":"structure","members":{"Key":{},"Value":{},"SyncCount":{"type":"long"},"LastModifiedDate":{"type":"timestamp"},"LastModifiedBy":{},"DeviceLastModifiedDate":{"type":"timestamp"}}}}}};
-AWS.apiLoader.services['devicefarm'] = {};
-AWS.DeviceFarm = AWS.Service.defineService('devicefarm', [ '2015-06-23' ]);
-
-AWS.apiLoader.services['devicefarm']['2015-06-23'] = {"version":"2.0","metadata":{"apiVersion":"2015-06-23","endpointPrefix":"devicefarm","jsonVersion":"1.1","serviceFullName":"AWS Device Farm","signatureVersion":"v4","targetPrefix":"DeviceFarm_20150623","protocol":"json"},"operations":{"CreateDevicePool":{"input":{"type":"structure","required":["projectArn","name","rules"],"members":{"projectArn":{},"name":{},"description":{},"rules":{"shape":"S5"}}},"output":{"type":"structure","members":{"devicePool":{"shape":"Sb"}}},"http":{}},"CreateProject":{"input":{"type":"structure","required":["name"],"members":{"name":{}}},"output":{"type":"structure","members":{"project":{"shape":"Sf"}}},"http":{}},"CreateUpload":{"input":{"type":"structure","required":["projectArn","name","type"],"members":{"projectArn":{},"name":{},"type":{},"contentType":{}}},"output":{"type":"structure","members":{"upload":{"shape":"Sl"}}},"http":{}},"GetAccountSettings":{"input":{"type":"structure","members":{}},"output":{"type":"structure","members":{"accountSettings":{"type":"structure","members":{"awsAccountNumber":{},"unmeteredDevices":{"type":"map","key":{},"value":{"type":"integer"}}}}}},"http":{}},"GetDevice":{"input":{"type":"structure","required":["arn"],"members":{"arn":{}}},"output":{"type":"structure","members":{"device":{"shape":"Sy"}}},"http":{}},"GetDevicePool":{"input":{"type":"structure","required":["arn"],"members":{"arn":{}}},"output":{"type":"structure","members":{"devicePool":{"shape":"Sb"}}},"http":{}},"GetDevicePoolCompatibility":{"input":{"type":"structure","required":["devicePoolArn","appArn"],"members":{"devicePoolArn":{},"appArn":{},"testType":{}}},"output":{"type":"structure","members":{"compatibleDevices":{"shape":"S19"},"incompatibleDevices":{"shape":"S19"}}},"http":{}},"GetJob":{"input":{"type":"structure","required":["arn"],"members":{"arn":{}}},"output":{"type":"structure","members":{"job":{"shape":"S1g"}}},"http":{}},"GetProject":{"input":{"type":"structure","required":["arn"],"members":{"arn":{}}},"output":{"type":"structure","members":{"project":{"shape":"Sf"}}},"http":{}},"GetRun":{"input":{"type":"structure","required":["arn"],"members":{"arn":{}}},"output":{"type":"structure","members":{"run":{"shape":"S1o"}}},"http":{}},"GetSuite":{"input":{"type":"structure","required":["arn"],"members":{"arn":{}}},"output":{"type":"structure","members":{"suite":{"shape":"S1s"}}},"http":{}},"GetTest":{"input":{"type":"structure","required":["arn"],"members":{"arn":{}}},"output":{"type":"structure","members":{"test":{"shape":"S1v"}}},"http":{}},"GetUpload":{"input":{"type":"structure","required":["arn"],"members":{"arn":{}}},"output":{"type":"structure","members":{"upload":{"shape":"Sl"}}},"http":{}},"ListArtifacts":{"input":{"type":"structure","required":["arn","type"],"members":{"arn":{},"type":{},"nextToken":{}}},"output":{"type":"structure","members":{"artifacts":{"type":"list","member":{"type":"structure","members":{"arn":{},"name":{},"type":{},"extension":{},"url":{}}}},"nextToken":{}}},"http":{}},"ListDevicePools":{"input":{"type":"structure","required":["arn"],"members":{"arn":{},"type":{},"nextToken":{}}},"output":{"type":"structure","members":{"devicePools":{"type":"list","member":{"shape":"Sb"}},"nextToken":{}}},"http":{}},"ListDevices":{"input":{"type":"structure","members":{"arn":{},"nextToken":{}}},"output":{"type":"structure","members":{"devices":{"type":"list","member":{"shape":"Sy"}},"nextToken":{}}},"http":{}},"ListJobs":{"input":{"type":"structure","required":["arn"],"members":{"arn":{},"nextToken":{}}},"output":{"type":"structure","members":{"jobs":{"type":"list","member":{"shape":"S1g"}},"nextToken":{}}},"http":{}},"ListProjects":{"input":{"type":"structure","members":{"arn":{},"nextToken":{}}},"output":{"type":"structure","members":{"projects":{"type":"list","member":{"shape":"Sf"}},"nextToken":{}}},"http":{}},"ListRuns":{"input":{"type":"structure","required":["arn"],"members":{"arn":{},"nextToken":{}}},"output":{"type":"structure","members":{"runs":{"type":"list","member":{"shape":"S1o"}},"nextToken":{}}},"http":{}},"ListSamples":{"input":{"type":"structure","required":["arn"],"members":{"arn":{},"nextToken":{}}},"output":{"type":"structure","members":{"samples":{"type":"list","member":{"type":"structure","members":{"arn":{},"type":{},"url":{}}}},"nextToken":{}}},"http":{}},"ListSuites":{"input":{"type":"structure","required":["arn"],"members":{"arn":{},"nextToken":{}}},"output":{"type":"structure","members":{"suites":{"type":"list","member":{"shape":"S1s"}},"nextToken":{}}},"http":{}},"ListTests":{"input":{"type":"structure","required":["arn"],"members":{"arn":{},"nextToken":{}}},"output":{"type":"structure","members":{"tests":{"type":"list","member":{"shape":"S1v"}},"nextToken":{}}},"http":{}},"ListUniqueProblems":{"input":{"type":"structure","required":["arn"],"members":{"arn":{},"nextToken":{}}},"output":{"type":"structure","members":{"uniqueProblems":{"type":"map","key":{},"value":{"type":"list","member":{"type":"structure","members":{"message":{},"problems":{"type":"list","member":{"type":"structure","members":{"run":{"shape":"S32"},"job":{"shape":"S32"},"suite":{"shape":"S32"},"test":{"shape":"S32"},"device":{"shape":"Sy"},"result":{},"message":{}}}}}}}},"nextToken":{}}},"http":{}},"ListUploads":{"input":{"type":"structure","required":["arn"],"members":{"arn":{},"nextToken":{}}},"output":{"type":"structure","members":{"uploads":{"type":"list","member":{"shape":"Sl"}},"nextToken":{}}},"http":{}},"ScheduleRun":{"input":{"type":"structure","required":["projectArn","appArn","devicePoolArn","test"],"members":{"projectArn":{},"appArn":{},"devicePoolArn":{},"name":{},"test":{"type":"structure","required":["type"],"members":{"type":{},"testPackageArn":{},"filter":{},"parameters":{"type":"map","key":{},"value":{}}}},"configuration":{"type":"structure","members":{"extraDataPackageArn":{},"networkProfileArn":{},"locale":{},"location":{"type":"structure","required":["latitude","longitude"],"members":{"latitude":{"type":"double"},"longitude":{"type":"double"}}},"radios":{"type":"structure","members":{"wifi":{"type":"boolean"},"bluetooth":{"type":"boolean"},"nfc":{"type":"boolean"},"gps":{"type":"boolean"}}},"auxiliaryApps":{"type":"list","member":{}},"billingMethod":{}}}}},"output":{"type":"structure","members":{"run":{"shape":"S1o"}}},"http":{}}},"shapes":{"S5":{"type":"list","member":{"type":"structure","members":{"attribute":{},"operator":{},"value":{}}}},"Sb":{"type":"structure","members":{"arn":{},"name":{},"description":{},"type":{},"rules":{"shape":"S5"}}},"Sf":{"type":"structure","members":{"arn":{},"name":{},"created":{"type":"timestamp"}}},"Sl":{"type":"structure","members":{"arn":{},"name":{},"created":{"type":"timestamp"},"type":{},"status":{},"url":{},"metadata":{},"contentType":{},"message":{}}},"Sy":{"type":"structure","members":{"arn":{},"name":{},"manufacturer":{},"model":{},"formFactor":{},"platform":{},"os":{},"cpu":{"type":"structure","members":{"frequency":{},"architecture":{},"clock":{"type":"double"}}},"resolution":{"type":"structure","members":{"width":{"type":"integer"},"height":{"type":"integer"}}},"heapSize":{"type":"long"},"memory":{"type":"long"},"image":{},"carrier":{},"radio":{}}},"S19":{"type":"list","member":{"type":"structure","members":{"device":{"shape":"Sy"},"compatible":{"type":"boolean"},"incompatibilityMessages":{"type":"list","member":{"type":"structure","members":{"message":{},"type":{}}}}}}},"S1g":{"type":"structure","members":{"arn":{},"name":{},"type":{},"created":{"type":"timestamp"},"status":{},"result":{},"started":{"type":"timestamp"},"stopped":{"type":"timestamp"},"counters":{"shape":"S1j"},"message":{},"device":{"shape":"Sy"}}},"S1j":{"type":"structure","members":{"total":{"type":"integer"},"passed":{"type":"integer"},"failed":{"type":"integer"},"warned":{"type":"integer"},"errored":{"type":"integer"},"stopped":{"type":"integer"},"skipped":{"type":"integer"}}},"S1o":{"type":"structure","members":{"arn":{},"name":{},"type":{},"platform":{},"created":{"type":"timestamp"},"status":{},"result":{},"started":{"type":"timestamp"},"stopped":{"type":"timestamp"},"counters":{"shape":"S1j"},"message":{},"totalJobs":{"type":"integer"},"completedJobs":{"type":"integer"},"billingMethod":{}}},"S1s":{"type":"structure","members":{"arn":{},"name":{},"type":{},"created":{"type":"timestamp"},"status":{},"result":{},"started":{"type":"timestamp"},"stopped":{"type":"timestamp"},"counters":{"shape":"S1j"},"message":{}}},"S1v":{"type":"structure","members":{"arn":{},"name":{},"type":{},"created":{"type":"timestamp"},"status":{},"result":{},"started":{"type":"timestamp"},"stopped":{"type":"timestamp"},"counters":{"shape":"S1j"},"message":{}}},"S32":{"type":"structure","members":{"arn":{},"name":{}}}},"examples":{},"paginators":{"ListArtifacts":{"input_token":"nextToken","output_token":"nextToken","result_key":"artifacts"},"ListDevicePools":{"input_token":"nextToken","output_token":"nextToken","result_key":"devicePools"},"ListDevices":{"input_token":"nextToken","output_token":"nextToken","result_key":"devices"},"ListJobs":{"input_token":"nextToken","output_token":"nextToken","result_key":"jobs"},"ListProjects":{"input_token":"nextToken","output_token":"nextToken","result_key":"projects"},"ListRuns":{"input_token":"nextToken","output_token":"nextToken","result_key":"runs"},"ListSamples":{"input_token":"nextToken","output_token":"nextToken","result_key":"samples"},"ListSuites":{"input_token":"nextToken","output_token":"nextToken","result_key":"suites"},"ListTests":{"input_token":"nextToken","output_token":"nextToken","result_key":"tests"},"ListUniqueProblems":{"input_token":"nextToken","output_token":"nextToken","result_key":"uniqueProblems"},"ListUploads":{"input_token":"nextToken","output_token":"nextToken","result_key":"uploads"}}};
+AWS.apiLoader.services['cognitosync']['2014-06-30'] = {"version":"2.0","metadata":{"apiVersion":"2014-06-30","endpointPrefix":"cognito-sync","jsonVersion":"1.1","serviceFullName":"Amazon Cognito Sync","signatureVersion":"v4","protocol":"rest-json"},"operations":{"BulkPublish":{"http":{"requestUri":"/identitypools/{IdentityPoolId}/bulkpublish","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"}}},"output":{"type":"structure","members":{"IdentityPoolId":{}}}},"DeleteDataset":{"http":{"method":"DELETE","requestUri":"/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets/{DatasetName}","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId","IdentityId","DatasetName"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"IdentityId":{"location":"uri","locationName":"IdentityId"},"DatasetName":{"location":"uri","locationName":"DatasetName"}}},"output":{"type":"structure","members":{"Dataset":{"shape":"S8"}}}},"DescribeDataset":{"http":{"method":"GET","requestUri":"/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets/{DatasetName}","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId","IdentityId","DatasetName"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"IdentityId":{"location":"uri","locationName":"IdentityId"},"DatasetName":{"location":"uri","locationName":"DatasetName"}}},"output":{"type":"structure","members":{"Dataset":{"shape":"S8"}}}},"DescribeIdentityPoolUsage":{"http":{"method":"GET","requestUri":"/identitypools/{IdentityPoolId}","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"}}},"output":{"type":"structure","members":{"IdentityPoolUsage":{"shape":"Sg"}}}},"DescribeIdentityUsage":{"http":{"method":"GET","requestUri":"/identitypools/{IdentityPoolId}/identities/{IdentityId}","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId","IdentityId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"IdentityId":{"location":"uri","locationName":"IdentityId"}}},"output":{"type":"structure","members":{"IdentityUsage":{"type":"structure","members":{"IdentityId":{},"IdentityPoolId":{},"LastModifiedDate":{"type":"timestamp"},"DatasetCount":{"type":"integer"},"DataStorage":{"type":"long"}}}}}},"GetBulkPublishDetails":{"http":{"requestUri":"/identitypools/{IdentityPoolId}/getBulkPublishDetails","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"}}},"output":{"type":"structure","members":{"IdentityPoolId":{},"BulkPublishStartTime":{"type":"timestamp"},"BulkPublishCompleteTime":{"type":"timestamp"},"BulkPublishStatus":{},"FailureMessage":{}}}},"GetIdentityPoolConfiguration":{"http":{"method":"GET","requestUri":"/identitypools/{IdentityPoolId}/configuration","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"}}},"output":{"type":"structure","members":{"IdentityPoolId":{},"PushSync":{"shape":"Sq"},"CognitoStreams":{"shape":"Su"}}}},"ListDatasets":{"http":{"method":"GET","requestUri":"/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets","responseCode":200},"input":{"type":"structure","required":["IdentityId","IdentityPoolId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"IdentityId":{"location":"uri","locationName":"IdentityId"},"NextToken":{"location":"querystring","locationName":"nextToken"},"MaxResults":{"location":"querystring","locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","members":{"Datasets":{"type":"list","member":{"shape":"S8"}},"Count":{"type":"integer"},"NextToken":{}}}},"ListIdentityPoolUsage":{"http":{"method":"GET","requestUri":"/identitypools","responseCode":200},"input":{"type":"structure","members":{"NextToken":{"location":"querystring","locationName":"nextToken"},"MaxResults":{"location":"querystring","locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","members":{"IdentityPoolUsages":{"type":"list","member":{"shape":"Sg"}},"MaxResults":{"type":"integer"},"Count":{"type":"integer"},"NextToken":{}}}},"ListRecords":{"http":{"method":"GET","requestUri":"/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets/{DatasetName}/records","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId","IdentityId","DatasetName"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"IdentityId":{"location":"uri","locationName":"IdentityId"},"DatasetName":{"location":"uri","locationName":"DatasetName"},"LastSyncCount":{"location":"querystring","locationName":"lastSyncCount","type":"long"},"NextToken":{"location":"querystring","locationName":"nextToken"},"MaxResults":{"location":"querystring","locationName":"maxResults","type":"integer"},"SyncSessionToken":{"location":"querystring","locationName":"syncSessionToken"}}},"output":{"type":"structure","members":{"Records":{"shape":"S17"},"NextToken":{},"Count":{"type":"integer"},"DatasetSyncCount":{"type":"long"},"LastModifiedBy":{},"MergedDatasetNames":{"type":"list","member":{}},"DatasetExists":{"type":"boolean"},"DatasetDeletedAfterRequestedSyncCount":{"type":"boolean"},"SyncSessionToken":{}}}},"RegisterDevice":{"http":{"requestUri":"/identitypools/{IdentityPoolId}/identity/{IdentityId}/device","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId","IdentityId","Platform","Token"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"IdentityId":{"location":"uri","locationName":"IdentityId"},"Platform":{},"Token":{}}},"output":{"type":"structure","members":{"DeviceId":{}}}},"SetIdentityPoolConfiguration":{"http":{"requestUri":"/identitypools/{IdentityPoolId}/configuration","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"PushSync":{"shape":"Sq"},"CognitoStreams":{"shape":"Su"}}},"output":{"type":"structure","members":{"IdentityPoolId":{},"PushSync":{"shape":"Sq"},"CognitoStreams":{"shape":"Su"}}}},"SubscribeToDataset":{"http":{"requestUri":"/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets/{DatasetName}/subscriptions/{DeviceId}","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId","IdentityId","DatasetName","DeviceId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"IdentityId":{"location":"uri","locationName":"IdentityId"},"DatasetName":{"location":"uri","locationName":"DatasetName"},"DeviceId":{"location":"uri","locationName":"DeviceId"}}},"output":{"type":"structure","members":{}}},"UnsubscribeFromDataset":{"http":{"method":"DELETE","requestUri":"/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets/{DatasetName}/subscriptions/{DeviceId}","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId","IdentityId","DatasetName","DeviceId"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"IdentityId":{"location":"uri","locationName":"IdentityId"},"DatasetName":{"location":"uri","locationName":"DatasetName"},"DeviceId":{"location":"uri","locationName":"DeviceId"}}},"output":{"type":"structure","members":{}}},"UpdateRecords":{"http":{"requestUri":"/identitypools/{IdentityPoolId}/identities/{IdentityId}/datasets/{DatasetName}","responseCode":200},"input":{"type":"structure","required":["IdentityPoolId","IdentityId","DatasetName","SyncSessionToken"],"members":{"IdentityPoolId":{"location":"uri","locationName":"IdentityPoolId"},"IdentityId":{"location":"uri","locationName":"IdentityId"},"DatasetName":{"location":"uri","locationName":"DatasetName"},"DeviceId":{},"RecordPatches":{"type":"list","member":{"type":"structure","required":["Op","Key","SyncCount"],"members":{"Op":{},"Key":{},"Value":{},"SyncCount":{"type":"long"},"DeviceLastModifiedDate":{"type":"timestamp"}}}},"SyncSessionToken":{},"ClientContext":{"location":"header","locationName":"x-amz-Client-Context"}}},"output":{"type":"structure","members":{"Records":{"shape":"S17"}}}}},"shapes":{"S8":{"type":"structure","members":{"IdentityId":{},"DatasetName":{},"CreationDate":{"type":"timestamp"},"LastModifiedDate":{"type":"timestamp"},"LastModifiedBy":{},"DataStorage":{"type":"long"},"NumRecords":{"type":"long"}}},"Sg":{"type":"structure","members":{"IdentityPoolId":{},"SyncSessionsCount":{"type":"long"},"DataStorage":{"type":"long"},"LastModifiedDate":{"type":"timestamp"}}},"Sq":{"type":"structure","members":{"ApplicationArns":{"type":"list","member":{}},"RoleArn":{}}},"Su":{"type":"structure","members":{"StreamName":{},"RoleArn":{},"StreamingStatus":{}}},"S17":{"type":"list","member":{"type":"structure","members":{"Key":{},"Value":{},"SyncCount":{"type":"long"},"LastModifiedDate":{"type":"timestamp"},"LastModifiedBy":{},"DeviceLastModifiedDate":{"type":"timestamp"}}}}}};
 AWS.apiLoader.services['dynamodb'] = {};
 AWS.DynamoDB = AWS.Service.defineService('dynamodb', [ '2011-12-05', '2012-08-10' ]);
 require('./services/dynamodb');
 
-AWS.apiLoader.services['dynamodb']['2012-08-10'] = {"version":"2.0","metadata":{"apiVersion":"2012-08-10","endpointPrefix":"dynamodb","jsonVersion":"1.0","serviceAbbreviation":"DynamoDB","serviceFullName":"Amazon DynamoDB","signatureVersion":"v4","targetPrefix":"DynamoDB_20120810","protocol":"json"},"operations":{"BatchGetItem":{"input":{"type":"structure","required":["RequestItems"],"members":{"RequestItems":{"shape":"S2"},"ReturnConsumedCapacity":{}}},"output":{"type":"structure","members":{"Responses":{"type":"map","key":{},"value":{"shape":"Sr"}},"UnprocessedKeys":{"shape":"S2"},"ConsumedCapacity":{"shape":"St"}}},"http":{}},"BatchWriteItem":{"input":{"type":"structure","required":["RequestItems"],"members":{"RequestItems":{"shape":"S10"},"ReturnConsumedCapacity":{},"ReturnItemCollectionMetrics":{}}},"output":{"type":"structure","members":{"UnprocessedItems":{"shape":"S10"},"ItemCollectionMetrics":{"type":"map","key":{},"value":{"type":"list","member":{"shape":"S1a"}}},"ConsumedCapacity":{"shape":"St"}}},"http":{}},"CreateTable":{"input":{"type":"structure","required":["AttributeDefinitions","TableName","KeySchema","ProvisionedThroughput"],"members":{"AttributeDefinitions":{"shape":"S1f"},"TableName":{},"KeySchema":{"shape":"S1j"},"LocalSecondaryIndexes":{"type":"list","member":{"type":"structure","required":["IndexName","KeySchema","Projection"],"members":{"IndexName":{},"KeySchema":{"shape":"S1j"},"Projection":{"shape":"S1o"}}}},"GlobalSecondaryIndexes":{"type":"list","member":{"type":"structure","required":["IndexName","KeySchema","Projection","ProvisionedThroughput"],"members":{"IndexName":{},"KeySchema":{"shape":"S1j"},"Projection":{"shape":"S1o"},"ProvisionedThroughput":{"shape":"S1u"}}}},"ProvisionedThroughput":{"shape":"S1u"},"StreamSpecification":{"shape":"S1w"}}},"output":{"type":"structure","members":{"TableDescription":{"shape":"S20"}}},"http":{}},"DeleteItem":{"input":{"type":"structure","required":["TableName","Key"],"members":{"TableName":{},"Key":{"shape":"S6"},"Expected":{"shape":"S2e"},"ConditionalOperator":{},"ReturnValues":{},"ReturnConsumedCapacity":{},"ReturnItemCollectionMetrics":{},"ConditionExpression":{},"ExpressionAttributeNames":{"shape":"Sm"},"ExpressionAttributeValues":{"shape":"S2m"}}},"output":{"type":"structure","members":{"Attributes":{"shape":"Ss"},"ConsumedCapacity":{"shape":"Su"},"ItemCollectionMetrics":{"shape":"S1a"}}},"http":{}},"DeleteTable":{"input":{"type":"structure","required":["TableName"],"members":{"TableName":{}}},"output":{"type":"structure","members":{"TableDescription":{"shape":"S20"}}},"http":{}},"DescribeTable":{"input":{"type":"structure","required":["TableName"],"members":{"TableName":{}}},"output":{"type":"structure","members":{"Table":{"shape":"S20"}}},"http":{}},"GetItem":{"input":{"type":"structure","required":["TableName","Key"],"members":{"TableName":{},"Key":{"shape":"S6"},"AttributesToGet":{"shape":"Sj"},"ConsistentRead":{"type":"boolean"},"ReturnConsumedCapacity":{},"ProjectionExpression":{},"ExpressionAttributeNames":{"shape":"Sm"}}},"output":{"type":"structure","members":{"Item":{"shape":"Ss"},"ConsumedCapacity":{"shape":"Su"}}},"http":{}},"ListTables":{"input":{"type":"structure","members":{"ExclusiveStartTableName":{},"Limit":{"type":"integer"}}},"output":{"type":"structure","members":{"TableNames":{"type":"list","member":{}},"LastEvaluatedTableName":{}}},"http":{}},"PutItem":{"input":{"type":"structure","required":["TableName","Item"],"members":{"TableName":{},"Item":{"shape":"S14"},"Expected":{"shape":"S2e"},"ReturnValues":{},"ReturnConsumedCapacity":{},"ReturnItemCollectionMetrics":{},"ConditionalOperator":{},"ConditionExpression":{},"ExpressionAttributeNames":{"shape":"Sm"},"ExpressionAttributeValues":{"shape":"S2m"}}},"output":{"type":"structure","members":{"Attributes":{"shape":"Ss"},"ConsumedCapacity":{"shape":"Su"},"ItemCollectionMetrics":{"shape":"S1a"}}},"http":{}},"Query":{"input":{"type":"structure","required":["TableName"],"members":{"TableName":{},"IndexName":{},"Select":{},"AttributesToGet":{"shape":"Sj"},"Limit":{"type":"integer"},"ConsistentRead":{"type":"boolean"},"KeyConditions":{"type":"map","key":{},"value":{"shape":"S35"}},"QueryFilter":{"shape":"S36"},"ConditionalOperator":{},"ScanIndexForward":{"type":"boolean"},"ExclusiveStartKey":{"shape":"S6"},"ReturnConsumedCapacity":{},"ProjectionExpression":{},"FilterExpression":{},"KeyConditionExpression":{},"ExpressionAttributeNames":{"shape":"Sm"},"ExpressionAttributeValues":{"shape":"S2m"}}},"output":{"type":"structure","members":{"Items":{"shape":"Sr"},"Count":{"type":"integer"},"ScannedCount":{"type":"integer"},"LastEvaluatedKey":{"shape":"S6"},"ConsumedCapacity":{"shape":"Su"}}},"http":{}},"Scan":{"input":{"type":"structure","required":["TableName"],"members":{"TableName":{},"IndexName":{},"AttributesToGet":{"shape":"Sj"},"Limit":{"type":"integer"},"Select":{},"ScanFilter":{"shape":"S36"},"ConditionalOperator":{},"ExclusiveStartKey":{"shape":"S6"},"ReturnConsumedCapacity":{},"TotalSegments":{"type":"integer"},"Segment":{"type":"integer"},"ProjectionExpression":{},"FilterExpression":{},"ExpressionAttributeNames":{"shape":"Sm"},"ExpressionAttributeValues":{"shape":"S2m"},"ConsistentRead":{"type":"boolean"}}},"output":{"type":"structure","members":{"Items":{"shape":"Sr"},"Count":{"type":"integer"},"ScannedCount":{"type":"integer"},"LastEvaluatedKey":{"shape":"S6"},"ConsumedCapacity":{"shape":"Su"}}},"http":{}},"UpdateItem":{"input":{"type":"structure","required":["TableName","Key"],"members":{"TableName":{},"Key":{"shape":"S6"},"AttributeUpdates":{"type":"map","key":{},"value":{"type":"structure","members":{"Value":{"shape":"S8"},"Action":{}}}},"Expected":{"shape":"S2e"},"ConditionalOperator":{},"ReturnValues":{},"ReturnConsumedCapacity":{},"ReturnItemCollectionMetrics":{},"UpdateExpression":{},"ConditionExpression":{},"ExpressionAttributeNames":{"shape":"Sm"},"ExpressionAttributeValues":{"shape":"S2m"}}},"output":{"type":"structure","members":{"Attributes":{"shape":"Ss"},"ConsumedCapacity":{"shape":"Su"},"ItemCollectionMetrics":{"shape":"S1a"}}},"http":{}},"UpdateTable":{"input":{"type":"structure","required":["TableName"],"members":{"AttributeDefinitions":{"shape":"S1f"},"TableName":{},"ProvisionedThroughput":{"shape":"S1u"},"GlobalSecondaryIndexUpdates":{"type":"list","member":{"type":"structure","members":{"Update":{"type":"structure","required":["IndexName","ProvisionedThroughput"],"members":{"IndexName":{},"ProvisionedThroughput":{"shape":"S1u"}}},"Create":{"type":"structure","required":["IndexName","KeySchema","Projection","ProvisionedThroughput"],"members":{"IndexName":{},"KeySchema":{"shape":"S1j"},"Projection":{"shape":"S1o"},"ProvisionedThroughput":{"shape":"S1u"}}},"Delete":{"type":"structure","required":["IndexName"],"members":{"IndexName":{}}}}}},"StreamSpecification":{"shape":"S1w"}}},"output":{"type":"structure","members":{"TableDescription":{"shape":"S20"}}},"http":{}}},"shapes":{"S2":{"type":"map","key":{},"value":{"type":"structure","required":["Keys"],"members":{"Keys":{"type":"list","member":{"shape":"S6"}},"AttributesToGet":{"shape":"Sj"},"ConsistentRead":{"type":"boolean"},"ProjectionExpression":{},"ExpressionAttributeNames":{"shape":"Sm"}}}},"S6":{"type":"map","key":{},"value":{"shape":"S8"}},"S8":{"type":"structure","members":{"S":{},"N":{},"B":{"type":"blob"},"SS":{"type":"list","member":{}},"NS":{"type":"list","member":{}},"BS":{"type":"list","member":{"type":"blob"}},"M":{"type":"map","key":{},"value":{"shape":"S8"}},"L":{"type":"list","member":{"shape":"S8"}},"NULL":{"type":"boolean"},"BOOL":{"type":"boolean"}}},"Sj":{"type":"list","member":{}},"Sm":{"type":"map","key":{},"value":{}},"Sr":{"type":"list","member":{"shape":"Ss"}},"Ss":{"type":"map","key":{},"value":{"shape":"S8"}},"St":{"type":"list","member":{"shape":"Su"}},"Su":{"type":"structure","members":{"TableName":{},"CapacityUnits":{"type":"double"},"Table":{"shape":"Sw"},"LocalSecondaryIndexes":{"shape":"Sx"},"GlobalSecondaryIndexes":{"shape":"Sx"}}},"Sw":{"type":"structure","members":{"CapacityUnits":{"type":"double"}}},"Sx":{"type":"map","key":{},"value":{"shape":"Sw"}},"S10":{"type":"map","key":{},"value":{"type":"list","member":{"type":"structure","members":{"PutRequest":{"type":"structure","required":["Item"],"members":{"Item":{"shape":"S14"}}},"DeleteRequest":{"type":"structure","required":["Key"],"members":{"Key":{"shape":"S6"}}}}}}},"S14":{"type":"map","key":{},"value":{"shape":"S8"}},"S1a":{"type":"structure","members":{"ItemCollectionKey":{"type":"map","key":{},"value":{"shape":"S8"}},"SizeEstimateRangeGB":{"type":"list","member":{"type":"double"}}}},"S1f":{"type":"list","member":{"type":"structure","required":["AttributeName","AttributeType"],"members":{"AttributeName":{},"AttributeType":{}}}},"S1j":{"type":"list","member":{"type":"structure","required":["AttributeName","KeyType"],"members":{"AttributeName":{},"KeyType":{}}}},"S1o":{"type":"structure","members":{"ProjectionType":{},"NonKeyAttributes":{"type":"list","member":{}}}},"S1u":{"type":"structure","required":["ReadCapacityUnits","WriteCapacityUnits"],"members":{"ReadCapacityUnits":{"type":"long"},"WriteCapacityUnits":{"type":"long"}}},"S1w":{"type":"structure","members":{"StreamEnabled":{"type":"boolean"},"StreamViewType":{}}},"S20":{"type":"structure","members":{"AttributeDefinitions":{"shape":"S1f"},"TableName":{},"KeySchema":{"shape":"S1j"},"TableStatus":{},"CreationDateTime":{"type":"timestamp"},"ProvisionedThroughput":{"shape":"S23"},"TableSizeBytes":{"type":"long"},"ItemCount":{"type":"long"},"TableArn":{},"LocalSecondaryIndexes":{"type":"list","member":{"type":"structure","members":{"IndexName":{},"KeySchema":{"shape":"S1j"},"Projection":{"shape":"S1o"},"IndexSizeBytes":{"type":"long"},"ItemCount":{"type":"long"},"IndexArn":{}}}},"GlobalSecondaryIndexes":{"type":"list","member":{"type":"structure","members":{"IndexName":{},"KeySchema":{"shape":"S1j"},"Projection":{"shape":"S1o"},"IndexStatus":{},"Backfilling":{"type":"boolean"},"ProvisionedThroughput":{"shape":"S23"},"IndexSizeBytes":{"type":"long"},"ItemCount":{"type":"long"},"IndexArn":{}}}},"StreamSpecification":{"shape":"S1w"},"LatestStreamLabel":{},"LatestStreamArn":{}}},"S23":{"type":"structure","members":{"LastIncreaseDateTime":{"type":"timestamp"},"LastDecreaseDateTime":{"type":"timestamp"},"NumberOfDecreasesToday":{"type":"long"},"ReadCapacityUnits":{"type":"long"},"WriteCapacityUnits":{"type":"long"}}},"S2e":{"type":"map","key":{},"value":{"type":"structure","members":{"Value":{"shape":"S8"},"Exists":{"type":"boolean"},"ComparisonOperator":{},"AttributeValueList":{"shape":"S2i"}}}},"S2i":{"type":"list","member":{"shape":"S8"}},"S2m":{"type":"map","key":{},"value":{"shape":"S8"}},"S35":{"type":"structure","required":["ComparisonOperator"],"members":{"AttributeValueList":{"shape":"S2i"},"ComparisonOperator":{}}},"S36":{"type":"map","key":{},"value":{"shape":"S35"}}},"examples":{},"paginators":{"BatchGetItem":{"input_token":"RequestItems","output_token":"UnprocessedKeys"},"ListTables":{"input_token":"ExclusiveStartTableName","output_token":"LastEvaluatedTableName","limit_key":"Limit","result_key":"TableNames"},"Query":{"input_token":"ExclusiveStartKey","output_token":"LastEvaluatedKey","limit_key":"Limit","result_key":"Items"},"Scan":{"input_token":"ExclusiveStartKey","output_token":"LastEvaluatedKey","limit_key":"Limit","result_key":"Items"}},"waiters":{"__default__":{"interval":20,"max_attempts":25},"__TableState":{"operation":"DescribeTable"},"TableExists":{"extends":"__TableState","ignore_errors":["ResourceNotFoundException"],"success_type":"output","success_path":"Table.TableStatus","success_value":"ACTIVE"},"TableNotExists":{"extends":"__TableState","success_type":"error","success_value":"ResourceNotFoundException"}}};
-AWS.apiLoader.services['dynamodbstreams'] = {};
-AWS.DynamoDBStreams = AWS.Service.defineService('dynamodbstreams', [ '2012-08-10' ]);
-
-AWS.apiLoader.services['dynamodbstreams']['2012-08-10'] = {"version":"2.0","metadata":{"apiVersion":"2012-08-10","endpointPrefix":"streams.dynamodb","jsonVersion":"1.0","serviceFullName":"Amazon DynamoDB Streams","signatureVersion":"v4","signingName":"dynamodb","targetPrefix":"DynamoDBStreams_20120810","protocol":"json"},"operations":{"DescribeStream":{"input":{"type":"structure","required":["StreamArn"],"members":{"StreamArn":{},"Limit":{"type":"integer"},"ExclusiveStartShardId":{}}},"output":{"type":"structure","members":{"StreamDescription":{"type":"structure","members":{"StreamArn":{},"StreamLabel":{},"StreamStatus":{},"StreamViewType":{},"CreationRequestDateTime":{"type":"timestamp"},"TableName":{},"KeySchema":{"type":"list","member":{"type":"structure","required":["AttributeName","KeyType"],"members":{"AttributeName":{},"KeyType":{}}}},"Shards":{"type":"list","member":{"type":"structure","members":{"ShardId":{},"SequenceNumberRange":{"type":"structure","members":{"StartingSequenceNumber":{},"EndingSequenceNumber":{}}},"ParentShardId":{}}}},"LastEvaluatedShardId":{}}}}},"http":{}},"GetRecords":{"input":{"type":"structure","required":["ShardIterator"],"members":{"ShardIterator":{},"Limit":{"type":"integer"}}},"output":{"type":"structure","members":{"Records":{"type":"list","member":{"type":"structure","members":{"eventID":{},"eventName":{},"eventVersion":{},"eventSource":{},"awsRegion":{},"dynamodb":{"type":"structure","members":{"Keys":{"shape":"Sr"},"NewImage":{"shape":"Sr"},"OldImage":{"shape":"Sr"},"SequenceNumber":{},"SizeBytes":{"type":"long"},"StreamViewType":{}}}}}},"NextShardIterator":{}}},"http":{}},"GetShardIterator":{"input":{"type":"structure","required":["StreamArn","ShardId","ShardIteratorType"],"members":{"StreamArn":{},"ShardId":{},"ShardIteratorType":{},"SequenceNumber":{}}},"output":{"type":"structure","members":{"ShardIterator":{}}},"http":{}},"ListStreams":{"input":{"type":"structure","members":{"TableName":{},"Limit":{"type":"integer"},"ExclusiveStartStreamArn":{}}},"output":{"type":"structure","members":{"Streams":{"type":"list","member":{"type":"structure","members":{"StreamArn":{},"TableName":{},"StreamLabel":{}}}},"LastEvaluatedStreamArn":{}}},"http":{}}},"shapes":{"Sr":{"type":"map","key":{},"value":{"shape":"St"}},"St":{"type":"structure","members":{"S":{},"N":{},"B":{"type":"blob"},"SS":{"type":"list","member":{}},"NS":{"type":"list","member":{}},"BS":{"type":"list","member":{"type":"blob"}},"M":{"type":"map","key":{},"value":{"shape":"St"}},"L":{"type":"list","member":{"shape":"St"}},"NULL":{"type":"boolean"},"BOOL":{"type":"boolean"}}}},"examples":{}};
-AWS.apiLoader.services['ec2'] = {};
-AWS.EC2 = AWS.Service.defineService('ec2', [ '2015-04-15' ]);
-require('./services/ec2');
-
-AWS.apiLoader.services['ec2']['2015-04-15'] = {"version":"2.0","metadata":{"apiVersion":"2015-04-15","endpointPrefix":"ec2","serviceAbbreviation":"Amazon EC2","serviceFullName":"Amazon Elastic Compute Cloud","signatureVersion":"v4","xmlNamespace":"http://ec2.amazonaws.com/doc/2015-04-15","protocol":"ec2"},"operations":{"AcceptVpcPeeringConnection":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"}}},"output":{"type":"structure","members":{"VpcPeeringConnection":{"shape":"S5","locationName":"vpcPeeringConnection"}}},"http":{}},"AllocateAddress":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Domain":{}}},"output":{"type":"structure","members":{"PublicIp":{"locationName":"publicIp"},"Domain":{"locationName":"domain"},"AllocationId":{"locationName":"allocationId"}}},"http":{}},"AssignPrivateIpAddresses":{"input":{"type":"structure","required":["NetworkInterfaceId"],"members":{"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"PrivateIpAddresses":{"shape":"Sg","locationName":"privateIpAddress"},"SecondaryPrivateIpAddressCount":{"locationName":"secondaryPrivateIpAddressCount","type":"integer"},"AllowReassignment":{"locationName":"allowReassignment","type":"boolean"}}},"http":{}},"AssociateAddress":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{},"PublicIp":{},"AllocationId":{},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"AllowReassociation":{"locationName":"allowReassociation","type":"boolean"}}},"output":{"type":"structure","members":{"AssociationId":{"locationName":"associationId"}}},"http":{}},"AssociateDhcpOptions":{"input":{"type":"structure","required":["DhcpOptionsId","VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"DhcpOptionsId":{},"VpcId":{}}},"http":{}},"AssociateRouteTable":{"input":{"type":"structure","required":["SubnetId","RouteTableId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SubnetId":{"locationName":"subnetId"},"RouteTableId":{"locationName":"routeTableId"}}},"output":{"type":"structure","members":{"AssociationId":{"locationName":"associationId"}}},"http":{}},"AttachClassicLinkVpc":{"input":{"type":"structure","required":["InstanceId","VpcId","Groups"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{"locationName":"instanceId"},"VpcId":{"locationName":"vpcId"},"Groups":{"shape":"So","locationName":"SecurityGroupId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"AttachInternetGateway":{"input":{"type":"structure","required":["InternetGatewayId","VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InternetGatewayId":{"locationName":"internetGatewayId"},"VpcId":{"locationName":"vpcId"}}},"http":{}},"AttachNetworkInterface":{"input":{"type":"structure","required":["NetworkInterfaceId","InstanceId","DeviceIndex"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"InstanceId":{"locationName":"instanceId"},"DeviceIndex":{"locationName":"deviceIndex","type":"integer"}}},"output":{"type":"structure","members":{"AttachmentId":{"locationName":"attachmentId"}}},"http":{}},"AttachVolume":{"input":{"type":"structure","required":["VolumeId","InstanceId","Device"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{},"InstanceId":{},"Device":{}}},"output":{"shape":"Su","locationName":"attachment"},"http":{}},"AttachVpnGateway":{"input":{"type":"structure","required":["VpnGatewayId","VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpnGatewayId":{},"VpcId":{}}},"output":{"type":"structure","members":{"VpcAttachment":{"shape":"Sy","locationName":"attachment"}}},"http":{}},"AuthorizeSecurityGroupEgress":{"input":{"type":"structure","required":["GroupId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupId":{"locationName":"groupId"},"SourceSecurityGroupName":{"locationName":"sourceSecurityGroupName"},"SourceSecurityGroupOwnerId":{"locationName":"sourceSecurityGroupOwnerId"},"IpProtocol":{"locationName":"ipProtocol"},"FromPort":{"locationName":"fromPort","type":"integer"},"ToPort":{"locationName":"toPort","type":"integer"},"CidrIp":{"locationName":"cidrIp"},"IpPermissions":{"shape":"S11","locationName":"ipPermissions"}}},"http":{}},"AuthorizeSecurityGroupIngress":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupName":{},"GroupId":{},"SourceSecurityGroupName":{},"SourceSecurityGroupOwnerId":{},"IpProtocol":{},"FromPort":{"type":"integer"},"ToPort":{"type":"integer"},"CidrIp":{},"IpPermissions":{"shape":"S11"}}},"http":{}},"BundleInstance":{"input":{"type":"structure","required":["InstanceId","Storage"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{},"Storage":{"shape":"S1b"}}},"output":{"type":"structure","members":{"BundleTask":{"shape":"S1f","locationName":"bundleInstanceTask"}}},"http":{}},"CancelBundleTask":{"input":{"type":"structure","required":["BundleId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"BundleId":{}}},"output":{"type":"structure","members":{"BundleTask":{"shape":"S1f","locationName":"bundleInstanceTask"}}},"http":{}},"CancelConversionTask":{"input":{"type":"structure","required":["ConversionTaskId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ConversionTaskId":{"locationName":"conversionTaskId"},"ReasonMessage":{"locationName":"reasonMessage"}}},"http":{}},"CancelExportTask":{"input":{"type":"structure","required":["ExportTaskId"],"members":{"ExportTaskId":{"locationName":"exportTaskId"}}},"http":{}},"CancelImportTask":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"ImportTaskId":{},"CancelReason":{}}},"output":{"type":"structure","members":{"ImportTaskId":{"locationName":"importTaskId"},"State":{"locationName":"state"},"PreviousState":{"locationName":"previousState"}}},"http":{}},"CancelReservedInstancesListing":{"input":{"type":"structure","required":["ReservedInstancesListingId"],"members":{"ReservedInstancesListingId":{"locationName":"reservedInstancesListingId"}}},"output":{"type":"structure","members":{"ReservedInstancesListings":{"shape":"S1q","locationName":"reservedInstancesListingsSet"}}},"http":{}},"CancelSpotFleetRequests":{"input":{"type":"structure","required":["SpotFleetRequestIds","TerminateInstances"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotFleetRequestIds":{"shape":"S22","locationName":"spotFleetRequestId"},"TerminateInstances":{"locationName":"terminateInstances","type":"boolean"}}},"output":{"type":"structure","members":{"UnsuccessfulFleetRequests":{"locationName":"unsuccessfulFleetRequestSet","type":"list","member":{"locationName":"item","type":"structure","required":["SpotFleetRequestId","Error"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"Error":{"locationName":"error","type":"structure","required":["Code","Message"],"members":{"Code":{"locationName":"code"},"Message":{"locationName":"message"}}}}}},"SuccessfulFleetRequests":{"locationName":"successfulFleetRequestSet","type":"list","member":{"locationName":"item","type":"structure","required":["SpotFleetRequestId","CurrentSpotFleetRequestState","PreviousSpotFleetRequestState"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"CurrentSpotFleetRequestState":{"locationName":"currentSpotFleetRequestState"},"PreviousSpotFleetRequestState":{"locationName":"previousSpotFleetRequestState"}}}}}},"http":{}},"CancelSpotInstanceRequests":{"input":{"type":"structure","required":["SpotInstanceRequestIds"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotInstanceRequestIds":{"shape":"S2c","locationName":"SpotInstanceRequestId"}}},"output":{"type":"structure","members":{"CancelledSpotInstanceRequests":{"locationName":"spotInstanceRequestSet","type":"list","member":{"locationName":"item","type":"structure","members":{"SpotInstanceRequestId":{"locationName":"spotInstanceRequestId"},"State":{"locationName":"state"}}}}}},"http":{}},"ConfirmProductInstance":{"input":{"type":"structure","required":["ProductCode","InstanceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ProductCode":{},"InstanceId":{}}},"output":{"type":"structure","members":{"OwnerId":{"locationName":"ownerId"},"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"CopyImage":{"input":{"type":"structure","required":["SourceRegion","SourceImageId","Name"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SourceRegion":{},"SourceImageId":{},"Name":{},"Description":{},"ClientToken":{}}},"output":{"type":"structure","members":{"ImageId":{"locationName":"imageId"}}},"http":{}},"CopySnapshot":{"input":{"type":"structure","required":["SourceRegion","SourceSnapshotId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SourceRegion":{},"SourceSnapshotId":{},"Description":{},"DestinationRegion":{"locationName":"destinationRegion"},"PresignedUrl":{"locationName":"presignedUrl"},"Encrypted":{"locationName":"encrypted","type":"boolean"},"KmsKeyId":{"locationName":"kmsKeyId"}}},"output":{"type":"structure","members":{"SnapshotId":{"locationName":"snapshotId"}}},"http":{}},"CreateCustomerGateway":{"input":{"type":"structure","required":["Type","PublicIp","BgpAsn"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Type":{},"PublicIp":{"locationName":"IpAddress"},"BgpAsn":{"type":"integer"}}},"output":{"type":"structure","members":{"CustomerGateway":{"shape":"S2q","locationName":"customerGateway"}}},"http":{}},"CreateDhcpOptions":{"input":{"type":"structure","required":["DhcpConfigurations"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"DhcpConfigurations":{"locationName":"dhcpConfiguration","type":"list","member":{"locationName":"item","type":"structure","members":{"Key":{"locationName":"key"},"Values":{"shape":"S22","locationName":"Value"}}}}}},"output":{"type":"structure","members":{"DhcpOptions":{"shape":"S2v","locationName":"dhcpOptions"}}},"http":{}},"CreateFlowLogs":{"input":{"type":"structure","required":["ResourceIds","ResourceType","TrafficType","LogGroupName","DeliverLogsPermissionArn"],"members":{"ResourceIds":{"shape":"S22","locationName":"ResourceId"},"ResourceType":{},"TrafficType":{},"LogGroupName":{},"DeliverLogsPermissionArn":{},"ClientToken":{}}},"output":{"type":"structure","members":{"FlowLogIds":{"shape":"S22","locationName":"flowLogIdSet"},"ClientToken":{"locationName":"clientToken"},"Unsuccessful":{"shape":"S34","locationName":"unsuccessful"}}},"http":{}},"CreateImage":{"input":{"type":"structure","required":["InstanceId","Name"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{"locationName":"instanceId"},"Name":{"locationName":"name"},"Description":{"locationName":"description"},"NoReboot":{"locationName":"noReboot","type":"boolean"},"BlockDeviceMappings":{"shape":"S38","locationName":"blockDeviceMapping"}}},"output":{"type":"structure","members":{"ImageId":{"locationName":"imageId"}}},"http":{}},"CreateInstanceExportTask":{"input":{"type":"structure","required":["InstanceId"],"members":{"Description":{"locationName":"description"},"InstanceId":{"locationName":"instanceId"},"TargetEnvironment":{"locationName":"targetEnvironment"},"ExportToS3Task":{"locationName":"exportToS3","type":"structure","members":{"DiskImageFormat":{"locationName":"diskImageFormat"},"ContainerFormat":{"locationName":"containerFormat"},"S3Bucket":{"locationName":"s3Bucket"},"S3Prefix":{"locationName":"s3Prefix"}}}}},"output":{"type":"structure","members":{"ExportTask":{"shape":"S3j","locationName":"exportTask"}}},"http":{}},"CreateInternetGateway":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"}}},"output":{"type":"structure","members":{"InternetGateway":{"shape":"S3p","locationName":"internetGateway"}}},"http":{}},"CreateKeyPair":{"input":{"type":"structure","required":["KeyName"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"KeyName":{}}},"output":{"locationName":"keyPair","type":"structure","members":{"KeyName":{"locationName":"keyName"},"KeyFingerprint":{"locationName":"keyFingerprint"},"KeyMaterial":{"locationName":"keyMaterial"}}},"http":{}},"CreateNetworkAcl":{"input":{"type":"structure","required":["VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{"locationName":"vpcId"}}},"output":{"type":"structure","members":{"NetworkAcl":{"shape":"S3w","locationName":"networkAcl"}}},"http":{}},"CreateNetworkAclEntry":{"input":{"type":"structure","required":["NetworkAclId","RuleNumber","Protocol","RuleAction","Egress","CidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkAclId":{"locationName":"networkAclId"},"RuleNumber":{"locationName":"ruleNumber","type":"integer"},"Protocol":{"locationName":"protocol"},"RuleAction":{"locationName":"ruleAction"},"Egress":{"locationName":"egress","type":"boolean"},"CidrBlock":{"locationName":"cidrBlock"},"IcmpTypeCode":{"shape":"S40","locationName":"Icmp"},"PortRange":{"shape":"S41","locationName":"portRange"}}},"http":{}},"CreateNetworkInterface":{"input":{"type":"structure","required":["SubnetId"],"members":{"SubnetId":{"locationName":"subnetId"},"Description":{"locationName":"description"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"Groups":{"shape":"S46","locationName":"SecurityGroupId"},"PrivateIpAddresses":{"shape":"S47","locationName":"privateIpAddresses"},"SecondaryPrivateIpAddressCount":{"locationName":"secondaryPrivateIpAddressCount","type":"integer"},"DryRun":{"locationName":"dryRun","type":"boolean"}}},"output":{"type":"structure","members":{"NetworkInterface":{"shape":"S4a","locationName":"networkInterface"}}},"http":{}},"CreatePlacementGroup":{"input":{"type":"structure","required":["GroupName","Strategy"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupName":{"locationName":"groupName"},"Strategy":{"locationName":"strategy"}}},"http":{}},"CreateReservedInstancesListing":{"input":{"type":"structure","required":["ReservedInstancesId","InstanceCount","PriceSchedules","ClientToken"],"members":{"ReservedInstancesId":{"locationName":"reservedInstancesId"},"InstanceCount":{"locationName":"instanceCount","type":"integer"},"PriceSchedules":{"locationName":"priceSchedules","type":"list","member":{"locationName":"item","type":"structure","members":{"Term":{"locationName":"term","type":"long"},"Price":{"locationName":"price","type":"double"},"CurrencyCode":{"locationName":"currencyCode"}}}},"ClientToken":{"locationName":"clientToken"}}},"output":{"type":"structure","members":{"ReservedInstancesListings":{"shape":"S1q","locationName":"reservedInstancesListingsSet"}}},"http":{}},"CreateRoute":{"input":{"type":"structure","required":["RouteTableId","DestinationCidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"RouteTableId":{"locationName":"routeTableId"},"DestinationCidrBlock":{"locationName":"destinationCidrBlock"},"GatewayId":{"locationName":"gatewayId"},"InstanceId":{"locationName":"instanceId"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"CreateRouteTable":{"input":{"type":"structure","required":["VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{"locationName":"vpcId"}}},"output":{"type":"structure","members":{"RouteTable":{"shape":"S4s","locationName":"routeTable"}}},"http":{}},"CreateSecurityGroup":{"input":{"type":"structure","required":["GroupName","Description"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupName":{},"Description":{"locationName":"GroupDescription"},"VpcId":{}}},"output":{"type":"structure","members":{"GroupId":{"locationName":"groupId"}}},"http":{}},"CreateSnapshot":{"input":{"type":"structure","required":["VolumeId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{},"Description":{}}},"output":{"shape":"S54","locationName":"snapshot"},"http":{}},"CreateSpotDatafeedSubscription":{"input":{"type":"structure","required":["Bucket"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Bucket":{"locationName":"bucket"},"Prefix":{"locationName":"prefix"}}},"output":{"type":"structure","members":{"SpotDatafeedSubscription":{"shape":"S58","locationName":"spotDatafeedSubscription"}}},"http":{}},"CreateSubnet":{"input":{"type":"structure","required":["VpcId","CidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{},"CidrBlock":{},"AvailabilityZone":{}}},"output":{"type":"structure","members":{"Subnet":{"shape":"S5d","locationName":"subnet"}}},"http":{}},"CreateTags":{"input":{"type":"structure","required":["Resources","Tags"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Resources":{"shape":"S5g","locationName":"ResourceId"},"Tags":{"shape":"Sa","locationName":"Tag"}}},"http":{}},"CreateVolume":{"input":{"type":"structure","required":["AvailabilityZone"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Size":{"type":"integer"},"SnapshotId":{},"AvailabilityZone":{},"VolumeType":{},"Iops":{"type":"integer"},"Encrypted":{"locationName":"encrypted","type":"boolean"},"KmsKeyId":{}}},"output":{"shape":"S5i","locationName":"volume"},"http":{}},"CreateVpc":{"input":{"type":"structure","required":["CidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"CidrBlock":{},"InstanceTenancy":{"locationName":"instanceTenancy"}}},"output":{"type":"structure","members":{"Vpc":{"shape":"S5o","locationName":"vpc"}}},"http":{}},"CreateVpcEndpoint":{"input":{"type":"structure","required":["VpcId","ServiceName"],"members":{"DryRun":{"type":"boolean"},"VpcId":{},"ServiceName":{},"PolicyDocument":{},"RouteTableIds":{"shape":"S22","locationName":"RouteTableId"},"ClientToken":{}}},"output":{"type":"structure","members":{"VpcEndpoint":{"shape":"S5s","locationName":"vpcEndpoint"},"ClientToken":{"locationName":"clientToken"}}},"http":{}},"CreateVpcPeeringConnection":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{"locationName":"vpcId"},"PeerVpcId":{"locationName":"peerVpcId"},"PeerOwnerId":{"locationName":"peerOwnerId"}}},"output":{"type":"structure","members":{"VpcPeeringConnection":{"shape":"S5","locationName":"vpcPeeringConnection"}}},"http":{}},"CreateVpnConnection":{"input":{"type":"structure","required":["Type","CustomerGatewayId","VpnGatewayId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Type":{},"CustomerGatewayId":{},"VpnGatewayId":{},"Options":{"locationName":"options","type":"structure","members":{"StaticRoutesOnly":{"locationName":"staticRoutesOnly","type":"boolean"}}}}},"output":{"type":"structure","members":{"VpnConnection":{"shape":"S5z","locationName":"vpnConnection"}}},"http":{}},"CreateVpnConnectionRoute":{"input":{"type":"structure","required":["VpnConnectionId","DestinationCidrBlock"],"members":{"VpnConnectionId":{},"DestinationCidrBlock":{}}},"http":{}},"CreateVpnGateway":{"input":{"type":"structure","required":["Type"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Type":{},"AvailabilityZone":{}}},"output":{"type":"structure","members":{"VpnGateway":{"shape":"S6b","locationName":"vpnGateway"}}},"http":{}},"DeleteCustomerGateway":{"input":{"type":"structure","required":["CustomerGatewayId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"CustomerGatewayId":{}}},"http":{}},"DeleteDhcpOptions":{"input":{"type":"structure","required":["DhcpOptionsId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"DhcpOptionsId":{}}},"http":{}},"DeleteFlowLogs":{"input":{"type":"structure","required":["FlowLogIds"],"members":{"FlowLogIds":{"shape":"S22","locationName":"FlowLogId"}}},"output":{"type":"structure","members":{"Unsuccessful":{"shape":"S34","locationName":"unsuccessful"}}},"http":{}},"DeleteInternetGateway":{"input":{"type":"structure","required":["InternetGatewayId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InternetGatewayId":{"locationName":"internetGatewayId"}}},"http":{}},"DeleteKeyPair":{"input":{"type":"structure","required":["KeyName"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"KeyName":{}}},"http":{}},"DeleteNetworkAcl":{"input":{"type":"structure","required":["NetworkAclId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkAclId":{"locationName":"networkAclId"}}},"http":{}},"DeleteNetworkAclEntry":{"input":{"type":"structure","required":["NetworkAclId","RuleNumber","Egress"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkAclId":{"locationName":"networkAclId"},"RuleNumber":{"locationName":"ruleNumber","type":"integer"},"Egress":{"locationName":"egress","type":"boolean"}}},"http":{}},"DeleteNetworkInterface":{"input":{"type":"structure","required":["NetworkInterfaceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"}}},"http":{}},"DeletePlacementGroup":{"input":{"type":"structure","required":["GroupName"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupName":{"locationName":"groupName"}}},"http":{}},"DeleteRoute":{"input":{"type":"structure","required":["RouteTableId","DestinationCidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"RouteTableId":{"locationName":"routeTableId"},"DestinationCidrBlock":{"locationName":"destinationCidrBlock"}}},"http":{}},"DeleteRouteTable":{"input":{"type":"structure","required":["RouteTableId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"RouteTableId":{"locationName":"routeTableId"}}},"http":{}},"DeleteSecurityGroup":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupName":{},"GroupId":{}}},"http":{}},"DeleteSnapshot":{"input":{"type":"structure","required":["SnapshotId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SnapshotId":{}}},"http":{}},"DeleteSpotDatafeedSubscription":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"}}},"http":{}},"DeleteSubnet":{"input":{"type":"structure","required":["SubnetId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SubnetId":{}}},"http":{}},"DeleteTags":{"input":{"type":"structure","required":["Resources"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Resources":{"shape":"S5g","locationName":"resourceId"},"Tags":{"shape":"Sa","locationName":"tag"}}},"http":{}},"DeleteVolume":{"input":{"type":"structure","required":["VolumeId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{}}},"http":{}},"DeleteVpc":{"input":{"type":"structure","required":["VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{}}},"http":{}},"DeleteVpcEndpoints":{"input":{"type":"structure","required":["VpcEndpointIds"],"members":{"DryRun":{"type":"boolean"},"VpcEndpointIds":{"shape":"S22","locationName":"VpcEndpointId"}}},"output":{"type":"structure","members":{"Unsuccessful":{"shape":"S34","locationName":"unsuccessful"}}},"http":{}},"DeleteVpcPeeringConnection":{"input":{"type":"structure","required":["VpcPeeringConnectionId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"DeleteVpnConnection":{"input":{"type":"structure","required":["VpnConnectionId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpnConnectionId":{}}},"http":{}},"DeleteVpnConnectionRoute":{"input":{"type":"structure","required":["VpnConnectionId","DestinationCidrBlock"],"members":{"VpnConnectionId":{},"DestinationCidrBlock":{}}},"http":{}},"DeleteVpnGateway":{"input":{"type":"structure","required":["VpnGatewayId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpnGatewayId":{}}},"http":{}},"DeregisterImage":{"input":{"type":"structure","required":["ImageId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageId":{}}},"http":{}},"DescribeAccountAttributes":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"AttributeNames":{"locationName":"attributeName","type":"list","member":{"locationName":"attributeName"}}}},"output":{"type":"structure","members":{"AccountAttributes":{"locationName":"accountAttributeSet","type":"list","member":{"locationName":"item","type":"structure","members":{"AttributeName":{"locationName":"attributeName"},"AttributeValues":{"locationName":"attributeValueSet","type":"list","member":{"locationName":"item","type":"structure","members":{"AttributeValue":{"locationName":"attributeValue"}}}}}}}}},"http":{}},"DescribeAddresses":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"PublicIps":{"locationName":"PublicIp","type":"list","member":{"locationName":"PublicIp"}},"Filters":{"shape":"S7e","locationName":"Filter"},"AllocationIds":{"locationName":"AllocationId","type":"list","member":{"locationName":"AllocationId"}}}},"output":{"type":"structure","members":{"Addresses":{"locationName":"addressesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"PublicIp":{"locationName":"publicIp"},"AllocationId":{"locationName":"allocationId"},"AssociationId":{"locationName":"associationId"},"Domain":{"locationName":"domain"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"NetworkInterfaceOwnerId":{"locationName":"networkInterfaceOwnerId"},"PrivateIpAddress":{"locationName":"privateIpAddress"}}}}}},"http":{}},"DescribeAvailabilityZones":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ZoneNames":{"locationName":"ZoneName","type":"list","member":{"locationName":"ZoneName"}},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"AvailabilityZones":{"locationName":"availabilityZoneInfo","type":"list","member":{"locationName":"item","type":"structure","members":{"ZoneName":{"locationName":"zoneName"},"State":{"locationName":"zoneState"},"RegionName":{"locationName":"regionName"},"Messages":{"locationName":"messageSet","type":"list","member":{"locationName":"item","type":"structure","members":{"Message":{"locationName":"message"}}}}}}}}},"http":{}},"DescribeBundleTasks":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"BundleIds":{"locationName":"BundleId","type":"list","member":{"locationName":"BundleId"}},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"BundleTasks":{"locationName":"bundleInstanceTasksSet","type":"list","member":{"shape":"S1f","locationName":"item"}}}},"http":{}},"DescribeClassicLinkInstances":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S7x","locationName":"InstanceId"},"Filters":{"shape":"S7e","locationName":"Filter"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","members":{"Instances":{"locationName":"instancesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"VpcId":{"locationName":"vpcId"},"Groups":{"shape":"S4c","locationName":"groupSet"},"Tags":{"shape":"Sa","locationName":"tagSet"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeConversionTasks":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Filters":{"shape":"S7e","locationName":"filter"},"ConversionTaskIds":{"locationName":"conversionTaskId","type":"list","member":{"locationName":"item"}}}},"output":{"type":"structure","members":{"ConversionTasks":{"locationName":"conversionTasks","type":"list","member":{"shape":"S85","locationName":"item"}}}},"http":{}},"DescribeCustomerGateways":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"CustomerGatewayIds":{"locationName":"CustomerGatewayId","type":"list","member":{"locationName":"CustomerGatewayId"}},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"CustomerGateways":{"locationName":"customerGatewaySet","type":"list","member":{"shape":"S2q","locationName":"item"}}}},"http":{}},"DescribeDhcpOptions":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"DhcpOptionsIds":{"locationName":"DhcpOptionsId","type":"list","member":{"locationName":"DhcpOptionsId"}},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"DhcpOptions":{"locationName":"dhcpOptionsSet","type":"list","member":{"shape":"S2v","locationName":"item"}}}},"http":{}},"DescribeExportTasks":{"input":{"type":"structure","members":{"ExportTaskIds":{"locationName":"exportTaskId","type":"list","member":{"locationName":"ExportTaskId"}}}},"output":{"type":"structure","members":{"ExportTasks":{"locationName":"exportTaskSet","type":"list","member":{"shape":"S3j","locationName":"item"}}}},"http":{}},"DescribeFlowLogs":{"input":{"type":"structure","members":{"FlowLogIds":{"shape":"S22","locationName":"FlowLogId"},"Filter":{"shape":"S7e"},"NextToken":{},"MaxResults":{"type":"integer"}}},"output":{"type":"structure","members":{"FlowLogs":{"locationName":"flowLogSet","type":"list","member":{"locationName":"item","type":"structure","members":{"CreationTime":{"locationName":"creationTime","type":"timestamp"},"FlowLogId":{"locationName":"flowLogId"},"FlowLogStatus":{"locationName":"flowLogStatus"},"ResourceId":{"locationName":"resourceId"},"TrafficType":{"locationName":"trafficType"},"LogGroupName":{"locationName":"logGroupName"},"DeliverLogsStatus":{"locationName":"deliverLogsStatus"},"DeliverLogsErrorMessage":{"locationName":"deliverLogsErrorMessage"},"DeliverLogsPermissionArn":{"locationName":"deliverLogsPermissionArn"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeImageAttribute":{"input":{"type":"structure","required":["ImageId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageId":{},"Attribute":{}}},"output":{"locationName":"imageAttribute","type":"structure","members":{"ImageId":{"locationName":"imageId"},"LaunchPermissions":{"shape":"S8x","locationName":"launchPermission"},"ProductCodes":{"shape":"S90","locationName":"productCodes"},"KernelId":{"shape":"S2z","locationName":"kernel"},"RamdiskId":{"shape":"S2z","locationName":"ramdisk"},"Description":{"shape":"S2z","locationName":"description"},"SriovNetSupport":{"shape":"S2z","locationName":"sriovNetSupport"},"BlockDeviceMappings":{"shape":"S93","locationName":"blockDeviceMapping"}}},"http":{}},"DescribeImages":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageIds":{"locationName":"ImageId","type":"list","member":{"locationName":"ImageId"}},"Owners":{"shape":"S96","locationName":"Owner"},"ExecutableUsers":{"locationName":"ExecutableBy","type":"list","member":{"locationName":"ExecutableBy"}},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"Images":{"locationName":"imagesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ImageId":{"locationName":"imageId"},"ImageLocation":{"locationName":"imageLocation"},"State":{"locationName":"imageState"},"OwnerId":{"locationName":"imageOwnerId"},"CreationDate":{"locationName":"creationDate"},"Public":{"locationName":"isPublic","type":"boolean"},"ProductCodes":{"shape":"S90","locationName":"productCodes"},"Architecture":{"locationName":"architecture"},"ImageType":{"locationName":"imageType"},"KernelId":{"locationName":"kernelId"},"RamdiskId":{"locationName":"ramdiskId"},"Platform":{"locationName":"platform"},"SriovNetSupport":{"locationName":"sriovNetSupport"},"StateReason":{"shape":"S9e","locationName":"stateReason"},"ImageOwnerAlias":{"locationName":"imageOwnerAlias"},"Name":{"locationName":"name"},"Description":{"locationName":"description"},"RootDeviceType":{"locationName":"rootDeviceType"},"RootDeviceName":{"locationName":"rootDeviceName"},"BlockDeviceMappings":{"shape":"S93","locationName":"blockDeviceMapping"},"VirtualizationType":{"locationName":"virtualizationType"},"Tags":{"shape":"Sa","locationName":"tagSet"},"Hypervisor":{"locationName":"hypervisor"}}}}}},"http":{}},"DescribeImportImageTasks":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"ImportTaskIds":{"shape":"S9j","locationName":"ImportTaskId"},"NextToken":{},"MaxResults":{"type":"integer"},"Filters":{"shape":"S7e"}}},"output":{"type":"structure","members":{"ImportImageTasks":{"locationName":"importImageTaskSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ImportTaskId":{"locationName":"importTaskId"},"Architecture":{"locationName":"architecture"},"LicenseType":{"locationName":"licenseType"},"Platform":{"locationName":"platform"},"Hypervisor":{"locationName":"hypervisor"},"Description":{"locationName":"description"},"SnapshotDetails":{"shape":"S9n","locationName":"snapshotDetailSet"},"ImageId":{"locationName":"imageId"},"Progress":{"locationName":"progress"},"StatusMessage":{"locationName":"statusMessage"},"Status":{"locationName":"status"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeImportSnapshotTasks":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"ImportTaskIds":{"shape":"S9j","locationName":"ImportTaskId"},"NextToken":{},"MaxResults":{"type":"integer"},"Filters":{"shape":"S7e"}}},"output":{"type":"structure","members":{"ImportSnapshotTasks":{"locationName":"importSnapshotTaskSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ImportTaskId":{"locationName":"importTaskId"},"SnapshotTaskDetail":{"shape":"S9u","locationName":"snapshotTaskDetail"},"Description":{"locationName":"description"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeInstanceAttribute":{"input":{"type":"structure","required":["InstanceId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{"locationName":"instanceId"},"Attribute":{"locationName":"attribute"}}},"output":{"type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"InstanceType":{"shape":"S2z","locationName":"instanceType"},"KernelId":{"shape":"S2z","locationName":"kernel"},"RamdiskId":{"shape":"S2z","locationName":"ramdisk"},"UserData":{"shape":"S2z","locationName":"userData"},"DisableApiTermination":{"shape":"S9y","locationName":"disableApiTermination"},"InstanceInitiatedShutdownBehavior":{"shape":"S2z","locationName":"instanceInitiatedShutdownBehavior"},"RootDeviceName":{"shape":"S2z","locationName":"rootDeviceName"},"BlockDeviceMappings":{"shape":"S9z","locationName":"blockDeviceMapping"},"ProductCodes":{"shape":"S90","locationName":"productCodes"},"EbsOptimized":{"shape":"S9y","locationName":"ebsOptimized"},"SriovNetSupport":{"shape":"S2z","locationName":"sriovNetSupport"},"SourceDestCheck":{"shape":"S9y","locationName":"sourceDestCheck"},"Groups":{"shape":"S4c","locationName":"groupSet"}}},"http":{}},"DescribeInstanceStatus":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S7x","locationName":"InstanceId"},"Filters":{"shape":"S7e","locationName":"Filter"},"NextToken":{},"MaxResults":{"type":"integer"},"IncludeAllInstances":{"locationName":"includeAllInstances","type":"boolean"}}},"output":{"type":"structure","members":{"InstanceStatuses":{"locationName":"instanceStatusSet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"AvailabilityZone":{"locationName":"availabilityZone"},"Events":{"locationName":"eventsSet","type":"list","member":{"locationName":"item","type":"structure","members":{"Code":{"locationName":"code"},"Description":{"locationName":"description"},"NotBefore":{"locationName":"notBefore","type":"timestamp"},"NotAfter":{"locationName":"notAfter","type":"timestamp"}}}},"InstanceState":{"shape":"Sa9","locationName":"instanceState"},"SystemStatus":{"shape":"Sab","locationName":"systemStatus"},"InstanceStatus":{"shape":"Sab","locationName":"instanceStatus"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeInstances":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S7x","locationName":"InstanceId"},"Filters":{"shape":"S7e","locationName":"Filter"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","members":{"Reservations":{"locationName":"reservationSet","type":"list","member":{"shape":"Sak","locationName":"item"}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeInternetGateways":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InternetGatewayIds":{"shape":"S22","locationName":"internetGatewayId"},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"InternetGateways":{"locationName":"internetGatewaySet","type":"list","member":{"shape":"S3p","locationName":"item"}}}},"http":{}},"DescribeKeyPairs":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"KeyNames":{"locationName":"KeyName","type":"list","member":{"locationName":"KeyName"}},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"KeyPairs":{"locationName":"keySet","type":"list","member":{"locationName":"item","type":"structure","members":{"KeyName":{"locationName":"keyName"},"KeyFingerprint":{"locationName":"keyFingerprint"}}}}}},"http":{}},"DescribeMovingAddresses":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"PublicIps":{"shape":"S22","locationName":"publicIp"},"NextToken":{"locationName":"nextToken"},"Filters":{"shape":"S7e","locationName":"filter"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","members":{"MovingAddressStatuses":{"locationName":"movingAddressStatusSet","type":"list","member":{"locationName":"item","type":"structure","members":{"PublicIp":{"locationName":"publicIp"},"MoveStatus":{"locationName":"moveStatus"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeNetworkAcls":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkAclIds":{"shape":"S22","locationName":"NetworkAclId"},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"NetworkAcls":{"locationName":"networkAclSet","type":"list","member":{"shape":"S3w","locationName":"item"}}}},"http":{}},"DescribeNetworkInterfaceAttribute":{"input":{"type":"structure","required":["NetworkInterfaceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"Attribute":{"locationName":"attribute"}}},"output":{"type":"structure","members":{"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"Description":{"shape":"S2z","locationName":"description"},"SourceDestCheck":{"shape":"S9y","locationName":"sourceDestCheck"},"Groups":{"shape":"S4c","locationName":"groupSet"},"Attachment":{"shape":"S4e","locationName":"attachment"}}},"http":{}},"DescribeNetworkInterfaces":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkInterfaceIds":{"locationName":"NetworkInterfaceId","type":"list","member":{"locationName":"item"}},"Filters":{"shape":"S7e","locationName":"filter"}}},"output":{"type":"structure","members":{"NetworkInterfaces":{"locationName":"networkInterfaceSet","type":"list","member":{"shape":"S4a","locationName":"item"}}}},"http":{}},"DescribePlacementGroups":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupNames":{"locationName":"groupName","type":"list","member":{}},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"PlacementGroups":{"locationName":"placementGroupSet","type":"list","member":{"locationName":"item","type":"structure","members":{"GroupName":{"locationName":"groupName"},"Strategy":{"locationName":"strategy"},"State":{"locationName":"state"}}}}}},"http":{}},"DescribePrefixLists":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"PrefixListIds":{"shape":"S22","locationName":"PrefixListId"},"Filters":{"shape":"S7e","locationName":"Filter"},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"PrefixLists":{"locationName":"prefixListSet","type":"list","member":{"locationName":"item","type":"structure","members":{"PrefixListId":{"locationName":"prefixListId"},"PrefixListName":{"locationName":"prefixListName"},"Cidrs":{"shape":"S22","locationName":"cidrSet"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeRegions":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"RegionNames":{"locationName":"RegionName","type":"list","member":{"locationName":"RegionName"}},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"Regions":{"locationName":"regionInfo","type":"list","member":{"locationName":"item","type":"structure","members":{"RegionName":{"locationName":"regionName"},"Endpoint":{"locationName":"regionEndpoint"}}}}}},"http":{}},"DescribeReservedInstances":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ReservedInstancesIds":{"shape":"Sc2","locationName":"ReservedInstancesId"},"Filters":{"shape":"S7e","locationName":"Filter"},"OfferingType":{"locationName":"offeringType"}}},"output":{"type":"structure","members":{"ReservedInstances":{"locationName":"reservedInstancesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ReservedInstancesId":{"locationName":"reservedInstancesId"},"InstanceType":{"locationName":"instanceType"},"AvailabilityZone":{"locationName":"availabilityZone"},"Start":{"locationName":"start","type":"timestamp"},"End":{"locationName":"end","type":"timestamp"},"Duration":{"locationName":"duration","type":"long"},"UsagePrice":{"locationName":"usagePrice","type":"float"},"FixedPrice":{"locationName":"fixedPrice","type":"float"},"InstanceCount":{"locationName":"instanceCount","type":"integer"},"ProductDescription":{"locationName":"productDescription"},"State":{"locationName":"state"},"Tags":{"shape":"Sa","locationName":"tagSet"},"InstanceTenancy":{"locationName":"instanceTenancy"},"CurrencyCode":{"locationName":"currencyCode"},"OfferingType":{"locationName":"offeringType"},"RecurringCharges":{"shape":"Sca","locationName":"recurringCharges"}}}}}},"http":{}},"DescribeReservedInstancesListings":{"input":{"type":"structure","members":{"ReservedInstancesId":{"locationName":"reservedInstancesId"},"ReservedInstancesListingId":{"locationName":"reservedInstancesListingId"},"Filters":{"shape":"S7e","locationName":"filters"}}},"output":{"type":"structure","members":{"ReservedInstancesListings":{"shape":"S1q","locationName":"reservedInstancesListingsSet"}}},"http":{}},"DescribeReservedInstancesModifications":{"input":{"type":"structure","members":{"ReservedInstancesModificationIds":{"locationName":"ReservedInstancesModificationId","type":"list","member":{"locationName":"ReservedInstancesModificationId"}},"NextToken":{"locationName":"nextToken"},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"ReservedInstancesModifications":{"locationName":"reservedInstancesModificationsSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ReservedInstancesModificationId":{"locationName":"reservedInstancesModificationId"},"ReservedInstancesIds":{"locationName":"reservedInstancesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ReservedInstancesId":{"locationName":"reservedInstancesId"}}}},"ModificationResults":{"locationName":"modificationResultSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ReservedInstancesId":{"locationName":"reservedInstancesId"},"TargetConfiguration":{"shape":"Sco","locationName":"targetConfiguration"}}}},"CreateDate":{"locationName":"createDate","type":"timestamp"},"UpdateDate":{"locationName":"updateDate","type":"timestamp"},"EffectiveDate":{"locationName":"effectiveDate","type":"timestamp"},"Status":{"locationName":"status"},"StatusMessage":{"locationName":"statusMessage"},"ClientToken":{"locationName":"clientToken"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeReservedInstancesOfferings":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ReservedInstancesOfferingIds":{"locationName":"ReservedInstancesOfferingId","type":"list","member":{}},"InstanceType":{},"AvailabilityZone":{},"ProductDescription":{},"Filters":{"shape":"S7e","locationName":"Filter"},"InstanceTenancy":{"locationName":"instanceTenancy"},"OfferingType":{"locationName":"offeringType"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"},"IncludeMarketplace":{"type":"boolean"},"MinDuration":{"type":"long"},"MaxDuration":{"type":"long"},"MaxInstanceCount":{"type":"integer"}}},"output":{"type":"structure","members":{"ReservedInstancesOfferings":{"locationName":"reservedInstancesOfferingsSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ReservedInstancesOfferingId":{"locationName":"reservedInstancesOfferingId"},"InstanceType":{"locationName":"instanceType"},"AvailabilityZone":{"locationName":"availabilityZone"},"Duration":{"locationName":"duration","type":"long"},"UsagePrice":{"locationName":"usagePrice","type":"float"},"FixedPrice":{"locationName":"fixedPrice","type":"float"},"ProductDescription":{"locationName":"productDescription"},"InstanceTenancy":{"locationName":"instanceTenancy"},"CurrencyCode":{"locationName":"currencyCode"},"OfferingType":{"locationName":"offeringType"},"RecurringCharges":{"shape":"Sca","locationName":"recurringCharges"},"Marketplace":{"locationName":"marketplace","type":"boolean"},"PricingDetails":{"locationName":"pricingDetailsSet","type":"list","member":{"locationName":"item","type":"structure","members":{"Price":{"locationName":"price","type":"double"},"Count":{"locationName":"count","type":"integer"}}}}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeRouteTables":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"RouteTableIds":{"shape":"S22","locationName":"RouteTableId"},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"RouteTables":{"locationName":"routeTableSet","type":"list","member":{"shape":"S4s","locationName":"item"}}}},"http":{}},"DescribeSecurityGroups":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupNames":{"shape":"Sd0","locationName":"GroupName"},"GroupIds":{"shape":"So","locationName":"GroupId"},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"SecurityGroups":{"locationName":"securityGroupInfo","type":"list","member":{"locationName":"item","type":"structure","members":{"OwnerId":{"locationName":"ownerId"},"GroupName":{"locationName":"groupName"},"GroupId":{"locationName":"groupId"},"Description":{"locationName":"groupDescription"},"IpPermissions":{"shape":"S11","locationName":"ipPermissions"},"IpPermissionsEgress":{"shape":"S11","locationName":"ipPermissionsEgress"},"VpcId":{"locationName":"vpcId"},"Tags":{"shape":"Sa","locationName":"tagSet"}}}}}},"http":{}},"DescribeSnapshotAttribute":{"input":{"type":"structure","required":["SnapshotId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SnapshotId":{},"Attribute":{}}},"output":{"type":"structure","members":{"SnapshotId":{"locationName":"snapshotId"},"CreateVolumePermissions":{"shape":"Sd7","locationName":"createVolumePermission"},"ProductCodes":{"shape":"S90","locationName":"productCodes"}}},"http":{}},"DescribeSnapshots":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SnapshotIds":{"locationName":"SnapshotId","type":"list","member":{"locationName":"SnapshotId"}},"OwnerIds":{"shape":"S96","locationName":"Owner"},"RestorableByUserIds":{"locationName":"RestorableBy","type":"list","member":{}},"Filters":{"shape":"S7e","locationName":"Filter"},"NextToken":{},"MaxResults":{"type":"integer"}}},"output":{"type":"structure","members":{"Snapshots":{"locationName":"snapshotSet","type":"list","member":{"shape":"S54","locationName":"item"}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeSpotDatafeedSubscription":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"}}},"output":{"type":"structure","members":{"SpotDatafeedSubscription":{"shape":"S58","locationName":"spotDatafeedSubscription"}}},"http":{}},"DescribeSpotFleetInstances":{"input":{"type":"structure","required":["SpotFleetRequestId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","required":["SpotFleetRequestId","ActiveInstances"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"ActiveInstances":{"locationName":"activeInstanceSet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceType":{"locationName":"instanceType"},"InstanceId":{"locationName":"instanceId"},"SpotInstanceRequestId":{"locationName":"spotInstanceRequestId"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeSpotFleetRequestHistory":{"input":{"type":"structure","required":["SpotFleetRequestId","StartTime"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"EventType":{"locationName":"eventType"},"StartTime":{"locationName":"startTime","type":"timestamp"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","required":["SpotFleetRequestId","StartTime","LastEvaluatedTime","HistoryRecords"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"StartTime":{"locationName":"startTime","type":"timestamp"},"LastEvaluatedTime":{"locationName":"lastEvaluatedTime","type":"timestamp"},"HistoryRecords":{"locationName":"historyRecordSet","type":"list","member":{"locationName":"item","type":"structure","required":["Timestamp","EventType","EventInformation"],"members":{"Timestamp":{"locationName":"timestamp","type":"timestamp"},"EventType":{"locationName":"eventType"},"EventInformation":{"locationName":"eventInformation","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"EventSubType":{"locationName":"eventSubType"},"EventDescription":{"locationName":"eventDescription"}}}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeSpotFleetRequests":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotFleetRequestIds":{"shape":"S22","locationName":"spotFleetRequestId"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","required":["SpotFleetRequestConfigs"],"members":{"SpotFleetRequestConfigs":{"locationName":"spotFleetRequestConfigSet","type":"list","member":{"locationName":"item","type":"structure","required":["SpotFleetRequestId","SpotFleetRequestState","SpotFleetRequestConfig"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"},"SpotFleetRequestState":{"locationName":"spotFleetRequestState"},"SpotFleetRequestConfig":{"shape":"Sdu","locationName":"spotFleetRequestConfig"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeSpotInstanceRequests":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotInstanceRequestIds":{"shape":"S2c","locationName":"SpotInstanceRequestId"},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"SpotInstanceRequests":{"shape":"Se4","locationName":"spotInstanceRequestSet"}}},"http":{}},"DescribeSpotPriceHistory":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"StartTime":{"locationName":"startTime","type":"timestamp"},"EndTime":{"locationName":"endTime","type":"timestamp"},"InstanceTypes":{"locationName":"InstanceType","type":"list","member":{}},"ProductDescriptions":{"locationName":"ProductDescription","type":"list","member":{}},"Filters":{"shape":"S7e","locationName":"Filter"},"AvailabilityZone":{"locationName":"availabilityZone"},"MaxResults":{"locationName":"maxResults","type":"integer"},"NextToken":{"locationName":"nextToken"}}},"output":{"type":"structure","members":{"SpotPriceHistory":{"locationName":"spotPriceHistorySet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceType":{"locationName":"instanceType"},"ProductDescription":{"locationName":"productDescription"},"SpotPrice":{"locationName":"spotPrice"},"Timestamp":{"locationName":"timestamp","type":"timestamp"},"AvailabilityZone":{"locationName":"availabilityZone"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeSubnets":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SubnetIds":{"locationName":"SubnetId","type":"list","member":{"locationName":"SubnetId"}},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"Subnets":{"locationName":"subnetSet","type":"list","member":{"shape":"S5d","locationName":"item"}}}},"http":{}},"DescribeTags":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Filters":{"shape":"S7e","locationName":"Filter"},"MaxResults":{"locationName":"maxResults","type":"integer"},"NextToken":{"locationName":"nextToken"}}},"output":{"type":"structure","members":{"Tags":{"locationName":"tagSet","type":"list","member":{"locationName":"item","type":"structure","members":{"ResourceId":{"locationName":"resourceId"},"ResourceType":{"locationName":"resourceType"},"Key":{"locationName":"key"},"Value":{"locationName":"value"}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeVolumeAttribute":{"input":{"type":"structure","required":["VolumeId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{},"Attribute":{}}},"output":{"type":"structure","members":{"VolumeId":{"locationName":"volumeId"},"AutoEnableIO":{"shape":"S9y","locationName":"autoEnableIO"},"ProductCodes":{"shape":"S90","locationName":"productCodes"}}},"http":{}},"DescribeVolumeStatus":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeIds":{"shape":"Seu","locationName":"VolumeId"},"Filters":{"shape":"S7e","locationName":"Filter"},"NextToken":{},"MaxResults":{"type":"integer"}}},"output":{"type":"structure","members":{"VolumeStatuses":{"locationName":"volumeStatusSet","type":"list","member":{"locationName":"item","type":"structure","members":{"VolumeId":{"locationName":"volumeId"},"AvailabilityZone":{"locationName":"availabilityZone"},"VolumeStatus":{"locationName":"volumeStatus","type":"structure","members":{"Status":{"locationName":"status"},"Details":{"locationName":"details","type":"list","member":{"locationName":"item","type":"structure","members":{"Name":{"locationName":"name"},"Status":{"locationName":"status"}}}}}},"Events":{"locationName":"eventsSet","type":"list","member":{"locationName":"item","type":"structure","members":{"EventType":{"locationName":"eventType"},"Description":{"locationName":"description"},"NotBefore":{"locationName":"notBefore","type":"timestamp"},"NotAfter":{"locationName":"notAfter","type":"timestamp"},"EventId":{"locationName":"eventId"}}}},"Actions":{"locationName":"actionsSet","type":"list","member":{"locationName":"item","type":"structure","members":{"Code":{"locationName":"code"},"Description":{"locationName":"description"},"EventType":{"locationName":"eventType"},"EventId":{"locationName":"eventId"}}}}}}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeVolumes":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeIds":{"shape":"Seu","locationName":"VolumeId"},"Filters":{"shape":"S7e","locationName":"Filter"},"NextToken":{"locationName":"nextToken"},"MaxResults":{"locationName":"maxResults","type":"integer"}}},"output":{"type":"structure","members":{"Volumes":{"locationName":"volumeSet","type":"list","member":{"shape":"S5i","locationName":"item"}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeVpcAttribute":{"input":{"type":"structure","required":["VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{},"Attribute":{}}},"output":{"type":"structure","members":{"VpcId":{"locationName":"vpcId"},"EnableDnsSupport":{"shape":"S9y","locationName":"enableDnsSupport"},"EnableDnsHostnames":{"shape":"S9y","locationName":"enableDnsHostnames"}}},"http":{}},"DescribeVpcClassicLink":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcIds":{"locationName":"VpcId","type":"list","member":{"locationName":"VpcId"}},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"Vpcs":{"locationName":"vpcSet","type":"list","member":{"locationName":"item","type":"structure","members":{"VpcId":{"locationName":"vpcId"},"ClassicLinkEnabled":{"locationName":"classicLinkEnabled","type":"boolean"},"Tags":{"shape":"Sa","locationName":"tagSet"}}}}}},"http":{}},"DescribeVpcEndpointServices":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"ServiceNames":{"shape":"S22","locationName":"serviceNameSet"},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeVpcEndpoints":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"VpcEndpointIds":{"shape":"S22","locationName":"VpcEndpointId"},"Filters":{"shape":"S7e","locationName":"Filter"},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"VpcEndpoints":{"locationName":"vpcEndpointSet","type":"list","member":{"shape":"S5s","locationName":"item"}},"NextToken":{"locationName":"nextToken"}}},"http":{}},"DescribeVpcPeeringConnections":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcPeeringConnectionIds":{"shape":"S22","locationName":"VpcPeeringConnectionId"},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"VpcPeeringConnections":{"locationName":"vpcPeeringConnectionSet","type":"list","member":{"shape":"S5","locationName":"item"}}}},"http":{}},"DescribeVpcs":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcIds":{"locationName":"VpcId","type":"list","member":{"locationName":"VpcId"}},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"Vpcs":{"locationName":"vpcSet","type":"list","member":{"shape":"S5o","locationName":"item"}}}},"http":{}},"DescribeVpnConnections":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpnConnectionIds":{"locationName":"VpnConnectionId","type":"list","member":{"locationName":"VpnConnectionId"}},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"VpnConnections":{"locationName":"vpnConnectionSet","type":"list","member":{"shape":"S5z","locationName":"item"}}}},"http":{}},"DescribeVpnGateways":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpnGatewayIds":{"locationName":"VpnGatewayId","type":"list","member":{"locationName":"VpnGatewayId"}},"Filters":{"shape":"S7e","locationName":"Filter"}}},"output":{"type":"structure","members":{"VpnGateways":{"locationName":"vpnGatewaySet","type":"list","member":{"shape":"S6b","locationName":"item"}}}},"http":{}},"DetachClassicLinkVpc":{"input":{"type":"structure","required":["InstanceId","VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{"locationName":"instanceId"},"VpcId":{"locationName":"vpcId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"DetachInternetGateway":{"input":{"type":"structure","required":["InternetGatewayId","VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InternetGatewayId":{"locationName":"internetGatewayId"},"VpcId":{"locationName":"vpcId"}}},"http":{}},"DetachNetworkInterface":{"input":{"type":"structure","required":["AttachmentId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"AttachmentId":{"locationName":"attachmentId"},"Force":{"locationName":"force","type":"boolean"}}},"http":{}},"DetachVolume":{"input":{"type":"structure","required":["VolumeId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{},"InstanceId":{},"Device":{},"Force":{"type":"boolean"}}},"output":{"shape":"Su","locationName":"attachment"},"http":{}},"DetachVpnGateway":{"input":{"type":"structure","required":["VpnGatewayId","VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpnGatewayId":{},"VpcId":{}}},"http":{}},"DisableVgwRoutePropagation":{"input":{"type":"structure","required":["RouteTableId","GatewayId"],"members":{"RouteTableId":{},"GatewayId":{}}},"http":{}},"DisableVpcClassicLink":{"input":{"type":"structure","required":["VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{"locationName":"vpcId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"DisassociateAddress":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"PublicIp":{},"AssociationId":{}}},"http":{}},"DisassociateRouteTable":{"input":{"type":"structure","required":["AssociationId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"AssociationId":{"locationName":"associationId"}}},"http":{}},"EnableVgwRoutePropagation":{"input":{"type":"structure","required":["RouteTableId","GatewayId"],"members":{"RouteTableId":{},"GatewayId":{}}},"http":{}},"EnableVolumeIO":{"input":{"type":"structure","required":["VolumeId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{"locationName":"volumeId"}}},"http":{}},"EnableVpcClassicLink":{"input":{"type":"structure","required":["VpcId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcId":{"locationName":"vpcId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"GetConsoleOutput":{"input":{"type":"structure","required":["InstanceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{}}},"output":{"type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"Timestamp":{"locationName":"timestamp","type":"timestamp"},"Output":{"locationName":"output"}}},"http":{}},"GetPasswordData":{"input":{"type":"structure","required":["InstanceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{}}},"output":{"type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"Timestamp":{"locationName":"timestamp","type":"timestamp"},"PasswordData":{"locationName":"passwordData"}}},"http":{}},"ImportImage":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"Description":{},"DiskContainers":{"locationName":"DiskContainer","type":"list","member":{"locationName":"item","type":"structure","members":{"Description":{},"Format":{},"Url":{},"UserBucket":{"shape":"Sgo"},"DeviceName":{},"SnapshotId":{}}}},"LicenseType":{},"Hypervisor":{},"Architecture":{},"Platform":{},"ClientData":{"shape":"Sgp"},"ClientToken":{},"RoleName":{}}},"output":{"type":"structure","members":{"ImportTaskId":{"locationName":"importTaskId"},"Architecture":{"locationName":"architecture"},"LicenseType":{"locationName":"licenseType"},"Platform":{"locationName":"platform"},"Hypervisor":{"locationName":"hypervisor"},"Description":{"locationName":"description"},"SnapshotDetails":{"shape":"S9n","locationName":"snapshotDetailSet"},"ImageId":{"locationName":"imageId"},"Progress":{"locationName":"progress"},"StatusMessage":{"locationName":"statusMessage"},"Status":{"locationName":"status"}}},"http":{}},"ImportInstance":{"input":{"type":"structure","required":["Platform"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Description":{"locationName":"description"},"LaunchSpecification":{"locationName":"launchSpecification","type":"structure","members":{"Architecture":{"locationName":"architecture"},"GroupNames":{"shape":"Sgt","locationName":"GroupName"},"GroupIds":{"shape":"S46","locationName":"GroupId"},"AdditionalInfo":{"locationName":"additionalInfo"},"UserData":{"locationName":"userData","type":"structure","members":{"Data":{"locationName":"data"}}},"InstanceType":{"locationName":"instanceType"},"Placement":{"shape":"Sao","locationName":"placement"},"Monitoring":{"locationName":"monitoring","type":"boolean"},"SubnetId":{"locationName":"subnetId"},"InstanceInitiatedShutdownBehavior":{"locationName":"instanceInitiatedShutdownBehavior"},"PrivateIpAddress":{"locationName":"privateIpAddress"}}},"DiskImages":{"locationName":"diskImage","type":"list","member":{"type":"structure","members":{"Image":{"shape":"Sgy"},"Description":{},"Volume":{"shape":"Sgz"}}}},"Platform":{"locationName":"platform"}}},"output":{"type":"structure","members":{"ConversionTask":{"shape":"S85","locationName":"conversionTask"}}},"http":{}},"ImportKeyPair":{"input":{"type":"structure","required":["KeyName","PublicKeyMaterial"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"KeyName":{"locationName":"keyName"},"PublicKeyMaterial":{"locationName":"publicKeyMaterial","type":"blob"}}},"output":{"type":"structure","members":{"KeyName":{"locationName":"keyName"},"KeyFingerprint":{"locationName":"keyFingerprint"}}},"http":{}},"ImportSnapshot":{"input":{"type":"structure","members":{"DryRun":{"type":"boolean"},"Description":{},"DiskContainer":{"type":"structure","members":{"Description":{},"Format":{},"Url":{},"UserBucket":{"shape":"Sgo"}}},"ClientData":{"shape":"Sgp"},"ClientToken":{},"RoleName":{}}},"output":{"type":"structure","members":{"ImportTaskId":{"locationName":"importTaskId"},"SnapshotTaskDetail":{"shape":"S9u","locationName":"snapshotTaskDetail"},"Description":{"locationName":"description"}}},"http":{}},"ImportVolume":{"input":{"type":"structure","required":["AvailabilityZone","Image","Volume"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"AvailabilityZone":{"locationName":"availabilityZone"},"Image":{"shape":"Sgy","locationName":"image"},"Description":{"locationName":"description"},"Volume":{"shape":"Sgz","locationName":"volume"}}},"output":{"type":"structure","members":{"ConversionTask":{"shape":"S85","locationName":"conversionTask"}}},"http":{}},"ModifyImageAttribute":{"input":{"type":"structure","required":["ImageId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageId":{},"Attribute":{},"OperationType":{},"UserIds":{"shape":"Sha","locationName":"UserId"},"UserGroups":{"locationName":"UserGroup","type":"list","member":{"locationName":"UserGroup"}},"ProductCodes":{"locationName":"ProductCode","type":"list","member":{"locationName":"ProductCode"}},"Value":{},"LaunchPermission":{"type":"structure","members":{"Add":{"shape":"S8x"},"Remove":{"shape":"S8x"}}},"Description":{"shape":"S2z"}}},"http":{}},"ModifyInstanceAttribute":{"input":{"type":"structure","required":["InstanceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{"locationName":"instanceId"},"Attribute":{"locationName":"attribute"},"Value":{"locationName":"value"},"BlockDeviceMappings":{"locationName":"blockDeviceMapping","type":"list","member":{"locationName":"item","type":"structure","members":{"DeviceName":{"locationName":"deviceName"},"Ebs":{"locationName":"ebs","type":"structure","members":{"VolumeId":{"locationName":"volumeId"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"}}},"VirtualName":{"locationName":"virtualName"},"NoDevice":{"locationName":"noDevice"}}}},"SourceDestCheck":{"shape":"S9y"},"DisableApiTermination":{"shape":"S9y","locationName":"disableApiTermination"},"InstanceType":{"shape":"S2z","locationName":"instanceType"},"Kernel":{"shape":"S2z","locationName":"kernel"},"Ramdisk":{"shape":"S2z","locationName":"ramdisk"},"UserData":{"locationName":"userData","type":"structure","members":{"Value":{"locationName":"value","type":"blob"}}},"InstanceInitiatedShutdownBehavior":{"shape":"S2z","locationName":"instanceInitiatedShutdownBehavior"},"Groups":{"shape":"So","locationName":"GroupId"},"EbsOptimized":{"shape":"S9y","locationName":"ebsOptimized"},"SriovNetSupport":{"shape":"S2z","locationName":"sriovNetSupport"}}},"http":{}},"ModifyNetworkInterfaceAttribute":{"input":{"type":"structure","required":["NetworkInterfaceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"Description":{"shape":"S2z","locationName":"description"},"SourceDestCheck":{"shape":"S9y","locationName":"sourceDestCheck"},"Groups":{"shape":"S46","locationName":"SecurityGroupId"},"Attachment":{"locationName":"attachment","type":"structure","members":{"AttachmentId":{"locationName":"attachmentId"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"}}}}},"http":{}},"ModifyReservedInstances":{"input":{"type":"structure","required":["ReservedInstancesIds","TargetConfigurations"],"members":{"ClientToken":{"locationName":"clientToken"},"ReservedInstancesIds":{"shape":"Sc2","locationName":"ReservedInstancesId"},"TargetConfigurations":{"locationName":"ReservedInstancesConfigurationSetItemType","type":"list","member":{"shape":"Sco","locationName":"item"}}}},"output":{"type":"structure","members":{"ReservedInstancesModificationId":{"locationName":"reservedInstancesModificationId"}}},"http":{}},"ModifySnapshotAttribute":{"input":{"type":"structure","required":["SnapshotId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SnapshotId":{},"Attribute":{},"OperationType":{},"UserIds":{"shape":"Sha","locationName":"UserId"},"GroupNames":{"shape":"Sd0","locationName":"UserGroup"},"CreateVolumePermission":{"type":"structure","members":{"Add":{"shape":"Sd7"},"Remove":{"shape":"Sd7"}}}}},"http":{}},"ModifySubnetAttribute":{"input":{"type":"structure","required":["SubnetId"],"members":{"SubnetId":{"locationName":"subnetId"},"MapPublicIpOnLaunch":{"shape":"S9y"}}},"http":{}},"ModifyVolumeAttribute":{"input":{"type":"structure","required":["VolumeId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VolumeId":{},"AutoEnableIO":{"shape":"S9y"}}},"http":{}},"ModifyVpcAttribute":{"input":{"type":"structure","required":["VpcId"],"members":{"VpcId":{"locationName":"vpcId"},"EnableDnsSupport":{"shape":"S9y"},"EnableDnsHostnames":{"shape":"S9y"}}},"http":{}},"ModifyVpcEndpoint":{"input":{"type":"structure","required":["VpcEndpointId"],"members":{"DryRun":{"type":"boolean"},"VpcEndpointId":{},"ResetPolicy":{"type":"boolean"},"PolicyDocument":{},"AddRouteTableIds":{"shape":"S22","locationName":"AddRouteTableId"},"RemoveRouteTableIds":{"shape":"S22","locationName":"RemoveRouteTableId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"MonitorInstances":{"input":{"type":"structure","required":["InstanceIds"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S7x","locationName":"InstanceId"}}},"output":{"type":"structure","members":{"InstanceMonitorings":{"shape":"Shx","locationName":"instancesSet"}}},"http":{}},"MoveAddressToVpc":{"input":{"type":"structure","required":["PublicIp"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"PublicIp":{"locationName":"publicIp"}}},"output":{"type":"structure","members":{"AllocationId":{"locationName":"allocationId"},"Status":{"locationName":"status"}}},"http":{}},"PurchaseReservedInstancesOffering":{"input":{"type":"structure","required":["ReservedInstancesOfferingId","InstanceCount"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ReservedInstancesOfferingId":{},"InstanceCount":{"type":"integer"},"LimitPrice":{"locationName":"limitPrice","type":"structure","members":{"Amount":{"locationName":"amount","type":"double"},"CurrencyCode":{"locationName":"currencyCode"}}}}},"output":{"type":"structure","members":{"ReservedInstancesId":{"locationName":"reservedInstancesId"}}},"http":{}},"RebootInstances":{"input":{"type":"structure","required":["InstanceIds"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S7x","locationName":"InstanceId"}}},"http":{}},"RegisterImage":{"input":{"type":"structure","required":["Name"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageLocation":{},"Name":{"locationName":"name"},"Description":{"locationName":"description"},"Architecture":{"locationName":"architecture"},"KernelId":{"locationName":"kernelId"},"RamdiskId":{"locationName":"ramdiskId"},"RootDeviceName":{"locationName":"rootDeviceName"},"BlockDeviceMappings":{"shape":"S38","locationName":"BlockDeviceMapping"},"VirtualizationType":{"locationName":"virtualizationType"},"SriovNetSupport":{"locationName":"sriovNetSupport"}}},"output":{"type":"structure","members":{"ImageId":{"locationName":"imageId"}}},"http":{}},"RejectVpcPeeringConnection":{"input":{"type":"structure","required":["VpcPeeringConnectionId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"}}},"output":{"type":"structure","members":{"Return":{"locationName":"return","type":"boolean"}}},"http":{}},"ReleaseAddress":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"PublicIp":{},"AllocationId":{}}},"http":{}},"ReplaceNetworkAclAssociation":{"input":{"type":"structure","required":["AssociationId","NetworkAclId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"AssociationId":{"locationName":"associationId"},"NetworkAclId":{"locationName":"networkAclId"}}},"output":{"type":"structure","members":{"NewAssociationId":{"locationName":"newAssociationId"}}},"http":{}},"ReplaceNetworkAclEntry":{"input":{"type":"structure","required":["NetworkAclId","RuleNumber","Protocol","RuleAction","Egress","CidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkAclId":{"locationName":"networkAclId"},"RuleNumber":{"locationName":"ruleNumber","type":"integer"},"Protocol":{"locationName":"protocol"},"RuleAction":{"locationName":"ruleAction"},"Egress":{"locationName":"egress","type":"boolean"},"CidrBlock":{"locationName":"cidrBlock"},"IcmpTypeCode":{"shape":"S40","locationName":"Icmp"},"PortRange":{"shape":"S41","locationName":"portRange"}}},"http":{}},"ReplaceRoute":{"input":{"type":"structure","required":["RouteTableId","DestinationCidrBlock"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"RouteTableId":{"locationName":"routeTableId"},"DestinationCidrBlock":{"locationName":"destinationCidrBlock"},"GatewayId":{"locationName":"gatewayId"},"InstanceId":{"locationName":"instanceId"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"}}},"http":{}},"ReplaceRouteTableAssociation":{"input":{"type":"structure","required":["AssociationId","RouteTableId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"AssociationId":{"locationName":"associationId"},"RouteTableId":{"locationName":"routeTableId"}}},"output":{"type":"structure","members":{"NewAssociationId":{"locationName":"newAssociationId"}}},"http":{}},"ReportInstanceStatus":{"input":{"type":"structure","required":["Instances","Status","ReasonCodes"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"Instances":{"shape":"S7x","locationName":"instanceId"},"Status":{"locationName":"status"},"StartTime":{"locationName":"startTime","type":"timestamp"},"EndTime":{"locationName":"endTime","type":"timestamp"},"ReasonCodes":{"locationName":"reasonCode","type":"list","member":{"locationName":"item"}},"Description":{"locationName":"description"}}},"http":{}},"RequestSpotFleet":{"input":{"type":"structure","required":["SpotFleetRequestConfig"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotFleetRequestConfig":{"shape":"Sdu","locationName":"spotFleetRequestConfig"}}},"output":{"type":"structure","required":["SpotFleetRequestId"],"members":{"SpotFleetRequestId":{"locationName":"spotFleetRequestId"}}},"http":{}},"RequestSpotInstances":{"input":{"type":"structure","required":["SpotPrice"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SpotPrice":{"locationName":"spotPrice"},"ClientToken":{"locationName":"clientToken"},"InstanceCount":{"locationName":"instanceCount","type":"integer"},"Type":{"locationName":"type"},"ValidFrom":{"locationName":"validFrom","type":"timestamp"},"ValidUntil":{"locationName":"validUntil","type":"timestamp"},"LaunchGroup":{"locationName":"launchGroup"},"AvailabilityZoneGroup":{"locationName":"availabilityZoneGroup"},"LaunchSpecification":{"type":"structure","members":{"ImageId":{"locationName":"imageId"},"KeyName":{"locationName":"keyName"},"SecurityGroups":{"shape":"S22","locationName":"SecurityGroup"},"UserData":{"locationName":"userData"},"AddressingType":{"locationName":"addressingType"},"InstanceType":{"locationName":"instanceType"},"Placement":{"shape":"Sdx","locationName":"placement"},"KernelId":{"locationName":"kernelId"},"RamdiskId":{"locationName":"ramdiskId"},"BlockDeviceMappings":{"shape":"S93","locationName":"blockDeviceMapping"},"SubnetId":{"locationName":"subnetId"},"NetworkInterfaces":{"shape":"Sdz","locationName":"NetworkInterface"},"IamInstanceProfile":{"shape":"Se1","locationName":"iamInstanceProfile"},"EbsOptimized":{"locationName":"ebsOptimized","type":"boolean"},"Monitoring":{"shape":"Sea","locationName":"monitoring"},"SecurityGroupIds":{"shape":"S22","locationName":"SecurityGroupId"}}}}},"output":{"type":"structure","members":{"SpotInstanceRequests":{"shape":"Se4","locationName":"spotInstanceRequestSet"}}},"http":{}},"ResetImageAttribute":{"input":{"type":"structure","required":["ImageId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageId":{},"Attribute":{}}},"http":{}},"ResetInstanceAttribute":{"input":{"type":"structure","required":["InstanceId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceId":{"locationName":"instanceId"},"Attribute":{"locationName":"attribute"}}},"http":{}},"ResetNetworkInterfaceAttribute":{"input":{"type":"structure","required":["NetworkInterfaceId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"SourceDestCheck":{"locationName":"sourceDestCheck"}}},"http":{}},"ResetSnapshotAttribute":{"input":{"type":"structure","required":["SnapshotId","Attribute"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"SnapshotId":{},"Attribute":{}}},"http":{}},"RestoreAddressToClassic":{"input":{"type":"structure","required":["PublicIp"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"PublicIp":{"locationName":"publicIp"}}},"output":{"type":"structure","members":{"Status":{"locationName":"status"},"PublicIp":{"locationName":"publicIp"}}},"http":{}},"RevokeSecurityGroupEgress":{"input":{"type":"structure","required":["GroupId"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupId":{"locationName":"groupId"},"SourceSecurityGroupName":{"locationName":"sourceSecurityGroupName"},"SourceSecurityGroupOwnerId":{"locationName":"sourceSecurityGroupOwnerId"},"IpProtocol":{"locationName":"ipProtocol"},"FromPort":{"locationName":"fromPort","type":"integer"},"ToPort":{"locationName":"toPort","type":"integer"},"CidrIp":{"locationName":"cidrIp"},"IpPermissions":{"shape":"S11","locationName":"ipPermissions"}}},"http":{}},"RevokeSecurityGroupIngress":{"input":{"type":"structure","members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"GroupName":{},"GroupId":{},"SourceSecurityGroupName":{},"SourceSecurityGroupOwnerId":{},"IpProtocol":{},"FromPort":{"type":"integer"},"ToPort":{"type":"integer"},"CidrIp":{},"IpPermissions":{"shape":"S11"}}},"http":{}},"RunInstances":{"input":{"type":"structure","required":["ImageId","MinCount","MaxCount"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"ImageId":{},"MinCount":{"type":"integer"},"MaxCount":{"type":"integer"},"KeyName":{},"SecurityGroups":{"shape":"Sgt","locationName":"SecurityGroup"},"SecurityGroupIds":{"shape":"S46","locationName":"SecurityGroupId"},"UserData":{},"InstanceType":{},"Placement":{"shape":"Sao"},"KernelId":{},"RamdiskId":{},"BlockDeviceMappings":{"shape":"S38","locationName":"BlockDeviceMapping"},"Monitoring":{"shape":"Sea"},"SubnetId":{},"DisableApiTermination":{"locationName":"disableApiTermination","type":"boolean"},"InstanceInitiatedShutdownBehavior":{"locationName":"instanceInitiatedShutdownBehavior"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"ClientToken":{"locationName":"clientToken"},"AdditionalInfo":{"locationName":"additionalInfo"},"NetworkInterfaces":{"shape":"Sdz","locationName":"networkInterface"},"IamInstanceProfile":{"shape":"Se1","locationName":"iamInstanceProfile"},"EbsOptimized":{"locationName":"ebsOptimized","type":"boolean"}}},"output":{"shape":"Sak","locationName":"reservation"},"http":{}},"StartInstances":{"input":{"type":"structure","required":["InstanceIds"],"members":{"InstanceIds":{"shape":"S7x","locationName":"InstanceId"},"AdditionalInfo":{"locationName":"additionalInfo"},"DryRun":{"locationName":"dryRun","type":"boolean"}}},"output":{"type":"structure","members":{"StartingInstances":{"shape":"Sj2","locationName":"instancesSet"}}},"http":{}},"StopInstances":{"input":{"type":"structure","required":["InstanceIds"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S7x","locationName":"InstanceId"},"Force":{"locationName":"force","type":"boolean"}}},"output":{"type":"structure","members":{"StoppingInstances":{"shape":"Sj2","locationName":"instancesSet"}}},"http":{}},"TerminateInstances":{"input":{"type":"structure","required":["InstanceIds"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S7x","locationName":"InstanceId"}}},"output":{"type":"structure","members":{"TerminatingInstances":{"shape":"Sj2","locationName":"instancesSet"}}},"http":{}},"UnassignPrivateIpAddresses":{"input":{"type":"structure","required":["NetworkInterfaceId","PrivateIpAddresses"],"members":{"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"PrivateIpAddresses":{"shape":"Sg","locationName":"privateIpAddress"}}},"http":{}},"UnmonitorInstances":{"input":{"type":"structure","required":["InstanceIds"],"members":{"DryRun":{"locationName":"dryRun","type":"boolean"},"InstanceIds":{"shape":"S7x","locationName":"InstanceId"}}},"output":{"type":"structure","members":{"InstanceMonitorings":{"shape":"Shx","locationName":"instancesSet"}}},"http":{}}},"shapes":{"S5":{"type":"structure","members":{"AccepterVpcInfo":{"shape":"S6","locationName":"accepterVpcInfo"},"ExpirationTime":{"locationName":"expirationTime","type":"timestamp"},"RequesterVpcInfo":{"shape":"S6","locationName":"requesterVpcInfo"},"Status":{"locationName":"status","type":"structure","members":{"Code":{"locationName":"code"},"Message":{"locationName":"message"}}},"Tags":{"shape":"Sa","locationName":"tagSet"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"}}},"S6":{"type":"structure","members":{"CidrBlock":{"locationName":"cidrBlock"},"OwnerId":{"locationName":"ownerId"},"VpcId":{"locationName":"vpcId"}}},"Sa":{"type":"list","member":{"locationName":"item","type":"structure","members":{"Key":{"locationName":"key"},"Value":{"locationName":"value"}}}},"Sg":{"type":"list","member":{"locationName":"PrivateIpAddress"}},"So":{"type":"list","member":{"locationName":"groupId"}},"Su":{"type":"structure","members":{"VolumeId":{"locationName":"volumeId"},"InstanceId":{"locationName":"instanceId"},"Device":{"locationName":"device"},"State":{"locationName":"status"},"AttachTime":{"locationName":"attachTime","type":"timestamp"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"}}},"Sy":{"type":"structure","members":{"VpcId":{"locationName":"vpcId"},"State":{"locationName":"state"}}},"S11":{"type":"list","member":{"locationName":"item","type":"structure","members":{"IpProtocol":{"locationName":"ipProtocol"},"FromPort":{"locationName":"fromPort","type":"integer"},"ToPort":{"locationName":"toPort","type":"integer"},"UserIdGroupPairs":{"locationName":"groups","type":"list","member":{"locationName":"item","type":"structure","members":{"UserId":{"locationName":"userId"},"GroupName":{"locationName":"groupName"},"GroupId":{"locationName":"groupId"}}}},"IpRanges":{"locationName":"ipRanges","type":"list","member":{"locationName":"item","type":"structure","members":{"CidrIp":{"locationName":"cidrIp"}}}},"PrefixListIds":{"locationName":"prefixListIds","type":"list","member":{"locationName":"item","type":"structure","members":{"PrefixListId":{"locationName":"prefixListId"}}}}}}},"S1b":{"type":"structure","members":{"S3":{"type":"structure","members":{"Bucket":{"locationName":"bucket"},"Prefix":{"locationName":"prefix"},"AWSAccessKeyId":{},"UploadPolicy":{"locationName":"uploadPolicy","type":"blob"},"UploadPolicySignature":{"locationName":"uploadPolicySignature"}}}}},"S1f":{"type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"BundleId":{"locationName":"bundleId"},"State":{"locationName":"state"},"StartTime":{"locationName":"startTime","type":"timestamp"},"UpdateTime":{"locationName":"updateTime","type":"timestamp"},"Storage":{"shape":"S1b","locationName":"storage"},"Progress":{"locationName":"progress"},"BundleTaskError":{"locationName":"error","type":"structure","members":{"Code":{"locationName":"code"},"Message":{"locationName":"message"}}}}},"S1q":{"type":"list","member":{"locationName":"item","type":"structure","members":{"ReservedInstancesListingId":{"locationName":"reservedInstancesListingId"},"ReservedInstancesId":{"locationName":"reservedInstancesId"},"CreateDate":{"locationName":"createDate","type":"timestamp"},"UpdateDate":{"locationName":"updateDate","type":"timestamp"},"Status":{"locationName":"status"},"StatusMessage":{"locationName":"statusMessage"},"InstanceCounts":{"locationName":"instanceCounts","type":"list","member":{"locationName":"item","type":"structure","members":{"State":{"locationName":"state"},"InstanceCount":{"locationName":"instanceCount","type":"integer"}}}},"PriceSchedules":{"locationName":"priceSchedules","type":"list","member":{"locationName":"item","type":"structure","members":{"Term":{"locationName":"term","type":"long"},"Price":{"locationName":"price","type":"double"},"CurrencyCode":{"locationName":"currencyCode"},"Active":{"locationName":"active","type":"boolean"}}}},"Tags":{"shape":"Sa","locationName":"tagSet"},"ClientToken":{"locationName":"clientToken"}}}},"S22":{"type":"list","member":{"locationName":"item"}},"S2c":{"type":"list","member":{"locationName":"SpotInstanceRequestId"}},"S2q":{"type":"structure","members":{"CustomerGatewayId":{"locationName":"customerGatewayId"},"State":{"locationName":"state"},"Type":{"locationName":"type"},"IpAddress":{"locationName":"ipAddress"},"BgpAsn":{"locationName":"bgpAsn"},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S2v":{"type":"structure","members":{"DhcpOptionsId":{"locationName":"dhcpOptionsId"},"DhcpConfigurations":{"locationName":"dhcpConfigurationSet","type":"list","member":{"locationName":"item","type":"structure","members":{"Key":{"locationName":"key"},"Values":{"locationName":"valueSet","type":"list","member":{"shape":"S2z","locationName":"item"}}}}},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S2z":{"type":"structure","members":{"Value":{"locationName":"value"}}},"S34":{"type":"list","member":{"locationName":"item","type":"structure","required":["Error"],"members":{"ResourceId":{"locationName":"resourceId"},"Error":{"locationName":"error","type":"structure","required":["Code","Message"],"members":{"Code":{"locationName":"code"},"Message":{"locationName":"message"}}}}}},"S38":{"type":"list","member":{"shape":"S39","locationName":"BlockDeviceMapping"}},"S39":{"type":"structure","members":{"VirtualName":{"locationName":"virtualName"},"DeviceName":{"locationName":"deviceName"},"Ebs":{"locationName":"ebs","type":"structure","members":{"SnapshotId":{"locationName":"snapshotId"},"VolumeSize":{"locationName":"volumeSize","type":"integer"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"},"VolumeType":{"locationName":"volumeType"},"Iops":{"locationName":"iops","type":"integer"},"Encrypted":{"locationName":"encrypted","type":"boolean"}}},"NoDevice":{"locationName":"noDevice"}}},"S3j":{"type":"structure","members":{"ExportTaskId":{"locationName":"exportTaskId"},"Description":{"locationName":"description"},"State":{"locationName":"state"},"StatusMessage":{"locationName":"statusMessage"},"InstanceExportDetails":{"locationName":"instanceExport","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"TargetEnvironment":{"locationName":"targetEnvironment"}}},"ExportToS3Task":{"locationName":"exportToS3","type":"structure","members":{"DiskImageFormat":{"locationName":"diskImageFormat"},"ContainerFormat":{"locationName":"containerFormat"},"S3Bucket":{"locationName":"s3Bucket"},"S3Key":{"locationName":"s3Key"}}}}},"S3p":{"type":"structure","members":{"InternetGatewayId":{"locationName":"internetGatewayId"},"Attachments":{"locationName":"attachmentSet","type":"list","member":{"locationName":"item","type":"structure","members":{"VpcId":{"locationName":"vpcId"},"State":{"locationName":"state"}}}},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S3w":{"type":"structure","members":{"NetworkAclId":{"locationName":"networkAclId"},"VpcId":{"locationName":"vpcId"},"IsDefault":{"locationName":"default","type":"boolean"},"Entries":{"locationName":"entrySet","type":"list","member":{"locationName":"item","type":"structure","members":{"RuleNumber":{"locationName":"ruleNumber","type":"integer"},"Protocol":{"locationName":"protocol"},"RuleAction":{"locationName":"ruleAction"},"Egress":{"locationName":"egress","type":"boolean"},"CidrBlock":{"locationName":"cidrBlock"},"IcmpTypeCode":{"shape":"S40","locationName":"icmpTypeCode"},"PortRange":{"shape":"S41","locationName":"portRange"}}}},"Associations":{"locationName":"associationSet","type":"list","member":{"locationName":"item","type":"structure","members":{"NetworkAclAssociationId":{"locationName":"networkAclAssociationId"},"NetworkAclId":{"locationName":"networkAclId"},"SubnetId":{"locationName":"subnetId"}}}},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S40":{"type":"structure","members":{"Type":{"locationName":"type","type":"integer"},"Code":{"locationName":"code","type":"integer"}}},"S41":{"type":"structure","members":{"From":{"locationName":"from","type":"integer"},"To":{"locationName":"to","type":"integer"}}},"S46":{"type":"list","member":{"locationName":"SecurityGroupId"}},"S47":{"type":"list","member":{"locationName":"item","type":"structure","required":["PrivateIpAddress"],"members":{"PrivateIpAddress":{"locationName":"privateIpAddress"},"Primary":{"locationName":"primary","type":"boolean"}}}},"S4a":{"type":"structure","members":{"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"SubnetId":{"locationName":"subnetId"},"VpcId":{"locationName":"vpcId"},"AvailabilityZone":{"locationName":"availabilityZone"},"Description":{"locationName":"description"},"OwnerId":{"locationName":"ownerId"},"RequesterId":{"locationName":"requesterId"},"RequesterManaged":{"locationName":"requesterManaged","type":"boolean"},"Status":{"locationName":"status"},"MacAddress":{"locationName":"macAddress"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"PrivateDnsName":{"locationName":"privateDnsName"},"SourceDestCheck":{"locationName":"sourceDestCheck","type":"boolean"},"Groups":{"shape":"S4c","locationName":"groupSet"},"Attachment":{"shape":"S4e","locationName":"attachment"},"Association":{"shape":"S4f","locationName":"association"},"TagSet":{"shape":"Sa","locationName":"tagSet"},"PrivateIpAddresses":{"locationName":"privateIpAddressesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"PrivateIpAddress":{"locationName":"privateIpAddress"},"PrivateDnsName":{"locationName":"privateDnsName"},"Primary":{"locationName":"primary","type":"boolean"},"Association":{"shape":"S4f","locationName":"association"}}}}}},"S4c":{"type":"list","member":{"locationName":"item","type":"structure","members":{"GroupName":{"locationName":"groupName"},"GroupId":{"locationName":"groupId"}}}},"S4e":{"type":"structure","members":{"AttachmentId":{"locationName":"attachmentId"},"InstanceId":{"locationName":"instanceId"},"InstanceOwnerId":{"locationName":"instanceOwnerId"},"DeviceIndex":{"locationName":"deviceIndex","type":"integer"},"Status":{"locationName":"status"},"AttachTime":{"locationName":"attachTime","type":"timestamp"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"}}},"S4f":{"type":"structure","members":{"PublicIp":{"locationName":"publicIp"},"PublicDnsName":{"locationName":"publicDnsName"},"IpOwnerId":{"locationName":"ipOwnerId"},"AllocationId":{"locationName":"allocationId"},"AssociationId":{"locationName":"associationId"}}},"S4s":{"type":"structure","members":{"RouteTableId":{"locationName":"routeTableId"},"VpcId":{"locationName":"vpcId"},"Routes":{"locationName":"routeSet","type":"list","member":{"locationName":"item","type":"structure","members":{"DestinationCidrBlock":{"locationName":"destinationCidrBlock"},"DestinationPrefixListId":{"locationName":"destinationPrefixListId"},"GatewayId":{"locationName":"gatewayId"},"InstanceId":{"locationName":"instanceId"},"InstanceOwnerId":{"locationName":"instanceOwnerId"},"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"VpcPeeringConnectionId":{"locationName":"vpcPeeringConnectionId"},"State":{"locationName":"state"},"Origin":{"locationName":"origin"}}}},"Associations":{"locationName":"associationSet","type":"list","member":{"locationName":"item","type":"structure","members":{"RouteTableAssociationId":{"locationName":"routeTableAssociationId"},"RouteTableId":{"locationName":"routeTableId"},"SubnetId":{"locationName":"subnetId"},"Main":{"locationName":"main","type":"boolean"}}}},"Tags":{"shape":"Sa","locationName":"tagSet"},"PropagatingVgws":{"locationName":"propagatingVgwSet","type":"list","member":{"locationName":"item","type":"structure","members":{"GatewayId":{"locationName":"gatewayId"}}}}}},"S54":{"type":"structure","members":{"SnapshotId":{"locationName":"snapshotId"},"VolumeId":{"locationName":"volumeId"},"State":{"locationName":"status"},"StartTime":{"locationName":"startTime","type":"timestamp"},"Progress":{"locationName":"progress"},"OwnerId":{"locationName":"ownerId"},"Description":{"locationName":"description"},"VolumeSize":{"locationName":"volumeSize","type":"integer"},"OwnerAlias":{"locationName":"ownerAlias"},"Tags":{"shape":"Sa","locationName":"tagSet"},"Encrypted":{"locationName":"encrypted","type":"boolean"},"KmsKeyId":{"locationName":"kmsKeyId"}}},"S58":{"type":"structure","members":{"OwnerId":{"locationName":"ownerId"},"Bucket":{"locationName":"bucket"},"Prefix":{"locationName":"prefix"},"State":{"locationName":"state"},"Fault":{"shape":"S5a","locationName":"fault"}}},"S5a":{"type":"structure","members":{"Code":{"locationName":"code"},"Message":{"locationName":"message"}}},"S5d":{"type":"structure","members":{"SubnetId":{"locationName":"subnetId"},"State":{"locationName":"state"},"VpcId":{"locationName":"vpcId"},"CidrBlock":{"locationName":"cidrBlock"},"AvailableIpAddressCount":{"locationName":"availableIpAddressCount","type":"integer"},"AvailabilityZone":{"locationName":"availabilityZone"},"DefaultForAz":{"locationName":"defaultForAz","type":"boolean"},"MapPublicIpOnLaunch":{"locationName":"mapPublicIpOnLaunch","type":"boolean"},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S5g":{"type":"list","member":{}},"S5i":{"type":"structure","members":{"VolumeId":{"locationName":"volumeId"},"Size":{"locationName":"size","type":"integer"},"SnapshotId":{"locationName":"snapshotId"},"AvailabilityZone":{"locationName":"availabilityZone"},"State":{"locationName":"status"},"CreateTime":{"locationName":"createTime","type":"timestamp"},"Attachments":{"locationName":"attachmentSet","type":"list","member":{"shape":"Su","locationName":"item"}},"Tags":{"shape":"Sa","locationName":"tagSet"},"VolumeType":{"locationName":"volumeType"},"Iops":{"locationName":"iops","type":"integer"},"Encrypted":{"locationName":"encrypted","type":"boolean"},"KmsKeyId":{"locationName":"kmsKeyId"}}},"S5o":{"type":"structure","members":{"VpcId":{"locationName":"vpcId"},"State":{"locationName":"state"},"CidrBlock":{"locationName":"cidrBlock"},"DhcpOptionsId":{"locationName":"dhcpOptionsId"},"Tags":{"shape":"Sa","locationName":"tagSet"},"InstanceTenancy":{"locationName":"instanceTenancy"},"IsDefault":{"locationName":"isDefault","type":"boolean"}}},"S5s":{"type":"structure","members":{"VpcEndpointId":{"locationName":"vpcEndpointId"},"VpcId":{"locationName":"vpcId"},"ServiceName":{"locationName":"serviceName"},"State":{"locationName":"state"},"PolicyDocument":{"locationName":"policyDocument"},"RouteTableIds":{"shape":"S22","locationName":"routeTableIdSet"},"CreationTimestamp":{"locationName":"creationTimestamp","type":"timestamp"}}},"S5z":{"type":"structure","members":{"VpnConnectionId":{"locationName":"vpnConnectionId"},"State":{"locationName":"state"},"CustomerGatewayConfiguration":{"locationName":"customerGatewayConfiguration"},"Type":{"locationName":"type"},"CustomerGatewayId":{"locationName":"customerGatewayId"},"VpnGatewayId":{"locationName":"vpnGatewayId"},"Tags":{"shape":"Sa","locationName":"tagSet"},"VgwTelemetry":{"locationName":"vgwTelemetry","type":"list","member":{"locationName":"item","type":"structure","members":{"OutsideIpAddress":{"locationName":"outsideIpAddress"},"Status":{"locationName":"status"},"LastStatusChange":{"locationName":"lastStatusChange","type":"timestamp"},"StatusMessage":{"locationName":"statusMessage"},"AcceptedRouteCount":{"locationName":"acceptedRouteCount","type":"integer"}}}},"Options":{"locationName":"options","type":"structure","members":{"StaticRoutesOnly":{"locationName":"staticRoutesOnly","type":"boolean"}}},"Routes":{"locationName":"routes","type":"list","member":{"locationName":"item","type":"structure","members":{"DestinationCidrBlock":{"locationName":"destinationCidrBlock"},"Source":{"locationName":"source"},"State":{"locationName":"state"}}}}}},"S6b":{"type":"structure","members":{"VpnGatewayId":{"locationName":"vpnGatewayId"},"State":{"locationName":"state"},"Type":{"locationName":"type"},"AvailabilityZone":{"locationName":"availabilityZone"},"VpcAttachments":{"locationName":"attachments","type":"list","member":{"shape":"Sy","locationName":"item"}},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S7e":{"type":"list","member":{"locationName":"Filter","type":"structure","members":{"Name":{},"Values":{"shape":"S22","locationName":"Value"}}}},"S7x":{"type":"list","member":{"locationName":"InstanceId"}},"S85":{"type":"structure","required":["ConversionTaskId","State"],"members":{"ConversionTaskId":{"locationName":"conversionTaskId"},"ExpirationTime":{"locationName":"expirationTime"},"ImportInstance":{"locationName":"importInstance","type":"structure","required":["Volumes"],"members":{"Volumes":{"locationName":"volumes","type":"list","member":{"locationName":"item","type":"structure","required":["BytesConverted","AvailabilityZone","Image","Volume","Status"],"members":{"BytesConverted":{"locationName":"bytesConverted","type":"long"},"AvailabilityZone":{"locationName":"availabilityZone"},"Image":{"shape":"S89","locationName":"image"},"Volume":{"shape":"S8a","locationName":"volume"},"Status":{"locationName":"status"},"StatusMessage":{"locationName":"statusMessage"},"Description":{"locationName":"description"}}}},"InstanceId":{"locationName":"instanceId"},"Platform":{"locationName":"platform"},"Description":{"locationName":"description"}}},"ImportVolume":{"locationName":"importVolume","type":"structure","required":["BytesConverted","AvailabilityZone","Image","Volume"],"members":{"BytesConverted":{"locationName":"bytesConverted","type":"long"},"AvailabilityZone":{"locationName":"availabilityZone"},"Description":{"locationName":"description"},"Image":{"shape":"S89","locationName":"image"},"Volume":{"shape":"S8a","locationName":"volume"}}},"State":{"locationName":"state"},"StatusMessage":{"locationName":"statusMessage"},"Tags":{"shape":"Sa","locationName":"tagSet"}}},"S89":{"type":"structure","required":["Format","Size","ImportManifestUrl"],"members":{"Format":{"locationName":"format"},"Size":{"locationName":"size","type":"long"},"ImportManifestUrl":{"locationName":"importManifestUrl"},"Checksum":{"locationName":"checksum"}}},"S8a":{"type":"structure","required":["Id"],"members":{"Size":{"locationName":"size","type":"long"},"Id":{"locationName":"id"}}},"S8x":{"type":"list","member":{"locationName":"item","type":"structure","members":{"UserId":{"locationName":"userId"},"Group":{"locationName":"group"}}}},"S90":{"type":"list","member":{"locationName":"item","type":"structure","members":{"ProductCodeId":{"locationName":"productCode"},"ProductCodeType":{"locationName":"type"}}}},"S93":{"type":"list","member":{"shape":"S39","locationName":"item"}},"S96":{"type":"list","member":{"locationName":"Owner"}},"S9e":{"type":"structure","members":{"Code":{"locationName":"code"},"Message":{"locationName":"message"}}},"S9j":{"type":"list","member":{"locationName":"ImportTaskId"}},"S9n":{"type":"list","member":{"locationName":"item","type":"structure","members":{"DiskImageSize":{"locationName":"diskImageSize","type":"double"},"Description":{"locationName":"description"},"Format":{"locationName":"format"},"Url":{"locationName":"url"},"UserBucket":{"shape":"S9p","locationName":"userBucket"},"DeviceName":{"locationName":"deviceName"},"SnapshotId":{"locationName":"snapshotId"},"Progress":{"locationName":"progress"},"StatusMessage":{"locationName":"statusMessage"},"Status":{"locationName":"status"}}}},"S9p":{"type":"structure","members":{"S3Bucket":{"locationName":"s3Bucket"},"S3Key":{"locationName":"s3Key"}}},"S9u":{"type":"structure","members":{"DiskImageSize":{"locationName":"diskImageSize","type":"double"},"Description":{"locationName":"description"},"Format":{"locationName":"format"},"Url":{"locationName":"url"},"UserBucket":{"shape":"S9p","locationName":"userBucket"},"SnapshotId":{"locationName":"snapshotId"},"Progress":{"locationName":"progress"},"StatusMessage":{"locationName":"statusMessage"},"Status":{"locationName":"status"}}},"S9y":{"type":"structure","members":{"Value":{"locationName":"value","type":"boolean"}}},"S9z":{"type":"list","member":{"locationName":"item","type":"structure","members":{"DeviceName":{"locationName":"deviceName"},"Ebs":{"locationName":"ebs","type":"structure","members":{"VolumeId":{"locationName":"volumeId"},"Status":{"locationName":"status"},"AttachTime":{"locationName":"attachTime","type":"timestamp"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"}}}}}},"Sa9":{"type":"structure","members":{"Code":{"locationName":"code","type":"integer"},"Name":{"locationName":"name"}}},"Sab":{"type":"structure","members":{"Status":{"locationName":"status"},"Details":{"locationName":"details","type":"list","member":{"locationName":"item","type":"structure","members":{"Name":{"locationName":"name"},"Status":{"locationName":"status"},"ImpairedSince":{"locationName":"impairedSince","type":"timestamp"}}}}}},"Sak":{"type":"structure","members":{"ReservationId":{"locationName":"reservationId"},"OwnerId":{"locationName":"ownerId"},"RequesterId":{"locationName":"requesterId"},"Groups":{"shape":"S4c","locationName":"groupSet"},"Instances":{"locationName":"instancesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"ImageId":{"locationName":"imageId"},"State":{"shape":"Sa9","locationName":"instanceState"},"PrivateDnsName":{"locationName":"privateDnsName"},"PublicDnsName":{"locationName":"dnsName"},"StateTransitionReason":{"locationName":"reason"},"KeyName":{"locationName":"keyName"},"AmiLaunchIndex":{"locationName":"amiLaunchIndex","type":"integer"},"ProductCodes":{"shape":"S90","locationName":"productCodes"},"InstanceType":{"locationName":"instanceType"},"LaunchTime":{"locationName":"launchTime","type":"timestamp"},"Placement":{"shape":"Sao","locationName":"placement"},"KernelId":{"locationName":"kernelId"},"RamdiskId":{"locationName":"ramdiskId"},"Platform":{"locationName":"platform"},"Monitoring":{"shape":"Sap","locationName":"monitoring"},"SubnetId":{"locationName":"subnetId"},"VpcId":{"locationName":"vpcId"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"PublicIpAddress":{"locationName":"ipAddress"},"StateReason":{"shape":"S9e","locationName":"stateReason"},"Architecture":{"locationName":"architecture"},"RootDeviceType":{"locationName":"rootDeviceType"},"RootDeviceName":{"locationName":"rootDeviceName"},"BlockDeviceMappings":{"shape":"S9z","locationName":"blockDeviceMapping"},"VirtualizationType":{"locationName":"virtualizationType"},"InstanceLifecycle":{"locationName":"instanceLifecycle"},"SpotInstanceRequestId":{"locationName":"spotInstanceRequestId"},"ClientToken":{"locationName":"clientToken"},"Tags":{"shape":"Sa","locationName":"tagSet"},"SecurityGroups":{"shape":"S4c","locationName":"groupSet"},"SourceDestCheck":{"locationName":"sourceDestCheck","type":"boolean"},"Hypervisor":{"locationName":"hypervisor"},"NetworkInterfaces":{"locationName":"networkInterfaceSet","type":"list","member":{"locationName":"item","type":"structure","members":{"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"SubnetId":{"locationName":"subnetId"},"VpcId":{"locationName":"vpcId"},"Description":{"locationName":"description"},"OwnerId":{"locationName":"ownerId"},"Status":{"locationName":"status"},"MacAddress":{"locationName":"macAddress"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"PrivateDnsName":{"locationName":"privateDnsName"},"SourceDestCheck":{"locationName":"sourceDestCheck","type":"boolean"},"Groups":{"shape":"S4c","locationName":"groupSet"},"Attachment":{"locationName":"attachment","type":"structure","members":{"AttachmentId":{"locationName":"attachmentId"},"DeviceIndex":{"locationName":"deviceIndex","type":"integer"},"Status":{"locationName":"status"},"AttachTime":{"locationName":"attachTime","type":"timestamp"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"}}},"Association":{"shape":"Sav","locationName":"association"},"PrivateIpAddresses":{"locationName":"privateIpAddressesSet","type":"list","member":{"locationName":"item","type":"structure","members":{"PrivateIpAddress":{"locationName":"privateIpAddress"},"PrivateDnsName":{"locationName":"privateDnsName"},"Primary":{"locationName":"primary","type":"boolean"},"Association":{"shape":"Sav","locationName":"association"}}}}}}},"IamInstanceProfile":{"locationName":"iamInstanceProfile","type":"structure","members":{"Arn":{"locationName":"arn"},"Id":{"locationName":"id"}}},"EbsOptimized":{"locationName":"ebsOptimized","type":"boolean"},"SriovNetSupport":{"locationName":"sriovNetSupport"}}}}}},"Sao":{"type":"structure","members":{"AvailabilityZone":{"locationName":"availabilityZone"},"GroupName":{"locationName":"groupName"},"Tenancy":{"locationName":"tenancy"}}},"Sap":{"type":"structure","members":{"State":{"locationName":"state"}}},"Sav":{"type":"structure","members":{"PublicIp":{"locationName":"publicIp"},"PublicDnsName":{"locationName":"publicDnsName"},"IpOwnerId":{"locationName":"ipOwnerId"}}},"Sc2":{"type":"list","member":{"locationName":"ReservedInstancesId"}},"Sca":{"type":"list","member":{"locationName":"item","type":"structure","members":{"Frequency":{"locationName":"frequency"},"Amount":{"locationName":"amount","type":"double"}}}},"Sco":{"type":"structure","members":{"AvailabilityZone":{"locationName":"availabilityZone"},"Platform":{"locationName":"platform"},"InstanceCount":{"locationName":"instanceCount","type":"integer"},"InstanceType":{"locationName":"instanceType"}}},"Sd0":{"type":"list","member":{"locationName":"GroupName"}},"Sd7":{"type":"list","member":{"locationName":"item","type":"structure","members":{"UserId":{"locationName":"userId"},"Group":{"locationName":"group"}}}},"Sdu":{"type":"structure","required":["SpotPrice","TargetCapacity","IamFleetRole","LaunchSpecifications"],"members":{"ClientToken":{"locationName":"clientToken"},"SpotPrice":{"locationName":"spotPrice"},"TargetCapacity":{"locationName":"targetCapacity","type":"integer"},"ValidFrom":{"locationName":"validFrom","type":"timestamp"},"ValidUntil":{"locationName":"validUntil","type":"timestamp"},"TerminateInstancesWithExpiration":{"locationName":"terminateInstancesWithExpiration","type":"boolean"},"IamFleetRole":{"locationName":"iamFleetRole"},"LaunchSpecifications":{"locationName":"launchSpecifications","type":"list","member":{"locationName":"item","type":"structure","members":{"ImageId":{"locationName":"imageId"},"KeyName":{"locationName":"keyName"},"SecurityGroups":{"shape":"S4c","locationName":"groupSet"},"UserData":{"locationName":"userData"},"AddressingType":{"locationName":"addressingType"},"InstanceType":{"locationName":"instanceType"},"Placement":{"shape":"Sdx","locationName":"placement"},"KernelId":{"locationName":"kernelId"},"RamdiskId":{"locationName":"ramdiskId"},"BlockDeviceMappings":{"shape":"S93","locationName":"blockDeviceMapping"},"Monitoring":{"locationName":"monitoring","type":"structure","members":{"Enabled":{"locationName":"enabled","type":"boolean"}}},"SubnetId":{"locationName":"subnetId"},"NetworkInterfaces":{"shape":"Sdz","locationName":"networkInterfaceSet"},"IamInstanceProfile":{"shape":"Se1","locationName":"iamInstanceProfile"},"EbsOptimized":{"locationName":"ebsOptimized","type":"boolean"},"WeightedCapacity":{"locationName":"weightedCapacity","type":"double"},"SpotPrice":{"locationName":"spotPrice"}}}}}},"Sdx":{"type":"structure","members":{"AvailabilityZone":{"locationName":"availabilityZone"},"GroupName":{"locationName":"groupName"}}},"Sdz":{"type":"list","member":{"locationName":"item","type":"structure","members":{"NetworkInterfaceId":{"locationName":"networkInterfaceId"},"DeviceIndex":{"locationName":"deviceIndex","type":"integer"},"SubnetId":{"locationName":"subnetId"},"Description":{"locationName":"description"},"PrivateIpAddress":{"locationName":"privateIpAddress"},"Groups":{"shape":"S46","locationName":"SecurityGroupId"},"DeleteOnTermination":{"locationName":"deleteOnTermination","type":"boolean"},"PrivateIpAddresses":{"shape":"S47","locationName":"privateIpAddressesSet","queryName":"PrivateIpAddresses"},"SecondaryPrivateIpAddressCount":{"locationName":"secondaryPrivateIpAddressCount","type":"integer"},"AssociatePublicIpAddress":{"locationName":"associatePublicIpAddress","type":"boolean"}}}},"Se1":{"type":"structure","members":{"Arn":{"locationName":"arn"},"Name":{"locationName":"name"}}},"Se4":{"type":"list","member":{"locationName":"item","type":"structure","members":{"SpotInstanceRequestId":{"locationName":"spotInstanceRequestId"},"SpotPrice":{"locationName":"spotPrice"},"Type":{"locationName":"type"},"State":{"locationName":"state"},"Fault":{"shape":"S5a","locationName":"fault"},"Status":{"locationName":"status","type":"structure","members":{"Code":{"locationName":"code"},"UpdateTime":{"locationName":"updateTime","type":"timestamp"},"Message":{"locationName":"message"}}},"ValidFrom":{"locationName":"validFrom","type":"timestamp"},"ValidUntil":{"locationName":"validUntil","type":"timestamp"},"LaunchGroup":{"locationName":"launchGroup"},"AvailabilityZoneGroup":{"locationName":"availabilityZoneGroup"},"LaunchSpecification":{"locationName":"launchSpecification","type":"structure","members":{"ImageId":{"locationName":"imageId"},"KeyName":{"locationName":"keyName"},"SecurityGroups":{"shape":"S4c","locationName":"groupSet"},"UserData":{"locationName":"userData"},"AddressingType":{"locationName":"addressingType"},"InstanceType":{"locationName":"instanceType"},"Placement":{"shape":"Sdx","locationName":"placement"},"KernelId":{"locationName":"kernelId"},"RamdiskId":{"locationName":"ramdiskId"},"BlockDeviceMappings":{"shape":"S93","locationName":"blockDeviceMapping"},"SubnetId":{"locationName":"subnetId"},"NetworkInterfaces":{"shape":"Sdz","locationName":"networkInterfaceSet"},"IamInstanceProfile":{"shape":"Se1","locationName":"iamInstanceProfile"},"EbsOptimized":{"locationName":"ebsOptimized","type":"boolean"},"Monitoring":{"shape":"Sea","locationName":"monitoring"}}},"InstanceId":{"locationName":"instanceId"},"CreateTime":{"locationName":"createTime","type":"timestamp"},"ProductDescription":{"locationName":"productDescription"},"Tags":{"shape":"Sa","locationName":"tagSet"},"LaunchedAvailabilityZone":{"locationName":"launchedAvailabilityZone"}}}},"Sea":{"type":"structure","required":["Enabled"],"members":{"Enabled":{"locationName":"enabled","type":"boolean"}}},"Seu":{"type":"list","member":{"locationName":"VolumeId"}},"Sgo":{"type":"structure","members":{"S3Bucket":{},"S3Key":{}}},"Sgp":{"type":"structure","members":{"UploadStart":{"type":"timestamp"},"UploadEnd":{"type":"timestamp"},"UploadSize":{"type":"double"},"Comment":{}}},"Sgt":{"type":"list","member":{"locationName":"SecurityGroup"}},"Sgy":{"type":"structure","required":["Format","Bytes","ImportManifestUrl"],"members":{"Format":{"locationName":"format"},"Bytes":{"locationName":"bytes","type":"long"},"ImportManifestUrl":{"locationName":"importManifestUrl"}}},"Sgz":{"type":"structure","required":["Size"],"members":{"Size":{"locationName":"size","type":"long"}}},"Sha":{"type":"list","member":{"locationName":"UserId"}},"Shx":{"type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"Monitoring":{"shape":"Sap","locationName":"monitoring"}}}},"Sj2":{"type":"list","member":{"locationName":"item","type":"structure","members":{"InstanceId":{"locationName":"instanceId"},"CurrentState":{"shape":"Sa9","locationName":"currentState"},"PreviousState":{"shape":"Sa9","locationName":"previousState"}}}}},"examples":{},"paginators":{"DescribeAccountAttributes":{"result_key":"AccountAttributes"},"DescribeAddresses":{"result_key":"Addresses"},"DescribeAvailabilityZones":{"result_key":"AvailabilityZones"},"DescribeBundleTasks":{"result_key":"BundleTasks"},"DescribeConversionTasks":{"result_key":"ConversionTasks"},"DescribeCustomerGateways":{"result_key":"CustomerGateways"},"DescribeDhcpOptions":{"result_key":"DhcpOptions"},"DescribeExportTasks":{"result_key":"ExportTasks"},"DescribeImages":{"result_key":"Images"},"DescribeInstanceStatus":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"InstanceStatuses"},"DescribeInstances":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"Reservations"},"DescribeInternetGateways":{"result_key":"InternetGateways"},"DescribeKeyPairs":{"result_key":"KeyPairs"},"DescribeNetworkAcls":{"result_key":"NetworkAcls"},"DescribeNetworkInterfaces":{"result_key":"NetworkInterfaces"},"DescribePlacementGroups":{"result_key":"PlacementGroups"},"DescribeRegions":{"result_key":"Regions"},"DescribeReservedInstances":{"result_key":"ReservedInstances"},"DescribeReservedInstancesListings":{"result_key":"ReservedInstancesListings"},"DescribeReservedInstancesOfferings":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"ReservedInstancesOfferings"},"DescribeReservedInstancesModifications":{"input_token":"NextToken","output_token":"NextToken","result_key":"ReservedInstancesModifications"},"DescribeRouteTables":{"result_key":"RouteTables"},"DescribeSecurityGroups":{"result_key":"SecurityGroups"},"DescribeSnapshots":{"input_token":"NextToken","output_token":"NextToken","result_key":"Snapshots"},"DescribeSpotInstanceRequests":{"result_key":"SpotInstanceRequests"},"DescribeSpotPriceHistory":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"SpotPriceHistory"},"DescribeSubnets":{"result_key":"Subnets"},"DescribeTags":{"result_key":"Tags"},"DescribeVolumeStatus":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"VolumeStatuses"},"DescribeVolumes":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"Volumes"},"DescribeVpcs":{"result_key":"Vpcs"},"DescribeVpnConnections":{"result_key":"VpnConnections"},"DescribeVpnGateways":{"result_key":"VpnGateways"}},"waiters":{"__default__":{"interval":15,"max_attempts":40,"acceptor_type":"output"},"__InstanceState":{"operation":"DescribeInstances","acceptor_path":"Reservations[].Instances[].State.Name"},"__InstanceStatus":{"operation":"DescribeInstanceStatus","success_value":"ok"},"SystemStatusOk":{"extends":"__InstanceStatus","acceptor_path":"InstanceStatuses[].SystemStatus.Status"},"InstanceStatusOk":{"extends":"__InstanceStatus","acceptor_path":"InstanceStatuses[].InstanceStatus.Status"},"ImageAvailable":{"operation":"DescribeImages","acceptor_path":"Images[].State","success_value":"available","failure_value":["failed"]},"InstanceRunning":{"extends":"__InstanceState","success_value":"running","failure_value":["shutting-down","terminated","stopping"]},"InstanceStopped":{"extends":"__InstanceState","success_value":"stopped","failure_value":["pending","terminated"]},"InstanceTerminated":{"extends":"__InstanceState","success_value":"terminated","failure_value":["pending","stopping"]},"__ExportTaskState":{"operation":"DescribeExportTasks","acceptor_path":"ExportTasks[].State"},"ExportTaskCompleted":{"extends":"__ExportTaskState","success_value":"completed"},"ExportTaskCancelled":{"extends":"__ExportTaskState","success_value":"cancelled"},"SnapshotCompleted":{"operation":"DescribeSnapshots","success_path":"Snapshots[].State","success_value":"completed"},"SubnetAvailable":{"operation":"DescribeSubnets","success_path":"Subnets[].State","success_value":"available"},"__VolumeStatus":{"operation":"DescribeVolumes","acceptor_path":"Volumes[].State"},"VolumeAvailable":{"extends":"__VolumeStatus","success_value":"available","failure_value":["deleted"]},"VolumeInUse":{"extends":"__VolumeStatus","success_value":"in-use","failure_value":["deleted"]},"VolumeDeleted":{"extends":"__VolumeStatus","success_type":"error","success_value":"InvalidVolume.NotFound"},"VpcAvailable":{"operation":"DescribeVpcs","success_path":"Vpcs[].State","success_value":"available"},"__VpnConnectionState":{"operation":"DescribeVpnConnections","acceptor_path":"VpnConnections[].State"},"VpnConnectionAvailable":{"extends":"__VpnConnectionState","success_value":"available","failure_value":["deleting","deleted"]},"VpnConnectionDeleted":{"extends":"__VpnConnectionState","success_value":"deleted","failure_value":["pending"]},"BundleTaskComplete":{"operation":"DescribeBundleTasks","acceptor_path":"BundleTasks[].State","success_value":"complete","failure_value":["failed"]},"__ConversionTaskState":{"operation":"DescribeConversionTasks","acceptor_path":"ConversionTasks[].State"},"ConversionTaskCompleted":{"extends":"__ConversionTaskState","success_value":"completed","failure_value":["cancelled","cancelling"]},"ConversionTaskCancelled":{"extends":"__ConversionTaskState","success_value":"cancelled"},"__CustomerGatewayState":{"operation":"DescribeCustomerGateways","acceptor_path":"CustomerGateways[].State"},"CustomerGatewayAvailable":{"extends":"__CustomerGatewayState","success_value":"available","failure_value":["deleted","deleting"]},"ConversionTaskDeleted":{"extends":"__CustomerGatewayState","success_value":"deleted"},"__SpotInstanceRequestState":{"operation":"DescribeSpotInstanceRequests","acceptor_path":"SpotInstanceRequests[].Status.Code"},"SpotInstanceRequestFulfilled":{"extends":"__SpotInstanceRequestState","success_value":"fulfilled","failure_value":["schedule-expired","canceled-before-fulfillment","bad-parameters","system-error"]}}};
+AWS.apiLoader.services['dynamodb']['2012-08-10'] = {"metadata":{"apiVersion":"2012-08-10","endpointPrefix":"dynamodb","jsonVersion":"1.0","serviceAbbreviation":"DynamoDB","serviceFullName":"Amazon DynamoDB","signatureVersion":"v4","targetPrefix":"DynamoDB_20120810","protocol":"json"},"operations":{"BatchGetItem":{"input":{"type":"structure","required":["RequestItems"],"members":{"RequestItems":{"shape":"S2"},"ReturnConsumedCapacity":{}}},"output":{"type":"structure","members":{"Responses":{"type":"map","key":{},"value":{"shape":"Sr"}},"UnprocessedKeys":{"shape":"S2"},"ConsumedCapacity":{"shape":"St"}}},"http":{}},"BatchWriteItem":{"input":{"type":"structure","required":["RequestItems"],"members":{"RequestItems":{"shape":"S10"},"ReturnConsumedCapacity":{},"ReturnItemCollectionMetrics":{}}},"output":{"type":"structure","members":{"UnprocessedItems":{"shape":"S10"},"ItemCollectionMetrics":{"type":"map","key":{},"value":{"type":"list","member":{"shape":"S1a"}}},"ConsumedCapacity":{"shape":"St"}}},"http":{}},"CreateTable":{"input":{"type":"structure","required":["AttributeDefinitions","TableName","KeySchema","ProvisionedThroughput"],"members":{"AttributeDefinitions":{"shape":"S1f"},"TableName":{},"KeySchema":{"shape":"S1j"},"LocalSecondaryIndexes":{"type":"list","member":{"type":"structure","required":["IndexName","KeySchema","Projection"],"members":{"IndexName":{},"KeySchema":{"shape":"S1j"},"Projection":{"shape":"S1o"}}}},"GlobalSecondaryIndexes":{"type":"list","member":{"type":"structure","required":["IndexName","KeySchema","Projection","ProvisionedThroughput"],"members":{"IndexName":{},"KeySchema":{"shape":"S1j"},"Projection":{"shape":"S1o"},"ProvisionedThroughput":{"shape":"S1u"}}}},"ProvisionedThroughput":{"shape":"S1u"}}},"output":{"type":"structure","members":{"TableDescription":{"shape":"S1x"}}},"http":{}},"DeleteItem":{"input":{"type":"structure","required":["TableName","Key"],"members":{"TableName":{},"Key":{"shape":"S6"},"Expected":{"shape":"S29"},"ConditionalOperator":{},"ReturnValues":{},"ReturnConsumedCapacity":{},"ReturnItemCollectionMetrics":{},"ConditionExpression":{},"ExpressionAttributeNames":{"shape":"Sm"},"ExpressionAttributeValues":{"shape":"S2h"}}},"output":{"type":"structure","members":{"Attributes":{"shape":"Ss"},"ConsumedCapacity":{"shape":"Su"},"ItemCollectionMetrics":{"shape":"S1a"}}},"http":{}},"DeleteTable":{"input":{"type":"structure","required":["TableName"],"members":{"TableName":{}}},"output":{"type":"structure","members":{"TableDescription":{"shape":"S1x"}}},"http":{}},"DescribeTable":{"input":{"type":"structure","required":["TableName"],"members":{"TableName":{}}},"output":{"type":"structure","members":{"Table":{"shape":"S1x"}}},"http":{}},"GetItem":{"input":{"type":"structure","required":["TableName","Key"],"members":{"TableName":{},"Key":{"shape":"S6"},"AttributesToGet":{"shape":"Sj"},"ConsistentRead":{"type":"boolean"},"ReturnConsumedCapacity":{},"ProjectionExpression":{},"ExpressionAttributeNames":{"shape":"Sm"}}},"output":{"type":"structure","members":{"Item":{"shape":"Ss"},"ConsumedCapacity":{"shape":"Su"}}},"http":{}},"ListTables":{"input":{"type":"structure","members":{"ExclusiveStartTableName":{},"Limit":{"type":"integer"}}},"output":{"type":"structure","members":{"TableNames":{"type":"list","member":{}},"LastEvaluatedTableName":{}}},"http":{}},"PutItem":{"input":{"type":"structure","required":["TableName","Item"],"members":{"TableName":{},"Item":{"shape":"S14"},"Expected":{"shape":"S29"},"ReturnValues":{},"ReturnConsumedCapacity":{},"ReturnItemCollectionMetrics":{},"ConditionalOperator":{},"ConditionExpression":{},"ExpressionAttributeNames":{"shape":"Sm"},"ExpressionAttributeValues":{"shape":"S2h"}}},"output":{"type":"structure","members":{"Attributes":{"shape":"Ss"},"ConsumedCapacity":{"shape":"Su"},"ItemCollectionMetrics":{"shape":"S1a"}}},"http":{}},"Query":{"input":{"type":"structure","required":["TableName","KeyConditions"],"members":{"TableName":{},"IndexName":{},"Select":{},"AttributesToGet":{"shape":"Sj"},"Limit":{"type":"integer"},"ConsistentRead":{"type":"boolean"},"KeyConditions":{"type":"map","key":{},"value":{"shape":"S30"}},"QueryFilter":{"shape":"S31"},"ConditionalOperator":{},"ScanIndexForward":{"type":"boolean"},"ExclusiveStartKey":{"shape":"S6"},"ReturnConsumedCapacity":{},"ProjectionExpression":{},"FilterExpression":{},"ExpressionAttributeNames":{"shape":"Sm"},"ExpressionAttributeValues":{"shape":"S2h"}}},"output":{"type":"structure","members":{"Items":{"shape":"Sr"},"Count":{"type":"integer"},"ScannedCount":{"type":"integer"},"LastEvaluatedKey":{"shape":"S6"},"ConsumedCapacity":{"shape":"Su"}}},"http":{}},"Scan":{"input":{"type":"structure","required":["TableName"],"members":{"TableName":{},"IndexName":{},"AttributesToGet":{"shape":"Sj"},"Limit":{"type":"integer"},"Select":{},"ScanFilter":{"shape":"S31"},"ConditionalOperator":{},"ExclusiveStartKey":{"shape":"S6"},"ReturnConsumedCapacity":{},"TotalSegments":{"type":"integer"},"Segment":{"type":"integer"},"ProjectionExpression":{},"FilterExpression":{},"ExpressionAttributeNames":{"shape":"Sm"},"ExpressionAttributeValues":{"shape":"S2h"}}},"output":{"type":"structure","members":{"Items":{"shape":"Sr"},"Count":{"type":"integer"},"ScannedCount":{"type":"integer"},"LastEvaluatedKey":{"shape":"S6"},"ConsumedCapacity":{"shape":"Su"}}},"http":{}},"UpdateItem":{"input":{"type":"structure","required":["TableName","Key"],"members":{"TableName":{},"Key":{"shape":"S6"},"AttributeUpdates":{"type":"map","key":{},"value":{"type":"structure","members":{"Value":{"shape":"S8"},"Action":{}}}},"Expected":{"shape":"S29"},"ConditionalOperator":{},"ReturnValues":{},"ReturnConsumedCapacity":{},"ReturnItemCollectionMetrics":{},"UpdateExpression":{},"ConditionExpression":{},"ExpressionAttributeNames":{"shape":"Sm"},"ExpressionAttributeValues":{"shape":"S2h"}}},"output":{"type":"structure","members":{"Attributes":{"shape":"Ss"},"ConsumedCapacity":{"shape":"Su"},"ItemCollectionMetrics":{"shape":"S1a"}}},"http":{}},"UpdateTable":{"input":{"type":"structure","required":["TableName"],"members":{"AttributeDefinitions":{"shape":"S1f"},"TableName":{},"ProvisionedThroughput":{"shape":"S1u"},"GlobalSecondaryIndexUpdates":{"type":"list","member":{"type":"structure","members":{"Update":{"type":"structure","required":["IndexName","ProvisionedThroughput"],"members":{"IndexName":{},"ProvisionedThroughput":{"shape":"S1u"}}},"Create":{"type":"structure","required":["IndexName","KeySchema","Projection","ProvisionedThroughput"],"members":{"IndexName":{},"KeySchema":{"shape":"S1j"},"Projection":{"shape":"S1o"},"ProvisionedThroughput":{"shape":"S1u"}}},"Delete":{"type":"structure","required":["IndexName"],"members":{"IndexName":{}}}}}}}},"output":{"type":"structure","members":{"TableDescription":{"shape":"S1x"}}},"http":{}}},"shapes":{"S2":{"type":"map","key":{},"value":{"type":"structure","required":["Keys"],"members":{"Keys":{"type":"list","member":{"shape":"S6"}},"AttributesToGet":{"shape":"Sj"},"ConsistentRead":{"type":"boolean"},"ProjectionExpression":{},"ExpressionAttributeNames":{"shape":"Sm"}}}},"S6":{"type":"map","key":{},"value":{"shape":"S8"}},"S8":{"type":"structure","members":{"S":{},"N":{},"B":{"type":"blob"},"SS":{"type":"list","member":{}},"NS":{"type":"list","member":{}},"BS":{"type":"list","member":{"type":"blob"}},"M":{"type":"map","key":{},"value":{"shape":"S8"}},"L":{"type":"list","member":{"shape":"S8"}},"NULL":{"type":"boolean"},"BOOL":{"type":"boolean"}}},"Sj":{"type":"list","member":{}},"Sm":{"type":"map","key":{},"value":{}},"Sr":{"type":"list","member":{"shape":"Ss"}},"Ss":{"type":"map","key":{},"value":{"shape":"S8"}},"St":{"type":"list","member":{"shape":"Su"}},"Su":{"type":"structure","members":{"TableName":{},"CapacityUnits":{"type":"double"},"Table":{"shape":"Sw"},"LocalSecondaryIndexes":{"shape":"Sx"},"GlobalSecondaryIndexes":{"shape":"Sx"}}},"Sw":{"type":"structure","members":{"CapacityUnits":{"type":"double"}}},"Sx":{"type":"map","key":{},"value":{"shape":"Sw"}},"S10":{"type":"map","key":{},"value":{"type":"list","member":{"type":"structure","members":{"PutRequest":{"type":"structure","required":["Item"],"members":{"Item":{"shape":"S14"}}},"DeleteRequest":{"type":"structure","required":["Key"],"members":{"Key":{"shape":"S6"}}}}}}},"S14":{"type":"map","key":{},"value":{"shape":"S8"}},"S1a":{"type":"structure","members":{"ItemCollectionKey":{"type":"map","key":{},"value":{"shape":"S8"}},"SizeEstimateRangeGB":{"type":"list","member":{"type":"double"}}}},"S1f":{"type":"list","member":{"type":"structure","required":["AttributeName","AttributeType"],"members":{"AttributeName":{},"AttributeType":{}}}},"S1j":{"type":"list","member":{"type":"structure","required":["AttributeName","KeyType"],"members":{"AttributeName":{},"KeyType":{}}}},"S1o":{"type":"structure","members":{"ProjectionType":{},"NonKeyAttributes":{"type":"list","member":{}}}},"S1u":{"type":"structure","required":["ReadCapacityUnits","WriteCapacityUnits"],"members":{"ReadCapacityUnits":{"type":"long"},"WriteCapacityUnits":{"type":"long"}}},"S1x":{"type":"structure","members":{"AttributeDefinitions":{"shape":"S1f"},"TableName":{},"KeySchema":{"shape":"S1j"},"TableStatus":{},"CreationDateTime":{"type":"timestamp"},"ProvisionedThroughput":{"shape":"S20"},"TableSizeBytes":{"type":"long"},"ItemCount":{"type":"long"},"LocalSecondaryIndexes":{"type":"list","member":{"type":"structure","members":{"IndexName":{},"KeySchema":{"shape":"S1j"},"Projection":{"shape":"S1o"},"IndexSizeBytes":{"type":"long"},"ItemCount":{"type":"long"}}}},"GlobalSecondaryIndexes":{"type":"list","member":{"type":"structure","members":{"IndexName":{},"KeySchema":{"shape":"S1j"},"Projection":{"shape":"S1o"},"IndexStatus":{},"Backfilling":{"type":"boolean"},"ProvisionedThroughput":{"shape":"S20"},"IndexSizeBytes":{"type":"long"},"ItemCount":{"type":"long"}}}}}},"S20":{"type":"structure","members":{"LastIncreaseDateTime":{"type":"timestamp"},"LastDecreaseDateTime":{"type":"timestamp"},"NumberOfDecreasesToday":{"type":"long"},"ReadCapacityUnits":{"type":"long"},"WriteCapacityUnits":{"type":"long"}}},"S29":{"type":"map","key":{},"value":{"type":"structure","members":{"Value":{"shape":"S8"},"Exists":{"type":"boolean"},"ComparisonOperator":{},"AttributeValueList":{"shape":"S2d"}}}},"S2d":{"type":"list","member":{"shape":"S8"}},"S2h":{"type":"map","key":{},"value":{"shape":"S8"}},"S30":{"type":"structure","required":["ComparisonOperator"],"members":{"AttributeValueList":{"shape":"S2d"},"ComparisonOperator":{}}},"S31":{"type":"map","key":{},"value":{"shape":"S30"}}},"paginators":{"BatchGetItem":{"input_token":"RequestItems","output_token":"UnprocessedKeys"},"ListTables":{"input_token":"ExclusiveStartTableName","output_token":"LastEvaluatedTableName","limit_key":"Limit","result_key":"TableNames"},"Query":{"input_token":"ExclusiveStartKey","output_token":"LastEvaluatedKey","limit_key":"Limit","result_key":"Items"},"Scan":{"input_token":"ExclusiveStartKey","output_token":"LastEvaluatedKey","limit_key":"Limit","result_key":"Items"}},"waiters":{"__default__":{"interval":20,"max_attempts":25},"__TableState":{"operation":"DescribeTable"},"TableExists":{"extends":"__TableState","ignore_errors":["ResourceNotFoundException"],"success_type":"output","success_path":"Table.TableStatus","success_value":"ACTIVE"},"TableNotExists":{"extends":"__TableState","success_type":"error","success_value":"ResourceNotFoundException"}}};
 AWS.apiLoader.services['elastictranscoder'] = {};
 AWS.ElasticTranscoder = AWS.Service.defineService('elastictranscoder', [ '2012-09-25' ]);
 
-AWS.apiLoader.services['elastictranscoder']['2012-09-25'] = {"version":"2.0","metadata":{"apiVersion":"2012-09-25","endpointPrefix":"elastictranscoder","serviceFullName":"Amazon Elastic Transcoder","signatureVersion":"v4","protocol":"rest-json"},"operations":{"CancelJob":{"http":{"method":"DELETE","requestUri":"/2012-09-25/jobs/{Id}","responseCode":202},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{}}},"CreateJob":{"http":{"requestUri":"/2012-09-25/jobs","responseCode":201},"input":{"type":"structure","required":["PipelineId","Input"],"members":{"PipelineId":{},"Input":{"shape":"S5"},"Output":{"shape":"Sk"},"Outputs":{"type":"list","member":{"shape":"Sk"}},"OutputKeyPrefix":{},"Playlists":{"type":"list","member":{"type":"structure","members":{"Name":{},"Format":{},"OutputKeys":{"shape":"S1i"},"HlsContentProtection":{"shape":"S1j"},"PlayReadyDrm":{"shape":"S1n"}}}},"UserMetadata":{"shape":"S1s"}}},"output":{"type":"structure","members":{"Job":{"shape":"S1v"}}}},"CreatePipeline":{"http":{"requestUri":"/2012-09-25/pipelines","responseCode":201},"input":{"type":"structure","required":["Name","InputBucket","Role"],"members":{"Name":{},"InputBucket":{},"OutputBucket":{},"Role":{},"AwsKmsKeyArn":{},"Notifications":{"shape":"S27"},"ContentConfig":{"shape":"S29"},"ThumbnailConfig":{"shape":"S29"}}},"output":{"type":"structure","members":{"Pipeline":{"shape":"S2i"},"Warnings":{"shape":"S2k"}}}},"CreatePreset":{"http":{"requestUri":"/2012-09-25/presets","responseCode":201},"input":{"type":"structure","required":["Name","Container"],"members":{"Name":{},"Description":{},"Container":{},"Video":{"shape":"S2o"},"Audio":{"shape":"S34"},"Thumbnails":{"shape":"S3f"}}},"output":{"type":"structure","members":{"Preset":{"shape":"S3j"},"Warning":{}}}},"DeletePipeline":{"http":{"method":"DELETE","requestUri":"/2012-09-25/pipelines/{Id}","responseCode":202},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{}}},"DeletePreset":{"http":{"method":"DELETE","requestUri":"/2012-09-25/presets/{Id}","responseCode":202},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{}}},"ListJobsByPipeline":{"http":{"method":"GET","requestUri":"/2012-09-25/jobsByPipeline/{PipelineId}"},"input":{"type":"structure","required":["PipelineId"],"members":{"PipelineId":{"location":"uri","locationName":"PipelineId"},"Ascending":{"location":"querystring","locationName":"Ascending"},"PageToken":{"location":"querystring","locationName":"PageToken"}}},"output":{"type":"structure","members":{"Jobs":{"shape":"S3s"},"NextPageToken":{}}}},"ListJobsByStatus":{"http":{"method":"GET","requestUri":"/2012-09-25/jobsByStatus/{Status}"},"input":{"type":"structure","required":["Status"],"members":{"Status":{"location":"uri","locationName":"Status"},"Ascending":{"location":"querystring","locationName":"Ascending"},"PageToken":{"location":"querystring","locationName":"PageToken"}}},"output":{"type":"structure","members":{"Jobs":{"shape":"S3s"},"NextPageToken":{}}}},"ListPipelines":{"http":{"method":"GET","requestUri":"/2012-09-25/pipelines"},"input":{"type":"structure","members":{"Ascending":{"location":"querystring","locationName":"Ascending"},"PageToken":{"location":"querystring","locationName":"PageToken"}}},"output":{"type":"structure","members":{"Pipelines":{"type":"list","member":{"shape":"S2i"}},"NextPageToken":{}}}},"ListPresets":{"http":{"method":"GET","requestUri":"/2012-09-25/presets"},"input":{"type":"structure","members":{"Ascending":{"location":"querystring","locationName":"Ascending"},"PageToken":{"location":"querystring","locationName":"PageToken"}}},"output":{"type":"structure","members":{"Presets":{"type":"list","member":{"shape":"S3j"}},"NextPageToken":{}}}},"ReadJob":{"http":{"method":"GET","requestUri":"/2012-09-25/jobs/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{"Job":{"shape":"S1v"}}}},"ReadPipeline":{"http":{"method":"GET","requestUri":"/2012-09-25/pipelines/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{"Pipeline":{"shape":"S2i"},"Warnings":{"shape":"S2k"}}}},"ReadPreset":{"http":{"method":"GET","requestUri":"/2012-09-25/presets/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{"Preset":{"shape":"S3j"}}}},"TestRole":{"http":{"requestUri":"/2012-09-25/roleTests","responseCode":200},"input":{"type":"structure","required":["Role","InputBucket","OutputBucket","Topics"],"members":{"Role":{},"InputBucket":{},"OutputBucket":{},"Topics":{"type":"list","member":{}}}},"output":{"type":"structure","members":{"Success":{},"Messages":{"type":"list","member":{}}}}},"UpdatePipeline":{"http":{"method":"PUT","requestUri":"/2012-09-25/pipelines/{Id}","responseCode":200},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"},"Name":{},"InputBucket":{},"Role":{},"AwsKmsKeyArn":{},"Notifications":{"shape":"S27"},"ContentConfig":{"shape":"S29"},"ThumbnailConfig":{"shape":"S29"}}},"output":{"type":"structure","members":{"Pipeline":{"shape":"S2i"},"Warnings":{"shape":"S2k"}}}},"UpdatePipelineNotifications":{"http":{"requestUri":"/2012-09-25/pipelines/{Id}/notifications"},"input":{"type":"structure","required":["Id","Notifications"],"members":{"Id":{"location":"uri","locationName":"Id"},"Notifications":{"shape":"S27"}}},"output":{"type":"structure","members":{"Pipeline":{"shape":"S2i"}}}},"UpdatePipelineStatus":{"http":{"requestUri":"/2012-09-25/pipelines/{Id}/status"},"input":{"type":"structure","required":["Id","Status"],"members":{"Id":{"location":"uri","locationName":"Id"},"Status":{}}},"output":{"type":"structure","members":{"Pipeline":{"shape":"S2i"}}}}},"shapes":{"S5":{"type":"structure","members":{"Key":{},"FrameRate":{},"Resolution":{},"AspectRatio":{},"Interlaced":{},"Container":{},"Encryption":{"shape":"Sc"},"DetectedProperties":{"type":"structure","members":{"Width":{"type":"integer"},"Height":{"type":"integer"},"FrameRate":{},"FileSize":{"type":"long"},"DurationMillis":{"type":"long"}}}}},"Sc":{"type":"structure","members":{"Mode":{},"Key":{},"KeyMd5":{},"InitializationVector":{}}},"Sk":{"type":"structure","members":{"Key":{},"ThumbnailPattern":{},"ThumbnailEncryption":{"shape":"Sc"},"Rotate":{},"PresetId":{},"SegmentDuration":{},"Watermarks":{"shape":"Sn"},"AlbumArt":{"shape":"Sr"},"Composition":{"shape":"Sz"},"Captions":{"shape":"S13"},"Encryption":{"shape":"Sc"}}},"Sn":{"type":"list","member":{"type":"structure","members":{"PresetWatermarkId":{},"InputKey":{},"Encryption":{"shape":"Sc"}}}},"Sr":{"type":"structure","members":{"MergePolicy":{},"Artwork":{"type":"list","member":{"type":"structure","members":{"InputKey":{},"MaxWidth":{},"MaxHeight":{},"SizingPolicy":{},"PaddingPolicy":{},"AlbumArtFormat":{},"Encryption":{"shape":"Sc"}}}}}},"Sz":{"type":"list","member":{"type":"structure","members":{"TimeSpan":{"type":"structure","members":{"StartTime":{},"Duration":{}}}}}},"S13":{"type":"structure","members":{"MergePolicy":{},"CaptionSources":{"type":"list","member":{"type":"structure","members":{"Key":{},"Language":{},"TimeOffset":{},"Label":{},"Encryption":{"shape":"Sc"}}}},"CaptionFormats":{"type":"list","member":{"type":"structure","members":{"Format":{},"Pattern":{},"Encryption":{"shape":"Sc"}}}}}},"S1i":{"type":"list","member":{}},"S1j":{"type":"structure","members":{"Method":{},"Key":{},"KeyMd5":{},"InitializationVector":{},"LicenseAcquisitionUrl":{},"KeyStoragePolicy":{}}},"S1n":{"type":"structure","members":{"Format":{},"Key":{},"KeyMd5":{},"KeyId":{},"InitializationVector":{},"LicenseAcquisitionUrl":{}}},"S1s":{"type":"map","key":{},"value":{}},"S1v":{"type":"structure","members":{"Id":{},"Arn":{},"PipelineId":{},"Input":{"shape":"S5"},"Output":{"shape":"S1w"},"Outputs":{"type":"list","member":{"shape":"S1w"}},"OutputKeyPrefix":{},"Playlists":{"type":"list","member":{"type":"structure","members":{"Name":{},"Format":{},"OutputKeys":{"shape":"S1i"},"HlsContentProtection":{"shape":"S1j"},"PlayReadyDrm":{"shape":"S1n"},"Status":{},"StatusDetail":{}}}},"Status":{},"UserMetadata":{"shape":"S1s"},"Timing":{"type":"structure","members":{"SubmitTimeMillis":{"type":"long"},"StartTimeMillis":{"type":"long"},"FinishTimeMillis":{"type":"long"}}}}},"S1w":{"type":"structure","members":{"Id":{},"Key":{},"ThumbnailPattern":{},"ThumbnailEncryption":{"shape":"Sc"},"Rotate":{},"PresetId":{},"SegmentDuration":{},"Status":{},"StatusDetail":{},"Duration":{"type":"long"},"Width":{"type":"integer"},"Height":{"type":"integer"},"FrameRate":{},"FileSize":{"type":"long"},"DurationMillis":{"type":"long"},"Watermarks":{"shape":"Sn"},"AlbumArt":{"shape":"Sr"},"Composition":{"shape":"Sz"},"Captions":{"shape":"S13"},"Encryption":{"shape":"Sc"},"AppliedColorSpaceConversion":{}}},"S27":{"type":"structure","members":{"Progressing":{},"Completed":{},"Warning":{},"Error":{}}},"S29":{"type":"structure","members":{"Bucket":{},"StorageClass":{},"Permissions":{"type":"list","member":{"type":"structure","members":{"GranteeType":{},"Grantee":{},"Access":{"type":"list","member":{}}}}}}},"S2i":{"type":"structure","members":{"Id":{},"Arn":{},"Name":{},"Status":{},"InputBucket":{},"OutputBucket":{},"Role":{},"AwsKmsKeyArn":{},"Notifications":{"shape":"S27"},"ContentConfig":{"shape":"S29"},"ThumbnailConfig":{"shape":"S29"}}},"S2k":{"type":"list","member":{"type":"structure","members":{"Code":{},"Message":{}}}},"S2o":{"type":"structure","members":{"Codec":{},"CodecOptions":{"type":"map","key":{},"value":{}},"KeyframesMaxDist":{},"FixedGOP":{},"BitRate":{},"FrameRate":{},"MaxFrameRate":{},"Resolution":{},"AspectRatio":{},"MaxWidth":{},"MaxHeight":{},"DisplayAspectRatio":{},"SizingPolicy":{},"PaddingPolicy":{},"Watermarks":{"type":"list","member":{"type":"structure","members":{"Id":{},"MaxWidth":{},"MaxHeight":{},"SizingPolicy":{},"HorizontalAlign":{},"HorizontalOffset":{},"VerticalAlign":{},"VerticalOffset":{},"Opacity":{},"Target":{}}}}}},"S34":{"type":"structure","members":{"Codec":{},"SampleRate":{},"BitRate":{},"Channels":{},"AudioPackingMode":{},"CodecOptions":{"type":"structure","members":{"Profile":{},"BitDepth":{},"BitOrder":{},"Signed":{}}}}},"S3f":{"type":"structure","members":{"Format":{},"Interval":{},"Resolution":{},"AspectRatio":{},"MaxWidth":{},"MaxHeight":{},"SizingPolicy":{},"PaddingPolicy":{}}},"S3j":{"type":"structure","members":{"Id":{},"Arn":{},"Name":{},"Description":{},"Container":{},"Audio":{"shape":"S34"},"Video":{"shape":"S2o"},"Thumbnails":{"shape":"S3f"},"Type":{}}},"S3s":{"type":"list","member":{"shape":"S1v"}}},"paginators":{"ListJobsByPipeline":{"input_token":"PageToken","output_token":"NextPageToken","result_key":"Jobs"},"ListJobsByStatus":{"input_token":"PageToken","output_token":"NextPageToken","result_key":"Jobs"},"ListPipelines":{"input_token":"PageToken","output_token":"NextPageToken","result_key":"Pipelines"},"ListPresets":{"input_token":"PageToken","output_token":"NextPageToken","result_key":"Presets"}},"waiters":{"JobComplete":{"operation":"ReadJob","success_type":"output","success_path":"Job.Status","interval":30,"max_attempts":120,"success_value":"Complete","failure_value":["Canceled","Error"]}}};
+AWS.apiLoader.services['elastictranscoder']['2012-09-25'] = {"version":"2.0","metadata":{"apiVersion":"2012-09-25","endpointPrefix":"elastictranscoder","serviceFullName":"Amazon Elastic Transcoder","signatureVersion":"v4","protocol":"rest-json"},"operations":{"CancelJob":{"http":{"method":"DELETE","requestUri":"/2012-09-25/jobs/{Id}","responseCode":202},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{}}},"CreateJob":{"http":{"requestUri":"/2012-09-25/jobs","responseCode":201},"input":{"type":"structure","required":["PipelineId","Input"],"members":{"PipelineId":{},"Input":{"shape":"S5"},"Output":{"shape":"Sg"},"Outputs":{"type":"list","member":{"shape":"Sg"}},"OutputKeyPrefix":{},"Playlists":{"type":"list","member":{"type":"structure","members":{"Name":{},"Format":{},"OutputKeys":{"shape":"S1f"},"HlsContentProtection":{"shape":"S1g"}}}},"UserMetadata":{"shape":"S1k"}}},"output":{"type":"structure","members":{"Job":{"shape":"S1n"}}}},"CreatePipeline":{"http":{"requestUri":"/2012-09-25/pipelines","responseCode":201},"input":{"type":"structure","required":["Name","InputBucket","Role"],"members":{"Name":{},"InputBucket":{},"OutputBucket":{},"Role":{},"AwsKmsKeyArn":{},"Notifications":{"shape":"S20"},"ContentConfig":{"shape":"S22"},"ThumbnailConfig":{"shape":"S22"}}},"output":{"type":"structure","members":{"Pipeline":{"shape":"S2b"},"Warnings":{"shape":"S2d"}}}},"CreatePreset":{"http":{"requestUri":"/2012-09-25/presets","responseCode":201},"input":{"type":"structure","required":["Name","Container"],"members":{"Name":{},"Description":{},"Container":{},"Video":{"shape":"S2h"},"Audio":{"shape":"S2x"},"Thumbnails":{"shape":"S34"}}},"output":{"type":"structure","members":{"Preset":{"shape":"S38"},"Warning":{}}}},"DeletePipeline":{"http":{"method":"DELETE","requestUri":"/2012-09-25/pipelines/{Id}","responseCode":202},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{}}},"DeletePreset":{"http":{"method":"DELETE","requestUri":"/2012-09-25/presets/{Id}","responseCode":202},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{}}},"ListJobsByPipeline":{"http":{"method":"GET","requestUri":"/2012-09-25/jobsByPipeline/{PipelineId}"},"input":{"type":"structure","required":["PipelineId"],"members":{"PipelineId":{"location":"uri","locationName":"PipelineId"},"Ascending":{"location":"querystring","locationName":"Ascending"},"PageToken":{"location":"querystring","locationName":"PageToken"}}},"output":{"type":"structure","members":{"Jobs":{"shape":"S3h"},"NextPageToken":{}}}},"ListJobsByStatus":{"http":{"method":"GET","requestUri":"/2012-09-25/jobsByStatus/{Status}"},"input":{"type":"structure","required":["Status"],"members":{"Status":{"location":"uri","locationName":"Status"},"Ascending":{"location":"querystring","locationName":"Ascending"},"PageToken":{"location":"querystring","locationName":"PageToken"}}},"output":{"type":"structure","members":{"Jobs":{"shape":"S3h"},"NextPageToken":{}}}},"ListPipelines":{"http":{"method":"GET","requestUri":"/2012-09-25/pipelines"},"input":{"type":"structure","members":{"Ascending":{"location":"querystring","locationName":"Ascending"},"PageToken":{"location":"querystring","locationName":"PageToken"}}},"output":{"type":"structure","members":{"Pipelines":{"type":"list","member":{"shape":"S2b"}},"NextPageToken":{}}}},"ListPresets":{"http":{"method":"GET","requestUri":"/2012-09-25/presets"},"input":{"type":"structure","members":{"Ascending":{"location":"querystring","locationName":"Ascending"},"PageToken":{"location":"querystring","locationName":"PageToken"}}},"output":{"type":"structure","members":{"Presets":{"type":"list","member":{"shape":"S38"}},"NextPageToken":{}}}},"ReadJob":{"http":{"method":"GET","requestUri":"/2012-09-25/jobs/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{"Job":{"shape":"S1n"}}}},"ReadPipeline":{"http":{"method":"GET","requestUri":"/2012-09-25/pipelines/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{"Pipeline":{"shape":"S2b"},"Warnings":{"shape":"S2d"}}}},"ReadPreset":{"http":{"method":"GET","requestUri":"/2012-09-25/presets/{Id}"},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"}}},"output":{"type":"structure","members":{"Preset":{"shape":"S38"}}}},"TestRole":{"http":{"requestUri":"/2012-09-25/roleTests","responseCode":200},"input":{"type":"structure","required":["Role","InputBucket","OutputBucket","Topics"],"members":{"Role":{},"InputBucket":{},"OutputBucket":{},"Topics":{"type":"list","member":{}}}},"output":{"type":"structure","members":{"Success":{},"Messages":{"type":"list","member":{}}}}},"UpdatePipeline":{"http":{"method":"PUT","requestUri":"/2012-09-25/pipelines/{Id}","responseCode":200},"input":{"type":"structure","required":["Id"],"members":{"Id":{"location":"uri","locationName":"Id"},"Name":{},"InputBucket":{},"Role":{},"AwsKmsKeyArn":{},"Notifications":{"shape":"S20"},"ContentConfig":{"shape":"S22"},"ThumbnailConfig":{"shape":"S22"}}},"output":{"type":"structure","members":{"Pipeline":{"shape":"S2b"},"Warnings":{"shape":"S2d"}}}},"UpdatePipelineNotifications":{"http":{"requestUri":"/2012-09-25/pipelines/{Id}/notifications"},"input":{"type":"structure","required":["Id","Notifications"],"members":{"Id":{"location":"uri","locationName":"Id"},"Notifications":{"shape":"S20"}}},"output":{"type":"structure","members":{"Pipeline":{"shape":"S2b"}}}},"UpdatePipelineStatus":{"http":{"requestUri":"/2012-09-25/pipelines/{Id}/status"},"input":{"type":"structure","required":["Id","Status"],"members":{"Id":{"location":"uri","locationName":"Id"},"Status":{}}},"output":{"type":"structure","members":{"Pipeline":{"shape":"S2b"}}}}},"shapes":{"S5":{"type":"structure","members":{"Key":{},"FrameRate":{},"Resolution":{},"AspectRatio":{},"Interlaced":{},"Container":{},"Encryption":{"shape":"Sc"}}},"Sc":{"type":"structure","members":{"Mode":{},"Key":{},"KeyMd5":{},"InitializationVector":{}}},"Sg":{"type":"structure","members":{"Key":{},"ThumbnailPattern":{},"ThumbnailEncryption":{"shape":"Sc"},"Rotate":{},"PresetId":{},"SegmentDuration":{},"Watermarks":{"shape":"Sk"},"AlbumArt":{"shape":"So"},"Composition":{"shape":"Sw"},"Captions":{"shape":"S10"},"Encryption":{"shape":"Sc"}}},"Sk":{"type":"list","member":{"type":"structure","members":{"PresetWatermarkId":{},"InputKey":{},"Encryption":{"shape":"Sc"}}}},"So":{"type":"structure","members":{"MergePolicy":{},"Artwork":{"type":"list","member":{"type":"structure","members":{"InputKey":{},"MaxWidth":{},"MaxHeight":{},"SizingPolicy":{},"PaddingPolicy":{},"AlbumArtFormat":{},"Encryption":{"shape":"Sc"}}}}}},"Sw":{"type":"list","member":{"type":"structure","members":{"TimeSpan":{"type":"structure","members":{"StartTime":{},"Duration":{}}}}}},"S10":{"type":"structure","members":{"MergePolicy":{},"CaptionSources":{"type":"list","member":{"type":"structure","members":{"Key":{},"Language":{},"TimeOffset":{},"Label":{},"Encryption":{"shape":"Sc"}}}},"CaptionFormats":{"type":"list","member":{"type":"structure","members":{"Format":{},"Pattern":{},"Encryption":{"shape":"Sc"}}}}}},"S1f":{"type":"list","member":{}},"S1g":{"type":"structure","members":{"Method":{},"Key":{},"KeyMd5":{},"InitializationVector":{},"LicenseAcquisitionUrl":{},"KeyStoragePolicy":{}}},"S1k":{"type":"map","key":{},"value":{}},"S1n":{"type":"structure","members":{"Id":{},"Arn":{},"PipelineId":{},"Input":{"shape":"S5"},"Output":{"shape":"S1o"},"Outputs":{"type":"list","member":{"shape":"S1o"}},"OutputKeyPrefix":{},"Playlists":{"type":"list","member":{"type":"structure","members":{"Name":{},"Format":{},"OutputKeys":{"shape":"S1f"},"HlsContentProtection":{"shape":"S1g"},"Status":{},"StatusDetail":{}}}},"Status":{},"UserMetadata":{"shape":"S1k"}}},"S1o":{"type":"structure","members":{"Id":{},"Key":{},"ThumbnailPattern":{},"ThumbnailEncryption":{"shape":"Sc"},"Rotate":{},"PresetId":{},"SegmentDuration":{},"Status":{},"StatusDetail":{},"Duration":{"type":"long"},"Width":{"type":"integer"},"Height":{"type":"integer"},"Watermarks":{"shape":"Sk"},"AlbumArt":{"shape":"So"},"Composition":{"shape":"Sw"},"Captions":{"shape":"S10"},"Encryption":{"shape":"Sc"},"AppliedColorSpaceConversion":{}}},"S20":{"type":"structure","members":{"Progressing":{},"Completed":{},"Warning":{},"Error":{}}},"S22":{"type":"structure","members":{"Bucket":{},"StorageClass":{},"Permissions":{"type":"list","member":{"type":"structure","members":{"GranteeType":{},"Grantee":{},"Access":{"type":"list","member":{}}}}}}},"S2b":{"type":"structure","members":{"Id":{},"Arn":{},"Name":{},"Status":{},"InputBucket":{},"OutputBucket":{},"Role":{},"AwsKmsKeyArn":{},"Notifications":{"shape":"S20"},"ContentConfig":{"shape":"S22"},"ThumbnailConfig":{"shape":"S22"}}},"S2d":{"type":"list","member":{"type":"structure","members":{"Code":{},"Message":{}}}},"S2h":{"type":"structure","members":{"Codec":{},"CodecOptions":{"type":"map","key":{},"value":{}},"KeyframesMaxDist":{},"FixedGOP":{},"BitRate":{},"FrameRate":{},"MaxFrameRate":{},"Resolution":{},"AspectRatio":{},"MaxWidth":{},"MaxHeight":{},"DisplayAspectRatio":{},"SizingPolicy":{},"PaddingPolicy":{},"Watermarks":{"type":"list","member":{"type":"structure","members":{"Id":{},"MaxWidth":{},"MaxHeight":{},"SizingPolicy":{},"HorizontalAlign":{},"HorizontalOffset":{},"VerticalAlign":{},"VerticalOffset":{},"Opacity":{},"Target":{}}}}}},"S2x":{"type":"structure","members":{"Codec":{},"SampleRate":{},"BitRate":{},"Channels":{},"CodecOptions":{"type":"structure","members":{"Profile":{}}}}},"S34":{"type":"structure","members":{"Format":{},"Interval":{},"Resolution":{},"AspectRatio":{},"MaxWidth":{},"MaxHeight":{},"SizingPolicy":{},"PaddingPolicy":{}}},"S38":{"type":"structure","members":{"Id":{},"Arn":{},"Name":{},"Description":{},"Container":{},"Audio":{"shape":"S2x"},"Video":{"shape":"S2h"},"Thumbnails":{"shape":"S34"},"Type":{}}},"S3h":{"type":"list","member":{"shape":"S1n"}}},"paginators":{"ListJobsByPipeline":{"input_token":"PageToken","output_token":"NextPageToken","result_key":"Jobs"},"ListJobsByStatus":{"input_token":"PageToken","output_token":"NextPageToken","result_key":"Jobs"},"ListPipelines":{"input_token":"PageToken","output_token":"NextPageToken","result_key":"Pipelines"},"ListPresets":{"input_token":"PageToken","output_token":"NextPageToken","result_key":"Presets"}},"waiters":{"JobComplete":{"operation":"ReadJob","success_type":"output","success_path":"Job.Status","interval":30,"max_attempts":120,"success_value":"Complete","failure_value":["Canceled","Error"]}}};
 AWS.apiLoader.services['kinesis'] = {};
 AWS.Kinesis = AWS.Service.defineService('kinesis', [ '2013-12-02' ]);
 
-AWS.apiLoader.services['kinesis']['2013-12-02'] = {"version":"2.0","metadata":{"apiVersion":"2013-12-02","endpointPrefix":"kinesis","jsonVersion":"1.1","serviceAbbreviation":"Kinesis","serviceFullName":"Amazon Kinesis","signatureVersion":"v4","targetPrefix":"Kinesis_20131202","protocol":"json"},"operations":{"AddTagsToStream":{"input":{"type":"structure","required":["StreamName","Tags"],"members":{"StreamName":{},"Tags":{"type":"map","key":{},"value":{}}}},"http":{}},"CreateStream":{"input":{"type":"structure","required":["StreamName","ShardCount"],"members":{"StreamName":{},"ShardCount":{"type":"integer"}}},"http":{}},"DeleteStream":{"input":{"type":"structure","required":["StreamName"],"members":{"StreamName":{}}},"http":{}},"DescribeStream":{"input":{"type":"structure","required":["StreamName"],"members":{"StreamName":{},"Limit":{"type":"integer"},"ExclusiveStartShardId":{}}},"output":{"type":"structure","required":["StreamDescription"],"members":{"StreamDescription":{"type":"structure","required":["StreamName","StreamARN","StreamStatus","Shards","HasMoreShards"],"members":{"StreamName":{},"StreamARN":{},"StreamStatus":{},"Shards":{"type":"list","member":{"type":"structure","required":["ShardId","HashKeyRange","SequenceNumberRange"],"members":{"ShardId":{},"ParentShardId":{},"AdjacentParentShardId":{},"HashKeyRange":{"type":"structure","required":["StartingHashKey","EndingHashKey"],"members":{"StartingHashKey":{},"EndingHashKey":{}}},"SequenceNumberRange":{"type":"structure","required":["StartingSequenceNumber"],"members":{"StartingSequenceNumber":{},"EndingSequenceNumber":{}}}}}},"HasMoreShards":{"type":"boolean"}}}}},"http":{}},"GetRecords":{"input":{"type":"structure","required":["ShardIterator"],"members":{"ShardIterator":{},"Limit":{"type":"integer"}}},"output":{"type":"structure","required":["Records"],"members":{"Records":{"type":"list","member":{"type":"structure","required":["SequenceNumber","Data","PartitionKey"],"members":{"SequenceNumber":{},"Data":{"type":"blob"},"PartitionKey":{}}}},"NextShardIterator":{},"MillisBehindLatest":{"type":"long"}}},"http":{}},"GetShardIterator":{"input":{"type":"structure","required":["StreamName","ShardId","ShardIteratorType"],"members":{"StreamName":{},"ShardId":{},"ShardIteratorType":{},"StartingSequenceNumber":{}}},"output":{"type":"structure","members":{"ShardIterator":{}}},"http":{}},"ListStreams":{"input":{"type":"structure","members":{"Limit":{"type":"integer"},"ExclusiveStartStreamName":{}}},"output":{"type":"structure","required":["StreamNames","HasMoreStreams"],"members":{"StreamNames":{"type":"list","member":{}},"HasMoreStreams":{"type":"boolean"}}},"http":{}},"ListTagsForStream":{"input":{"type":"structure","required":["StreamName"],"members":{"StreamName":{},"ExclusiveStartTagKey":{},"Limit":{"type":"integer"}}},"output":{"type":"structure","required":["Tags","HasMoreTags"],"members":{"Tags":{"type":"list","member":{"type":"structure","required":["Key"],"members":{"Key":{},"Value":{}}}},"HasMoreTags":{"type":"boolean"}}},"http":{}},"MergeShards":{"input":{"type":"structure","required":["StreamName","ShardToMerge","AdjacentShardToMerge"],"members":{"StreamName":{},"ShardToMerge":{},"AdjacentShardToMerge":{}}},"http":{}},"PutRecord":{"input":{"type":"structure","required":["StreamName","Data","PartitionKey"],"members":{"StreamName":{},"Data":{"type":"blob"},"PartitionKey":{},"ExplicitHashKey":{},"SequenceNumberForOrdering":{}}},"output":{"type":"structure","required":["ShardId","SequenceNumber"],"members":{"ShardId":{},"SequenceNumber":{}}},"http":{}},"PutRecords":{"input":{"type":"structure","required":["Records","StreamName"],"members":{"Records":{"type":"list","member":{"type":"structure","required":["Data","PartitionKey"],"members":{"Data":{"type":"blob"},"ExplicitHashKey":{},"PartitionKey":{}}}},"StreamName":{}}},"output":{"type":"structure","required":["Records"],"members":{"FailedRecordCount":{"type":"integer"},"Records":{"type":"list","member":{"type":"structure","members":{"SequenceNumber":{},"ShardId":{},"ErrorCode":{},"ErrorMessage":{}}}}}},"http":{}},"RemoveTagsFromStream":{"input":{"type":"structure","required":["StreamName","TagKeys"],"members":{"StreamName":{},"TagKeys":{"type":"list","member":{}}}},"http":{}},"SplitShard":{"input":{"type":"structure","required":["StreamName","ShardToSplit","NewStartingHashKey"],"members":{"StreamName":{},"ShardToSplit":{},"NewStartingHashKey":{}}},"http":{}}},"shapes":{},"paginators":{"DescribeStream":{"input_token":"ExclusiveStartShardId","limit_key":"Limit","more_results":"StreamDescription.HasMoreShards","output_token":"StreamDescription.Shards[-1].ShardId","result_key":"StreamDescription.Shards"},"ListStreams":{"input_token":"ExclusiveStartStreamName","limit_key":"Limit","more_results":"HasMoreStreams","output_token":"StreamNames[-1]","result_key":"StreamNames"}}};
+AWS.apiLoader.services['kinesis']['2013-12-02'] = {"metadata":{"apiVersion":"2013-12-02","endpointPrefix":"kinesis","jsonVersion":"1.1","serviceAbbreviation":"Kinesis","serviceFullName":"Amazon Kinesis","signatureVersion":"v4","targetPrefix":"Kinesis_20131202","protocol":"json"},"operations":{"AddTagsToStream":{"input":{"type":"structure","required":["StreamName","Tags"],"members":{"StreamName":{},"Tags":{"type":"map","key":{},"value":{}}}},"http":{}},"CreateStream":{"input":{"type":"structure","required":["StreamName","ShardCount"],"members":{"StreamName":{},"ShardCount":{"type":"integer"}}},"http":{}},"DeleteStream":{"input":{"type":"structure","required":["StreamName"],"members":{"StreamName":{}}},"http":{}},"DescribeStream":{"input":{"type":"structure","required":["StreamName"],"members":{"StreamName":{},"Limit":{"type":"integer"},"ExclusiveStartShardId":{}}},"output":{"type":"structure","required":["StreamDescription"],"members":{"StreamDescription":{"type":"structure","required":["StreamName","StreamARN","StreamStatus","Shards","HasMoreShards"],"members":{"StreamName":{},"StreamARN":{},"StreamStatus":{},"Shards":{"type":"list","member":{"type":"structure","required":["ShardId","HashKeyRange","SequenceNumberRange"],"members":{"ShardId":{},"ParentShardId":{},"AdjacentParentShardId":{},"HashKeyRange":{"type":"structure","required":["StartingHashKey","EndingHashKey"],"members":{"StartingHashKey":{},"EndingHashKey":{}}},"SequenceNumberRange":{"type":"structure","required":["StartingSequenceNumber"],"members":{"StartingSequenceNumber":{},"EndingSequenceNumber":{}}}}}},"HasMoreShards":{"type":"boolean"}}}}},"http":{}},"GetRecords":{"input":{"type":"structure","required":["ShardIterator"],"members":{"ShardIterator":{},"Limit":{"type":"integer"}}},"output":{"type":"structure","required":["Records"],"members":{"Records":{"type":"list","member":{"type":"structure","required":["SequenceNumber","Data","PartitionKey"],"members":{"SequenceNumber":{},"Data":{"type":"blob"},"PartitionKey":{}}}},"NextShardIterator":{}}},"http":{}},"GetShardIterator":{"input":{"type":"structure","required":["StreamName","ShardId","ShardIteratorType"],"members":{"StreamName":{},"ShardId":{},"ShardIteratorType":{},"StartingSequenceNumber":{}}},"output":{"type":"structure","members":{"ShardIterator":{}}},"http":{}},"ListStreams":{"input":{"type":"structure","members":{"Limit":{"type":"integer"},"ExclusiveStartStreamName":{}}},"output":{"type":"structure","required":["StreamNames","HasMoreStreams"],"members":{"StreamNames":{"type":"list","member":{}},"HasMoreStreams":{"type":"boolean"}}},"http":{}},"ListTagsForStream":{"input":{"type":"structure","required":["StreamName"],"members":{"StreamName":{},"ExclusiveStartTagKey":{},"Limit":{"type":"integer"}}},"output":{"type":"structure","required":["Tags","HasMoreTags"],"members":{"Tags":{"type":"list","member":{"type":"structure","required":["Key"],"members":{"Key":{},"Value":{}}}},"HasMoreTags":{"type":"boolean"}}},"http":{}},"MergeShards":{"input":{"type":"structure","required":["StreamName","ShardToMerge","AdjacentShardToMerge"],"members":{"StreamName":{},"ShardToMerge":{},"AdjacentShardToMerge":{}}},"http":{}},"PutRecord":{"input":{"type":"structure","required":["StreamName","Data","PartitionKey"],"members":{"StreamName":{},"Data":{"type":"blob"},"PartitionKey":{},"ExplicitHashKey":{},"SequenceNumberForOrdering":{}}},"output":{"type":"structure","required":["ShardId","SequenceNumber"],"members":{"ShardId":{},"SequenceNumber":{}}},"http":{}},"PutRecords":{"input":{"type":"structure","required":["Records","StreamName"],"members":{"Records":{"type":"list","member":{"type":"structure","required":["Data","PartitionKey"],"members":{"Data":{"type":"blob"},"ExplicitHashKey":{},"PartitionKey":{}}}},"StreamName":{}}},"output":{"type":"structure","required":["Records"],"members":{"FailedRecordCount":{"type":"integer"},"Records":{"type":"list","member":{"type":"structure","members":{"SequenceNumber":{},"ShardId":{},"ErrorCode":{},"ErrorMessage":{}}}}}},"http":{}},"RemoveTagsFromStream":{"input":{"type":"structure","required":["StreamName","TagKeys"],"members":{"StreamName":{},"TagKeys":{"type":"list","member":{}}}},"http":{}},"SplitShard":{"input":{"type":"structure","required":["StreamName","ShardToSplit","NewStartingHashKey"],"members":{"StreamName":{},"ShardToSplit":{},"NewStartingHashKey":{}}},"http":{}}},"shapes":{},"paginators":{"DescribeStream":{"input_token":"ExclusiveStartShardId","limit_key":"Limit","more_results":"StreamDescription.HasMoreShards","output_token":"StreamDescription.Shards[-1].ShardId","result_key":"StreamDescription.Shards"},"ListStreams":{"input_token":"ExclusiveStartStreamName","limit_key":"Limit","more_results":"HasMoreStreams","output_token":"StreamNames[-1]","result_key":"StreamNames"}}};
 AWS.apiLoader.services['lambda'] = {};
-AWS.Lambda = AWS.Service.defineService('lambda', [ '2014-11-11', '2015-03-31' ]);
+AWS.Lambda = AWS.Service.defineService('lambda', [ '2014-11-11' ]);
 
-AWS.apiLoader.services['lambda']['2015-03-31'] = {"version":"2.0","metadata":{"apiVersion":"2015-03-31","endpointPrefix":"lambda","serviceFullName":"AWS Lambda","signatureVersion":"v4","protocol":"rest-json"},"operations":{"AddPermission":{"http":{"requestUri":"/2015-03-31/functions/{FunctionName}/versions/HEAD/policy","responseCode":201},"input":{"type":"structure","required":["FunctionName","StatementId","Action","Principal"],"members":{"FunctionName":{"location":"uri","locationName":"FunctionName"},"StatementId":{},"Action":{},"Principal":{},"SourceArn":{},"SourceAccount":{}}},"output":{"type":"structure","members":{"Statement":{}}}},"CreateEventSourceMapping":{"http":{"requestUri":"/2015-03-31/event-source-mappings/","responseCode":202},"input":{"type":"structure","required":["EventSourceArn","FunctionName","StartingPosition"],"members":{"EventSourceArn":{},"FunctionName":{},"Enabled":{"type":"boolean"},"BatchSize":{"type":"integer"},"StartingPosition":{}}},"output":{"shape":"Se"}},"CreateFunction":{"http":{"requestUri":"/2015-03-31/functions","responseCode":201},"input":{"type":"structure","required":["FunctionName","Runtime","Role","Handler","Code"],"members":{"FunctionName":{},"Runtime":{},"Role":{},"Handler":{},"Description":{},"Timeout":{"type":"integer"},"MemorySize":{"type":"integer"},"Code":{"type":"structure","members":{"ZipFile":{"type":"blob"},"S3Bucket":{},"S3Key":{},"S3ObjectVersion":{}}}}},"output":{"shape":"St"}},"DeleteEventSourceMapping":{"http":{"method":"DELETE","requestUri":"/2015-03-31/event-source-mappings/{UUID}","responseCode":202},"input":{"type":"structure","required":["UUID"],"members":{"UUID":{"location":"uri","locationName":"UUID"}}},"output":{"shape":"Se"}},"DeleteFunction":{"http":{"method":"DELETE","requestUri":"/2015-03-31/functions/{FunctionName}","responseCode":204},"input":{"type":"structure","required":["FunctionName"],"members":{"FunctionName":{"location":"uri","locationName":"FunctionName"}}}},"GetEventSourceMapping":{"http":{"method":"GET","requestUri":"/2015-03-31/event-source-mappings/{UUID}","responseCode":200},"input":{"type":"structure","required":["UUID"],"members":{"UUID":{"location":"uri","locationName":"UUID"}}},"output":{"shape":"Se"}},"GetFunction":{"http":{"method":"GET","requestUri":"/2015-03-31/functions/{FunctionName}/versions/HEAD","responseCode":200},"input":{"type":"structure","required":["FunctionName"],"members":{"FunctionName":{"location":"uri","locationName":"FunctionName"}}},"output":{"type":"structure","members":{"Configuration":{"shape":"St"},"Code":{"type":"structure","members":{"RepositoryType":{},"Location":{}}}}}},"GetFunctionConfiguration":{"http":{"method":"GET","requestUri":"/2015-03-31/functions/{FunctionName}/versions/HEAD/configuration","responseCode":200},"input":{"type":"structure","required":["FunctionName"],"members":{"FunctionName":{"location":"uri","locationName":"FunctionName"}}},"output":{"shape":"St"}},"GetPolicy":{"http":{"method":"GET","requestUri":"/2015-03-31/functions/{FunctionName}/versions/HEAD/policy","responseCode":200},"input":{"type":"structure","required":["FunctionName"],"members":{"FunctionName":{"location":"uri","locationName":"FunctionName"}}},"output":{"type":"structure","members":{"Policy":{}}}},"Invoke":{"http":{"requestUri":"/2015-03-31/functions/{FunctionName}/invocations"},"input":{"type":"structure","required":["FunctionName"],"members":{"FunctionName":{"location":"uri","locationName":"FunctionName"},"InvocationType":{"location":"header","locationName":"X-Amz-Invocation-Type"},"LogType":{"location":"header","locationName":"X-Amz-Log-Type"},"ClientContext":{"location":"header","locationName":"X-Amz-Client-Context"},"Payload":{"type":"blob"}},"payload":"Payload"},"output":{"type":"structure","members":{"StatusCode":{"location":"statusCode","type":"integer"},"FunctionError":{"location":"header","locationName":"X-Amz-Function-Error"},"LogResult":{"location":"header","locationName":"X-Amz-Log-Result"},"Payload":{"type":"blob"}},"payload":"Payload"}},"InvokeAsync":{"http":{"requestUri":"/2014-11-13/functions/{FunctionName}/invoke-async/","responseCode":202},"input":{"deprecated":true,"type":"structure","required":["FunctionName","InvokeArgs"],"members":{"FunctionName":{"location":"uri","locationName":"FunctionName"},"InvokeArgs":{"type":"blob","streaming":true}},"payload":"InvokeArgs"},"output":{"deprecated":true,"type":"structure","members":{"Status":{"location":"statusCode","type":"integer"}}},"deprecated":true},"ListEventSourceMappings":{"http":{"method":"GET","requestUri":"/2015-03-31/event-source-mappings/","responseCode":200},"input":{"type":"structure","members":{"EventSourceArn":{"location":"querystring","locationName":"EventSourceArn"},"FunctionName":{"location":"querystring","locationName":"FunctionName"},"Marker":{"location":"querystring","locationName":"Marker"},"MaxItems":{"location":"querystring","locationName":"MaxItems","type":"integer"}}},"output":{"type":"structure","members":{"NextMarker":{},"EventSourceMappings":{"type":"list","member":{"shape":"Se"}}}}},"ListFunctions":{"http":{"method":"GET","requestUri":"/2015-03-31/functions/","responseCode":200},"input":{"type":"structure","members":{"Marker":{"location":"querystring","locationName":"Marker"},"MaxItems":{"location":"querystring","locationName":"MaxItems","type":"integer"}}},"output":{"type":"structure","members":{"NextMarker":{},"Functions":{"type":"list","member":{"shape":"St"}}}}},"RemovePermission":{"http":{"method":"DELETE","requestUri":"/2015-03-31/functions/{FunctionName}/versions/HEAD/policy/{StatementId}","responseCode":204},"input":{"type":"structure","required":["FunctionName","StatementId"],"members":{"FunctionName":{"location":"uri","locationName":"FunctionName"},"StatementId":{"location":"uri","locationName":"StatementId"}}}},"UpdateEventSourceMapping":{"http":{"method":"PUT","requestUri":"/2015-03-31/event-source-mappings/{UUID}","responseCode":202},"input":{"type":"structure","required":["UUID"],"members":{"UUID":{"location":"uri","locationName":"UUID"},"FunctionName":{},"Enabled":{"type":"boolean"},"BatchSize":{"type":"integer"}}},"output":{"shape":"Se"}},"UpdateFunctionCode":{"http":{"method":"PUT","requestUri":"/2015-03-31/functions/{FunctionName}/versions/HEAD/code","responseCode":200},"input":{"type":"structure","required":["FunctionName"],"members":{"FunctionName":{"location":"uri","locationName":"FunctionName"},"ZipFile":{"type":"blob"},"S3Bucket":{},"S3Key":{},"S3ObjectVersion":{}}},"output":{"shape":"St"}},"UpdateFunctionConfiguration":{"http":{"method":"PUT","requestUri":"/2015-03-31/functions/{FunctionName}/versions/HEAD/configuration","responseCode":200},"input":{"type":"structure","required":["FunctionName"],"members":{"FunctionName":{"location":"uri","locationName":"FunctionName"},"Role":{},"Handler":{},"Description":{},"Timeout":{"type":"integer"},"MemorySize":{"type":"integer"}}},"output":{"shape":"St"}}},"shapes":{"Se":{"type":"structure","members":{"UUID":{},"BatchSize":{"type":"integer"},"EventSourceArn":{},"FunctionArn":{},"LastModified":{"type":"timestamp"},"LastProcessingResult":{},"State":{},"StateTransitionReason":{}}},"St":{"type":"structure","members":{"FunctionName":{},"FunctionArn":{},"Runtime":{},"Role":{},"Handler":{},"CodeSize":{"type":"long"},"Description":{},"Timeout":{"type":"integer"},"MemorySize":{"type":"integer"},"LastModified":{}}}},"paginators":{"ListEventSourceMappings":{"input_token":"Marker","output_token":"NextMarker","limit_key":"MaxItems","result_key":"EventSourceMappings"},"ListFunctions":{"input_token":"Marker","output_token":"NextMarker","limit_key":"MaxItems","result_key":"Functions"}}};
-AWS.apiLoader.services['machinelearning'] = {};
-AWS.MachineLearning = AWS.Service.defineService('machinelearning', [ '2014-12-12' ]);
-require('./services/machinelearning');
-
-AWS.apiLoader.services['machinelearning']['2014-12-12'] = {"version":"2.0","metadata":{"apiVersion":"2014-12-12","endpointPrefix":"machinelearning","jsonVersion":"1.1","serviceFullName":"Amazon Machine Learning","signatureVersion":"v4","targetPrefix":"AmazonML_20141212","protocol":"json"},"operations":{"CreateBatchPrediction":{"input":{"type":"structure","required":["BatchPredictionId","MLModelId","BatchPredictionDataSourceId","OutputUri"],"members":{"BatchPredictionId":{},"BatchPredictionName":{},"MLModelId":{},"BatchPredictionDataSourceId":{},"OutputUri":{}}},"output":{"type":"structure","members":{"BatchPredictionId":{}}},"http":{}},"CreateDataSourceFromRDS":{"input":{"type":"structure","required":["DataSourceId","RDSData","RoleARN"],"members":{"DataSourceId":{},"DataSourceName":{},"RDSData":{"type":"structure","required":["DatabaseInformation","SelectSqlQuery","DatabaseCredentials","S3StagingLocation","ResourceRole","ServiceRole","SubnetId","SecurityGroupIds"],"members":{"DatabaseInformation":{"shape":"S8"},"SelectSqlQuery":{},"DatabaseCredentials":{"type":"structure","required":["Username","Password"],"members":{"Username":{},"Password":{}}},"S3StagingLocation":{},"DataRearrangement":{},"DataSchema":{},"DataSchemaUri":{},"ResourceRole":{},"ServiceRole":{},"SubnetId":{},"SecurityGroupIds":{"type":"list","member":{}}}},"RoleARN":{},"ComputeStatistics":{"type":"boolean"}}},"output":{"type":"structure","members":{"DataSourceId":{}}},"http":{}},"CreateDataSourceFromRedshift":{"input":{"type":"structure","required":["DataSourceId","DataSpec","RoleARN"],"members":{"DataSourceId":{},"DataSourceName":{},"DataSpec":{"type":"structure","required":["DatabaseInformation","SelectSqlQuery","DatabaseCredentials","S3StagingLocation"],"members":{"DatabaseInformation":{"shape":"Sr"},"SelectSqlQuery":{},"DatabaseCredentials":{"type":"structure","required":["Username","Password"],"members":{"Username":{},"Password":{}}},"S3StagingLocation":{},"DataRearrangement":{},"DataSchema":{},"DataSchemaUri":{}}},"RoleARN":{},"ComputeStatistics":{"type":"boolean"}}},"output":{"type":"structure","members":{"DataSourceId":{}}},"http":{}},"CreateDataSourceFromS3":{"input":{"type":"structure","required":["DataSourceId","DataSpec"],"members":{"DataSourceId":{},"DataSourceName":{},"DataSpec":{"type":"structure","required":["DataLocationS3"],"members":{"DataLocationS3":{},"DataRearrangement":{},"DataSchema":{},"DataSchemaLocationS3":{}}},"ComputeStatistics":{"type":"boolean"}}},"output":{"type":"structure","members":{"DataSourceId":{}}},"http":{}},"CreateEvaluation":{"input":{"type":"structure","required":["EvaluationId","MLModelId","EvaluationDataSourceId"],"members":{"EvaluationId":{},"EvaluationName":{},"MLModelId":{},"EvaluationDataSourceId":{}}},"output":{"type":"structure","members":{"EvaluationId":{}}},"http":{}},"CreateMLModel":{"input":{"type":"structure","required":["MLModelId","MLModelType","TrainingDataSourceId"],"members":{"MLModelId":{},"MLModelName":{},"MLModelType":{},"Parameters":{"shape":"S16"},"TrainingDataSourceId":{},"Recipe":{},"RecipeUri":{}}},"output":{"type":"structure","members":{"MLModelId":{}}},"http":{}},"CreateRealtimeEndpoint":{"input":{"type":"structure","required":["MLModelId"],"members":{"MLModelId":{}}},"output":{"type":"structure","members":{"MLModelId":{},"RealtimeEndpointInfo":{"shape":"S1c"}}},"http":{}},"DeleteBatchPrediction":{"input":{"type":"structure","required":["BatchPredictionId"],"members":{"BatchPredictionId":{}}},"output":{"type":"structure","members":{"BatchPredictionId":{}}},"http":{}},"DeleteDataSource":{"input":{"type":"structure","required":["DataSourceId"],"members":{"DataSourceId":{}}},"output":{"type":"structure","members":{"DataSourceId":{}}},"http":{}},"DeleteEvaluation":{"input":{"type":"structure","required":["EvaluationId"],"members":{"EvaluationId":{}}},"output":{"type":"structure","members":{"EvaluationId":{}}},"http":{}},"DeleteMLModel":{"input":{"type":"structure","required":["MLModelId"],"members":{"MLModelId":{}}},"output":{"type":"structure","members":{"MLModelId":{}}},"http":{}},"DeleteRealtimeEndpoint":{"input":{"type":"structure","required":["MLModelId"],"members":{"MLModelId":{}}},"output":{"type":"structure","members":{"MLModelId":{},"RealtimeEndpointInfo":{"shape":"S1c"}}},"http":{}},"DescribeBatchPredictions":{"input":{"type":"structure","members":{"FilterVariable":{},"EQ":{},"GT":{},"LT":{},"GE":{},"LE":{},"NE":{},"Prefix":{},"SortOrder":{},"NextToken":{},"Limit":{"type":"integer"}}},"output":{"type":"structure","members":{"Results":{"type":"list","member":{"type":"structure","members":{"BatchPredictionId":{},"MLModelId":{},"BatchPredictionDataSourceId":{},"InputDataLocationS3":{},"CreatedByIamUser":{},"CreatedAt":{"type":"timestamp"},"LastUpdatedAt":{"type":"timestamp"},"Name":{},"Status":{},"OutputUri":{},"Message":{}}}},"NextToken":{}}},"http":{}},"DescribeDataSources":{"input":{"type":"structure","members":{"FilterVariable":{},"EQ":{},"GT":{},"LT":{},"GE":{},"LE":{},"NE":{},"Prefix":{},"SortOrder":{},"NextToken":{},"Limit":{"type":"integer"}}},"output":{"type":"structure","members":{"Results":{"type":"list","member":{"type":"structure","members":{"DataSourceId":{},"DataLocationS3":{},"DataRearrangement":{},"CreatedByIamUser":{},"CreatedAt":{"type":"timestamp"},"LastUpdatedAt":{"type":"timestamp"},"DataSizeInBytes":{"type":"long"},"NumberOfFiles":{"type":"long"},"Name":{},"Status":{},"Message":{},"RedshiftMetadata":{"shape":"S28"},"RDSMetadata":{"shape":"S29"},"RoleARN":{},"ComputeStatistics":{"type":"boolean"}}}},"NextToken":{}}},"http":{}},"DescribeEvaluations":{"input":{"type":"structure","members":{"FilterVariable":{},"EQ":{},"GT":{},"LT":{},"GE":{},"LE":{},"NE":{},"Prefix":{},"SortOrder":{},"NextToken":{},"Limit":{"type":"integer"}}},"output":{"type":"structure","members":{"Results":{"type":"list","member":{"type":"structure","members":{"EvaluationId":{},"MLModelId":{},"EvaluationDataSourceId":{},"InputDataLocationS3":{},"CreatedByIamUser":{},"CreatedAt":{"type":"timestamp"},"LastUpdatedAt":{"type":"timestamp"},"Name":{},"Status":{},"PerformanceMetrics":{"shape":"S2g"},"Message":{}}}},"NextToken":{}}},"http":{}},"DescribeMLModels":{"input":{"type":"structure","members":{"FilterVariable":{},"EQ":{},"GT":{},"LT":{},"GE":{},"LE":{},"NE":{},"Prefix":{},"SortOrder":{},"NextToken":{},"Limit":{"type":"integer"}}},"output":{"type":"structure","members":{"Results":{"type":"list","member":{"type":"structure","members":{"MLModelId":{},"TrainingDataSourceId":{},"CreatedByIamUser":{},"CreatedAt":{"type":"timestamp"},"LastUpdatedAt":{"type":"timestamp"},"Name":{},"Status":{},"SizeInBytes":{"type":"long"},"EndpointInfo":{"shape":"S1c"},"TrainingParameters":{"shape":"S16"},"InputDataLocationS3":{},"Algorithm":{},"MLModelType":{},"ScoreThreshold":{"type":"float"},"ScoreThresholdLastUpdatedAt":{"type":"timestamp"},"Message":{}}}},"NextToken":{}}},"http":{}},"GetBatchPrediction":{"input":{"type":"structure","required":["BatchPredictionId"],"members":{"BatchPredictionId":{}}},"output":{"type":"structure","members":{"BatchPredictionId":{},"MLModelId":{},"BatchPredictionDataSourceId":{},"InputDataLocationS3":{},"CreatedByIamUser":{},"CreatedAt":{"type":"timestamp"},"LastUpdatedAt":{"type":"timestamp"},"Name":{},"Status":{},"OutputUri":{},"LogUri":{},"Message":{}}},"http":{}},"GetDataSource":{"input":{"type":"structure","required":["DataSourceId"],"members":{"DataSourceId":{},"Verbose":{"type":"boolean"}}},"output":{"type":"structure","members":{"DataSourceId":{},"DataLocationS3":{},"DataRearrangement":{},"CreatedByIamUser":{},"CreatedAt":{"type":"timestamp"},"LastUpdatedAt":{"type":"timestamp"},"DataSizeInBytes":{"type":"long"},"NumberOfFiles":{"type":"long"},"Name":{},"Status":{},"LogUri":{},"Message":{},"RedshiftMetadata":{"shape":"S28"},"RDSMetadata":{"shape":"S29"},"RoleARN":{},"ComputeStatistics":{"type":"boolean"},"DataSourceSchema":{}}},"http":{}},"GetEvaluation":{"input":{"type":"structure","required":["EvaluationId"],"members":{"EvaluationId":{}}},"output":{"type":"structure","members":{"EvaluationId":{},"MLModelId":{},"EvaluationDataSourceId":{},"InputDataLocationS3":{},"CreatedByIamUser":{},"CreatedAt":{"type":"timestamp"},"LastUpdatedAt":{"type":"timestamp"},"Name":{},"Status":{},"PerformanceMetrics":{"shape":"S2g"},"LogUri":{},"Message":{}}},"http":{}},"GetMLModel":{"input":{"type":"structure","required":["MLModelId"],"members":{"MLModelId":{},"Verbose":{"type":"boolean"}}},"output":{"type":"structure","members":{"MLModelId":{},"TrainingDataSourceId":{},"CreatedByIamUser":{},"CreatedAt":{"type":"timestamp"},"LastUpdatedAt":{"type":"timestamp"},"Name":{},"Status":{},"SizeInBytes":{"type":"long"},"EndpointInfo":{"shape":"S1c"},"TrainingParameters":{"shape":"S16"},"InputDataLocationS3":{},"MLModelType":{},"ScoreThreshold":{"type":"float"},"ScoreThresholdLastUpdatedAt":{"type":"timestamp"},"LogUri":{},"Message":{},"Recipe":{},"Schema":{}}},"http":{}},"Predict":{"input":{"type":"structure","required":["MLModelId","Record","PredictEndpoint"],"members":{"MLModelId":{},"Record":{"type":"map","key":{},"value":{}},"PredictEndpoint":{}}},"output":{"type":"structure","members":{"Prediction":{"type":"structure","members":{"predictedLabel":{},"predictedValue":{"type":"float"},"predictedScores":{"type":"map","key":{},"value":{"type":"float"}},"details":{"type":"map","key":{},"value":{}}}}}},"http":{}},"UpdateBatchPrediction":{"input":{"type":"structure","required":["BatchPredictionId","BatchPredictionName"],"members":{"BatchPredictionId":{},"BatchPredictionName":{}}},"output":{"type":"structure","members":{"BatchPredictionId":{}}},"http":{}},"UpdateDataSource":{"input":{"type":"structure","required":["DataSourceId","DataSourceName"],"members":{"DataSourceId":{},"DataSourceName":{}}},"output":{"type":"structure","members":{"DataSourceId":{}}},"http":{}},"UpdateEvaluation":{"input":{"type":"structure","required":["EvaluationId","EvaluationName"],"members":{"EvaluationId":{},"EvaluationName":{}}},"output":{"type":"structure","members":{"EvaluationId":{}}},"http":{}},"UpdateMLModel":{"input":{"type":"structure","required":["MLModelId"],"members":{"MLModelId":{},"MLModelName":{},"ScoreThreshold":{"type":"float"}}},"output":{"type":"structure","members":{"MLModelId":{}}},"http":{}}},"shapes":{"S8":{"type":"structure","required":["InstanceIdentifier","DatabaseName"],"members":{"InstanceIdentifier":{},"DatabaseName":{}}},"Sr":{"type":"structure","required":["DatabaseName","ClusterIdentifier"],"members":{"DatabaseName":{},"ClusterIdentifier":{}}},"S16":{"type":"map","key":{},"value":{}},"S1c":{"type":"structure","members":{"PeakRequestsPerSecond":{"type":"integer"},"CreatedAt":{"type":"timestamp"},"EndpointUrl":{},"EndpointStatus":{}}},"S28":{"type":"structure","members":{"RedshiftDatabase":{"shape":"Sr"},"DatabaseUserName":{},"SelectSqlQuery":{}}},"S29":{"type":"structure","members":{"Database":{"shape":"S8"},"DatabaseUserName":{},"SelectSqlQuery":{},"ResourceRole":{},"ServiceRole":{},"DataPipelineId":{}}},"S2g":{"type":"structure","members":{"Properties":{"type":"map","key":{},"value":{}}}}},"paginators":{"DescribeBatchPredictions":{"limit_key":"Limit","output_token":"NextToken","input_token":"NextToken","result_key":"Results"},"DescribeDataSources":{"limit_key":"Limit","output_token":"NextToken","input_token":"NextToken","result_key":"Results"},"DescribeEvaluations":{"limit_key":"Limit","output_token":"NextToken","input_token":"NextToken","result_key":"Results"},"DescribeMLModels":{"limit_key":"Limit","output_token":"NextToken","input_token":"NextToken","result_key":"Results"}}};
+AWS.apiLoader.services['lambda']['2014-11-11'] = {"metadata":{"apiVersion":"2014-11-11","endpointPrefix":"lambda","serviceFullName":"AWS Lambda","signatureVersion":"v4","protocol":"rest-json"},"operations":{"AddEventSource":{"http":{"requestUri":"/2014-11-13/event-source-mappings/"},"input":{"type":"structure","required":["EventSource","FunctionName","Role"],"members":{"EventSource":{},"FunctionName":{},"Role":{},"BatchSize":{"type":"integer"},"Parameters":{"shape":"S6"}}},"output":{"shape":"S7"}},"DeleteFunction":{"http":{"method":"DELETE","requestUri":"/2014-11-13/functions/{FunctionName}","responseCode":204},"input":{"type":"structure","required":["FunctionName"],"members":{"FunctionName":{"location":"uri","locationName":"FunctionName"}}}},"GetEventSource":{"http":{"method":"GET","requestUri":"/2014-11-13/event-source-mappings/{UUID}","responseCode":200},"input":{"type":"structure","required":["UUID"],"members":{"UUID":{"location":"uri","locationName":"UUID"}}},"output":{"shape":"S7"}},"GetFunction":{"http":{"method":"GET","requestUri":"/2014-11-13/functions/{FunctionName}","responseCode":200},"input":{"type":"structure","required":["FunctionName"],"members":{"FunctionName":{"location":"uri","locationName":"FunctionName"}}},"output":{"type":"structure","members":{"Configuration":{"shape":"Se"},"Code":{"type":"structure","members":{"RepositoryType":{},"Location":{}}}}}},"GetFunctionConfiguration":{"http":{"method":"GET","requestUri":"/2014-11-13/functions/{FunctionName}/configuration","responseCode":200},"input":{"type":"structure","required":["FunctionName"],"members":{"FunctionName":{"location":"uri","locationName":"FunctionName"}}},"output":{"shape":"Se"}},"InvokeAsync":{"http":{"requestUri":"/2014-11-13/functions/{FunctionName}/invoke-async/","responseCode":202},"input":{"type":"structure","required":["FunctionName","InvokeArgs"],"members":{"FunctionName":{"location":"uri","locationName":"FunctionName"},"InvokeArgs":{"shape":"Sq"}},"payload":"InvokeArgs"},"output":{"type":"structure","members":{"Status":{"location":"statusCode","type":"integer"}}}},"ListEventSources":{"http":{"method":"GET","requestUri":"/2014-11-13/event-source-mappings/","responseCode":200},"input":{"type":"structure","members":{"EventSourceArn":{"location":"querystring","locationName":"EventSource"},"FunctionName":{"location":"querystring","locationName":"FunctionName"},"Marker":{"location":"querystring","locationName":"Marker"},"MaxItems":{"location":"querystring","locationName":"MaxItems","type":"integer"}}},"output":{"type":"structure","members":{"NextMarker":{},"EventSources":{"type":"list","member":{"shape":"S7"}}}}},"ListFunctions":{"http":{"method":"GET","requestUri":"/2014-11-13/functions/","responseCode":200},"input":{"type":"structure","members":{"Marker":{"location":"querystring","locationName":"Marker"},"MaxItems":{"location":"querystring","locationName":"MaxItems","type":"integer"}}},"output":{"type":"structure","members":{"NextMarker":{},"Functions":{"type":"list","member":{"shape":"Se"}}}}},"RemoveEventSource":{"http":{"method":"DELETE","requestUri":"/2014-11-13/event-source-mappings/{UUID}","responseCode":204},"input":{"type":"structure","required":["UUID"],"members":{"UUID":{"location":"uri","locationName":"UUID"}}}},"UpdateFunctionConfiguration":{"http":{"method":"PUT","requestUri":"/2014-11-13/functions/{FunctionName}/configuration","responseCode":200},"input":{"type":"structure","required":["FunctionName"],"members":{"FunctionName":{"location":"uri","locationName":"FunctionName"},"Role":{"location":"querystring","locationName":"Role"},"Handler":{"location":"querystring","locationName":"Handler"},"Description":{"location":"querystring","locationName":"Description"},"Timeout":{"location":"querystring","locationName":"Timeout","type":"integer"},"MemorySize":{"location":"querystring","locationName":"MemorySize","type":"integer"}}},"output":{"shape":"Se"}},"UploadFunction":{"http":{"method":"PUT","requestUri":"/2014-11-13/functions/{FunctionName}","responseCode":201},"input":{"type":"structure","required":["FunctionName","FunctionZip","Runtime","Role","Handler","Mode"],"members":{"FunctionName":{"location":"uri","locationName":"FunctionName"},"FunctionZip":{"shape":"Sq"},"Runtime":{"location":"querystring","locationName":"Runtime"},"Role":{"location":"querystring","locationName":"Role"},"Handler":{"location":"querystring","locationName":"Handler"},"Mode":{"location":"querystring","locationName":"Mode"},"Description":{"location":"querystring","locationName":"Description"},"Timeout":{"location":"querystring","locationName":"Timeout","type":"integer"},"MemorySize":{"location":"querystring","locationName":"MemorySize","type":"integer"}},"payload":"FunctionZip"},"output":{"shape":"Se"}}},"shapes":{"S6":{"type":"map","key":{},"value":{}},"S7":{"type":"structure","members":{"UUID":{},"BatchSize":{"type":"integer"},"EventSource":{},"FunctionName":{},"Parameters":{"shape":"S6"},"Role":{},"LastModified":{"type":"timestamp"},"IsActive":{"type":"boolean"},"Status":{}}},"Se":{"type":"structure","members":{"FunctionName":{},"FunctionARN":{},"ConfigurationId":{},"Runtime":{},"Role":{},"Handler":{},"Mode":{},"CodeSize":{"type":"long"},"Description":{},"Timeout":{"type":"integer"},"MemorySize":{"type":"integer"},"LastModified":{"type":"timestamp"}}},"Sq":{"type":"blob","streaming":true}},"paginators":{"ListEventSources":{"input_token":"Marker","output_token":"NextMarker","limit_key":"MaxItems","result_key":"EventSources"},"ListFunctions":{"input_token":"Marker","output_token":"NextMarker","limit_key":"MaxItems","result_key":"Functions"}}};
 AWS.apiLoader.services['mobileanalytics'] = {};
 AWS.MobileAnalytics = AWS.Service.defineService('mobileanalytics', [ '2014-06-05' ]);
 
 AWS.apiLoader.services['mobileanalytics']['2014-06-05'] = {"version":"2.0","metadata":{"apiVersion":"2014-06-05","endpointPrefix":"mobileanalytics","serviceFullName":"Amazon Mobile Analytics","signatureVersion":"v4","protocol":"rest-json"},"operations":{"PutEvents":{"http":{"requestUri":"/2014-06-05/events","responseCode":202},"input":{"type":"structure","required":["events","clientContext"],"members":{"events":{"type":"list","member":{"type":"structure","required":["eventType","timestamp"],"members":{"eventType":{},"timestamp":{},"session":{"type":"structure","members":{"id":{},"duration":{"type":"long"},"startTimestamp":{},"stopTimestamp":{}}},"version":{},"attributes":{"type":"map","key":{},"value":{}},"metrics":{"type":"map","key":{},"value":{"type":"double"}}}}},"clientContext":{"location":"header","locationName":"x-amz-Client-Context"},"clientContextEncoding":{"location":"header","locationName":"x-amz-Client-Context-Encoding"}}}}},"shapes":{}};
-AWS.apiLoader.services['opsworks'] = {};
-AWS.OpsWorks = AWS.Service.defineService('opsworks', [ '2013-02-18' ]);
-
-AWS.apiLoader.services['opsworks']['2013-02-18'] = {"version":"2.0","metadata":{"apiVersion":"2013-02-18","endpointPrefix":"opsworks","jsonVersion":"1.1","serviceFullName":"AWS OpsWorks","signatureVersion":"v4","targetPrefix":"OpsWorks_20130218","protocol":"json"},"operations":{"AssignInstance":{"input":{"type":"structure","required":["InstanceId","LayerIds"],"members":{"InstanceId":{},"LayerIds":{"shape":"S3"}}},"http":{}},"AssignVolume":{"input":{"type":"structure","required":["VolumeId"],"members":{"VolumeId":{},"InstanceId":{}}},"http":{}},"AssociateElasticIp":{"input":{"type":"structure","required":["ElasticIp"],"members":{"ElasticIp":{},"InstanceId":{}}},"http":{}},"AttachElasticLoadBalancer":{"input":{"type":"structure","required":["ElasticLoadBalancerName","LayerId"],"members":{"ElasticLoadBalancerName":{},"LayerId":{}}},"http":{}},"CloneStack":{"input":{"type":"structure","required":["SourceStackId","ServiceRoleArn"],"members":{"SourceStackId":{},"Name":{},"Region":{},"VpcId":{},"Attributes":{"shape":"S8"},"ServiceRoleArn":{},"DefaultInstanceProfileArn":{},"DefaultOs":{},"HostnameTheme":{},"DefaultAvailabilityZone":{},"DefaultSubnetId":{},"CustomJson":{},"ConfigurationManager":{"shape":"Sa"},"ChefConfiguration":{"shape":"Sb"},"UseCustomCookbooks":{"type":"boolean"},"UseOpsworksSecurityGroups":{"type":"boolean"},"CustomCookbooksSource":{"shape":"Sd"},"DefaultSshKeyName":{},"ClonePermissions":{"type":"boolean"},"CloneAppIds":{"shape":"S3"},"DefaultRootDeviceType":{},"AgentVersion":{}}},"output":{"type":"structure","members":{"StackId":{}}},"http":{}},"CreateApp":{"input":{"type":"structure","required":["StackId","Name","Type"],"members":{"StackId":{},"Shortname":{},"Name":{},"Description":{},"DataSources":{"shape":"Si"},"Type":{},"AppSource":{"shape":"Sd"},"Domains":{"shape":"S3"},"EnableSsl":{"type":"boolean"},"SslConfiguration":{"shape":"Sl"},"Attributes":{"shape":"Sm"},"Environment":{"shape":"So"}}},"output":{"type":"structure","members":{"AppId":{}}},"http":{}},"CreateDeployment":{"input":{"type":"structure","required":["StackId","Command"],"members":{"StackId":{},"AppId":{},"InstanceIds":{"shape":"S3"},"Command":{"shape":"Ss"},"Comment":{},"CustomJson":{}}},"output":{"type":"structure","members":{"DeploymentId":{}}},"http":{}},"CreateInstance":{"input":{"type":"structure","required":["StackId","LayerIds","InstanceType"],"members":{"StackId":{},"LayerIds":{"shape":"S3"},"InstanceType":{},"AutoScalingType":{},"Hostname":{},"Os":{},"AmiId":{},"SshKeyName":{},"AvailabilityZone":{},"VirtualizationType":{},"SubnetId":{},"Architecture":{},"RootDeviceType":{},"BlockDeviceMappings":{"shape":"Sz"},"InstallUpdatesOnBoot":{"type":"boolean"},"EbsOptimized":{"type":"boolean"},"AgentVersion":{}}},"output":{"type":"structure","members":{"InstanceId":{}}},"http":{}},"CreateLayer":{"input":{"type":"structure","required":["StackId","Type","Name","Shortname"],"members":{"StackId":{},"Type":{},"Name":{},"Shortname":{},"Attributes":{"shape":"S17"},"CustomInstanceProfileArn":{},"CustomJson":{},"CustomSecurityGroupIds":{"shape":"S3"},"Packages":{"shape":"S3"},"VolumeConfigurations":{"shape":"S19"},"EnableAutoHealing":{"type":"boolean"},"AutoAssignElasticIps":{"type":"boolean"},"AutoAssignPublicIps":{"type":"boolean"},"CustomRecipes":{"shape":"S1b"},"InstallUpdatesOnBoot":{"type":"boolean"},"UseEbsOptimizedInstances":{"type":"boolean"},"LifecycleEventConfiguration":{"shape":"S1c"}}},"output":{"type":"structure","members":{"LayerId":{}}},"http":{}},"CreateStack":{"input":{"type":"structure","required":["Name","Region","ServiceRoleArn","DefaultInstanceProfileArn"],"members":{"Name":{},"Region":{},"VpcId":{},"Attributes":{"shape":"S8"},"ServiceRoleArn":{},"DefaultInstanceProfileArn":{},"DefaultOs":{},"HostnameTheme":{},"DefaultAvailabilityZone":{},"DefaultSubnetId":{},"CustomJson":{},"ConfigurationManager":{"shape":"Sa"},"ChefConfiguration":{"shape":"Sb"},"UseCustomCookbooks":{"type":"boolean"},"UseOpsworksSecurityGroups":{"type":"boolean"},"CustomCookbooksSource":{"shape":"Sd"},"DefaultSshKeyName":{},"DefaultRootDeviceType":{},"AgentVersion":{}}},"output":{"type":"structure","members":{"StackId":{}}},"http":{}},"CreateUserProfile":{"input":{"type":"structure","required":["IamUserArn"],"members":{"IamUserArn":{},"SshUsername":{},"SshPublicKey":{},"AllowSelfManagement":{"type":"boolean"}}},"output":{"type":"structure","members":{"IamUserArn":{}}},"http":{}},"DeleteApp":{"input":{"type":"structure","required":["AppId"],"members":{"AppId":{}}},"http":{}},"DeleteInstance":{"input":{"type":"structure","required":["InstanceId"],"members":{"InstanceId":{},"DeleteElasticIp":{"type":"boolean"},"DeleteVolumes":{"type":"boolean"}}},"http":{}},"DeleteLayer":{"input":{"type":"structure","required":["LayerId"],"members":{"LayerId":{}}},"http":{}},"DeleteStack":{"input":{"type":"structure","required":["StackId"],"members":{"StackId":{}}},"http":{}},"DeleteUserProfile":{"input":{"type":"structure","required":["IamUserArn"],"members":{"IamUserArn":{}}},"http":{}},"DeregisterEcsCluster":{"input":{"type":"structure","required":["EcsClusterArn"],"members":{"EcsClusterArn":{}}},"http":{}},"DeregisterElasticIp":{"input":{"type":"structure","required":["ElasticIp"],"members":{"ElasticIp":{}}},"http":{}},"DeregisterInstance":{"input":{"type":"structure","required":["InstanceId"],"members":{"InstanceId":{}}},"http":{}},"DeregisterRdsDbInstance":{"input":{"type":"structure","required":["RdsDbInstanceArn"],"members":{"RdsDbInstanceArn":{}}},"http":{}},"DeregisterVolume":{"input":{"type":"structure","required":["VolumeId"],"members":{"VolumeId":{}}},"http":{}},"DescribeAgentVersions":{"input":{"type":"structure","members":{"StackId":{},"ConfigurationManager":{"shape":"Sa"}}},"output":{"type":"structure","members":{"AgentVersions":{"type":"list","member":{"type":"structure","members":{"Version":{},"ConfigurationManager":{"shape":"Sa"}}}}}},"http":{}},"DescribeApps":{"input":{"type":"structure","members":{"StackId":{},"AppIds":{"shape":"S3"}}},"output":{"type":"structure","members":{"Apps":{"type":"list","member":{"type":"structure","members":{"AppId":{},"StackId":{},"Shortname":{},"Name":{},"Description":{},"DataSources":{"shape":"Si"},"Type":{},"AppSource":{"shape":"Sd"},"Domains":{"shape":"S3"},"EnableSsl":{"type":"boolean"},"SslConfiguration":{"shape":"Sl"},"Attributes":{"shape":"Sm"},"CreatedAt":{},"Environment":{"shape":"So"}}}}}},"http":{}},"DescribeCommands":{"input":{"type":"structure","members":{"DeploymentId":{},"InstanceId":{},"CommandIds":{"shape":"S3"}}},"output":{"type":"structure","members":{"Commands":{"type":"list","member":{"type":"structure","members":{"CommandId":{},"InstanceId":{},"DeploymentId":{},"CreatedAt":{},"AcknowledgedAt":{},"CompletedAt":{},"Status":{},"ExitCode":{"type":"integer"},"LogUrl":{},"Type":{}}}}}},"http":{}},"DescribeDeployments":{"input":{"type":"structure","members":{"StackId":{},"AppId":{},"DeploymentIds":{"shape":"S3"}}},"output":{"type":"structure","members":{"Deployments":{"type":"list","member":{"type":"structure","members":{"DeploymentId":{},"StackId":{},"AppId":{},"CreatedAt":{},"CompletedAt":{},"Duration":{"type":"integer"},"IamUserArn":{},"Comment":{},"Command":{"shape":"Ss"},"Status":{},"CustomJson":{},"InstanceIds":{"shape":"S3"}}}}}},"http":{}},"DescribeEcsClusters":{"input":{"type":"structure","members":{"EcsClusterArns":{"shape":"S3"},"StackId":{},"NextToken":{},"MaxResults":{"type":"integer"}}},"output":{"type":"structure","members":{"EcsClusters":{"type":"list","member":{"type":"structure","members":{"EcsClusterArn":{},"EcsClusterName":{},"StackId":{},"RegisteredAt":{}}}},"NextToken":{}}},"http":{}},"DescribeElasticIps":{"input":{"type":"structure","members":{"InstanceId":{},"StackId":{},"Ips":{"shape":"S3"}}},"output":{"type":"structure","members":{"ElasticIps":{"type":"list","member":{"type":"structure","members":{"Ip":{},"Name":{},"Domain":{},"Region":{},"InstanceId":{}}}}}},"http":{}},"DescribeElasticLoadBalancers":{"input":{"type":"structure","members":{"StackId":{},"LayerIds":{"shape":"S3"}}},"output":{"type":"structure","members":{"ElasticLoadBalancers":{"type":"list","member":{"type":"structure","members":{"ElasticLoadBalancerName":{},"Region":{},"DnsName":{},"StackId":{},"LayerId":{},"VpcId":{},"AvailabilityZones":{"shape":"S3"},"SubnetIds":{"shape":"S3"},"Ec2InstanceIds":{"shape":"S3"}}}}}},"http":{}},"DescribeInstances":{"input":{"type":"structure","members":{"StackId":{},"LayerId":{},"InstanceIds":{"shape":"S3"}}},"output":{"type":"structure","members":{"Instances":{"type":"list","member":{"type":"structure","members":{"AgentVersion":{},"AmiId":{},"Architecture":{},"AutoScalingType":{},"AvailabilityZone":{},"BlockDeviceMappings":{"shape":"Sz"},"CreatedAt":{},"EbsOptimized":{"type":"boolean"},"Ec2InstanceId":{},"EcsClusterArn":{},"EcsContainerInstanceArn":{},"ElasticIp":{},"Hostname":{},"InfrastructureClass":{},"InstallUpdatesOnBoot":{"type":"boolean"},"InstanceId":{},"InstanceProfileArn":{},"InstanceType":{},"LastServiceErrorId":{},"LayerIds":{"shape":"S3"},"Os":{},"Platform":{},"PrivateDns":{},"PrivateIp":{},"PublicDns":{},"PublicIp":{},"RegisteredBy":{},"ReportedAgentVersion":{},"ReportedOs":{"type":"structure","members":{"Family":{},"Name":{},"Version":{}}},"RootDeviceType":{},"RootDeviceVolumeId":{},"SecurityGroupIds":{"shape":"S3"},"SshHostDsaKeyFingerprint":{},"SshHostRsaKeyFingerprint":{},"SshKeyName":{},"StackId":{},"Status":{},"SubnetId":{},"VirtualizationType":{}}}}}},"http":{}},"DescribeLayers":{"input":{"type":"structure","members":{"StackId":{},"LayerIds":{"shape":"S3"}}},"output":{"type":"structure","members":{"Layers":{"type":"list","member":{"type":"structure","members":{"StackId":{},"LayerId":{},"Type":{},"Name":{},"Shortname":{},"Attributes":{"shape":"S17"},"CustomInstanceProfileArn":{},"CustomJson":{},"CustomSecurityGroupIds":{"shape":"S3"},"DefaultSecurityGroupNames":{"shape":"S3"},"Packages":{"shape":"S3"},"VolumeConfigurations":{"shape":"S19"},"EnableAutoHealing":{"type":"boolean"},"AutoAssignElasticIps":{"type":"boolean"},"AutoAssignPublicIps":{"type":"boolean"},"DefaultRecipes":{"shape":"S1b"},"CustomRecipes":{"shape":"S1b"},"CreatedAt":{},"InstallUpdatesOnBoot":{"type":"boolean"},"UseEbsOptimizedInstances":{"type":"boolean"},"LifecycleEventConfiguration":{"shape":"S1c"}}}}}},"http":{}},"DescribeLoadBasedAutoScaling":{"input":{"type":"structure","required":["LayerIds"],"members":{"LayerIds":{"shape":"S3"}}},"output":{"type":"structure","members":{"LoadBasedAutoScalingConfigurations":{"type":"list","member":{"type":"structure","members":{"LayerId":{},"Enable":{"type":"boolean"},"UpScaling":{"shape":"S30"},"DownScaling":{"shape":"S30"}}}}}},"http":{}},"DescribeMyUserProfile":{"output":{"type":"structure","members":{"UserProfile":{"type":"structure","members":{"IamUserArn":{},"Name":{},"SshUsername":{},"SshPublicKey":{}}}}},"http":{}},"DescribePermissions":{"input":{"type":"structure","members":{"IamUserArn":{},"StackId":{}}},"output":{"type":"structure","members":{"Permissions":{"type":"list","member":{"type":"structure","members":{"StackId":{},"IamUserArn":{},"AllowSsh":{"type":"boolean"},"AllowSudo":{"type":"boolean"},"Level":{}}}}}},"http":{}},"DescribeRaidArrays":{"input":{"type":"structure","members":{"InstanceId":{},"StackId":{},"RaidArrayIds":{"shape":"S3"}}},"output":{"type":"structure","members":{"RaidArrays":{"type":"list","member":{"type":"structure","members":{"RaidArrayId":{},"InstanceId":{},"Name":{},"RaidLevel":{"type":"integer"},"NumberOfDisks":{"type":"integer"},"Size":{"type":"integer"},"Device":{},"MountPoint":{},"AvailabilityZone":{},"CreatedAt":{},"StackId":{},"VolumeType":{},"Iops":{"type":"integer"}}}}}},"http":{}},"DescribeRdsDbInstances":{"input":{"type":"structure","required":["StackId"],"members":{"StackId":{},"RdsDbInstanceArns":{"shape":"S3"}}},"output":{"type":"structure","members":{"RdsDbInstances":{"type":"list","member":{"type":"structure","members":{"RdsDbInstanceArn":{},"DbInstanceIdentifier":{},"DbUser":{},"DbPassword":{},"Region":{},"Address":{},"Engine":{},"StackId":{},"MissingOnRds":{"type":"boolean"}}}}}},"http":{}},"DescribeServiceErrors":{"input":{"type":"structure","members":{"StackId":{},"InstanceId":{},"ServiceErrorIds":{"shape":"S3"}}},"output":{"type":"structure","members":{"ServiceErrors":{"type":"list","member":{"type":"structure","members":{"ServiceErrorId":{},"StackId":{},"InstanceId":{},"Type":{},"Message":{},"CreatedAt":{}}}}}},"http":{}},"DescribeStackProvisioningParameters":{"input":{"type":"structure","required":["StackId"],"members":{"StackId":{}}},"output":{"type":"structure","members":{"AgentInstallerUrl":{},"Parameters":{"type":"map","key":{},"value":{}}}},"http":{}},"DescribeStackSummary":{"input":{"type":"structure","required":["StackId"],"members":{"StackId":{}}},"output":{"type":"structure","members":{"StackSummary":{"type":"structure","members":{"StackId":{},"Name":{},"Arn":{},"LayersCount":{"type":"integer"},"AppsCount":{"type":"integer"},"InstancesCount":{"type":"structure","members":{"Assigning":{"type":"integer"},"Booting":{"type":"integer"},"ConnectionLost":{"type":"integer"},"Deregistering":{"type":"integer"},"Online":{"type":"integer"},"Pending":{"type":"integer"},"Rebooting":{"type":"integer"},"Registered":{"type":"integer"},"Registering":{"type":"integer"},"Requested":{"type":"integer"},"RunningSetup":{"type":"integer"},"SetupFailed":{"type":"integer"},"ShuttingDown":{"type":"integer"},"StartFailed":{"type":"integer"},"Stopped":{"type":"integer"},"Stopping":{"type":"integer"},"Terminated":{"type":"integer"},"Terminating":{"type":"integer"},"Unassigning":{"type":"integer"}}}}}}},"http":{}},"DescribeStacks":{"input":{"type":"structure","members":{"StackIds":{"shape":"S3"}}},"output":{"type":"structure","members":{"Stacks":{"type":"list","member":{"type":"structure","members":{"StackId":{},"Name":{},"Arn":{},"Region":{},"VpcId":{},"Attributes":{"shape":"S8"},"ServiceRoleArn":{},"DefaultInstanceProfileArn":{},"DefaultOs":{},"HostnameTheme":{},"DefaultAvailabilityZone":{},"DefaultSubnetId":{},"CustomJson":{},"ConfigurationManager":{"shape":"Sa"},"ChefConfiguration":{"shape":"Sb"},"UseCustomCookbooks":{"type":"boolean"},"UseOpsworksSecurityGroups":{"type":"boolean"},"CustomCookbooksSource":{"shape":"Sd"},"DefaultSshKeyName":{},"CreatedAt":{},"DefaultRootDeviceType":{},"AgentVersion":{}}}}}},"http":{}},"DescribeTimeBasedAutoScaling":{"input":{"type":"structure","required":["InstanceIds"],"members":{"InstanceIds":{"shape":"S3"}}},"output":{"type":"structure","members":{"TimeBasedAutoScalingConfigurations":{"type":"list","member":{"type":"structure","members":{"InstanceId":{},"AutoScalingSchedule":{"shape":"S40"}}}}}},"http":{}},"DescribeUserProfiles":{"input":{"type":"structure","members":{"IamUserArns":{"shape":"S3"}}},"output":{"type":"structure","members":{"UserProfiles":{"type":"list","member":{"type":"structure","members":{"IamUserArn":{},"Name":{},"SshUsername":{},"SshPublicKey":{},"AllowSelfManagement":{"type":"boolean"}}}}}},"http":{}},"DescribeVolumes":{"input":{"type":"structure","members":{"InstanceId":{},"StackId":{},"RaidArrayId":{},"VolumeIds":{"shape":"S3"}}},"output":{"type":"structure","members":{"Volumes":{"type":"list","member":{"type":"structure","members":{"VolumeId":{},"Ec2VolumeId":{},"Name":{},"RaidArrayId":{},"InstanceId":{},"Status":{},"Size":{"type":"integer"},"Device":{},"MountPoint":{},"Region":{},"AvailabilityZone":{},"VolumeType":{},"Iops":{"type":"integer"}}}}}},"http":{}},"DetachElasticLoadBalancer":{"input":{"type":"structure","required":["ElasticLoadBalancerName","LayerId"],"members":{"ElasticLoadBalancerName":{},"LayerId":{}}},"http":{}},"DisassociateElasticIp":{"input":{"type":"structure","required":["ElasticIp"],"members":{"ElasticIp":{}}},"http":{}},"GetHostnameSuggestion":{"input":{"type":"structure","required":["LayerId"],"members":{"LayerId":{}}},"output":{"type":"structure","members":{"LayerId":{},"Hostname":{}}},"http":{}},"GrantAccess":{"input":{"type":"structure","required":["InstanceId"],"members":{"InstanceId":{},"ValidForInMinutes":{"type":"integer"}}},"output":{"type":"structure","members":{"TemporaryCredential":{"type":"structure","members":{"Username":{},"Password":{},"ValidForInMinutes":{"type":"integer"},"InstanceId":{}}}}},"http":{}},"RebootInstance":{"input":{"type":"structure","required":["InstanceId"],"members":{"InstanceId":{}}},"http":{}},"RegisterEcsCluster":{"input":{"type":"structure","required":["EcsClusterArn","StackId"],"members":{"EcsClusterArn":{},"StackId":{}}},"output":{"type":"structure","members":{"EcsClusterArn":{}}},"http":{}},"RegisterElasticIp":{"input":{"type":"structure","required":["ElasticIp","StackId"],"members":{"ElasticIp":{},"StackId":{}}},"output":{"type":"structure","members":{"ElasticIp":{}}},"http":{}},"RegisterInstance":{"input":{"type":"structure","required":["StackId"],"members":{"StackId":{},"Hostname":{},"PublicIp":{},"PrivateIp":{},"RsaPublicKey":{},"RsaPublicKeyFingerprint":{},"InstanceIdentity":{"type":"structure","members":{"Document":{},"Signature":{}}}}},"output":{"type":"structure","members":{"InstanceId":{}}},"http":{}},"RegisterRdsDbInstance":{"input":{"type":"structure","required":["StackId","RdsDbInstanceArn","DbUser","DbPassword"],"members":{"StackId":{},"RdsDbInstanceArn":{},"DbUser":{},"DbPassword":{}}},"http":{}},"RegisterVolume":{"input":{"type":"structure","required":["StackId"],"members":{"Ec2VolumeId":{},"StackId":{}}},"output":{"type":"structure","members":{"VolumeId":{}}},"http":{}},"SetLoadBasedAutoScaling":{"input":{"type":"structure","required":["LayerId"],"members":{"LayerId":{},"Enable":{"type":"boolean"},"UpScaling":{"shape":"S30"},"DownScaling":{"shape":"S30"}}},"http":{}},"SetPermission":{"input":{"type":"structure","required":["StackId","IamUserArn"],"members":{"StackId":{},"IamUserArn":{},"AllowSsh":{"type":"boolean"},"AllowSudo":{"type":"boolean"},"Level":{}}},"http":{}},"SetTimeBasedAutoScaling":{"input":{"type":"structure","required":["InstanceId"],"members":{"InstanceId":{},"AutoScalingSchedule":{"shape":"S40"}}},"http":{}},"StartInstance":{"input":{"type":"structure","required":["InstanceId"],"members":{"InstanceId":{}}},"http":{}},"StartStack":{"input":{"type":"structure","required":["StackId"],"members":{"StackId":{}}},"http":{}},"StopInstance":{"input":{"type":"structure","required":["InstanceId"],"members":{"InstanceId":{}}},"http":{}},"StopStack":{"input":{"type":"structure","required":["StackId"],"members":{"StackId":{}}},"http":{}},"UnassignInstance":{"input":{"type":"structure","required":["InstanceId"],"members":{"InstanceId":{}}},"http":{}},"UnassignVolume":{"input":{"type":"structure","required":["VolumeId"],"members":{"VolumeId":{}}},"http":{}},"UpdateApp":{"input":{"type":"structure","required":["AppId"],"members":{"AppId":{},"Name":{},"Description":{},"DataSources":{"shape":"Si"},"Type":{},"AppSource":{"shape":"Sd"},"Domains":{"shape":"S3"},"EnableSsl":{"type":"boolean"},"SslConfiguration":{"shape":"Sl"},"Attributes":{"shape":"Sm"},"Environment":{"shape":"So"}}},"http":{}},"UpdateElasticIp":{"input":{"type":"structure","required":["ElasticIp"],"members":{"ElasticIp":{},"Name":{}}},"http":{}},"UpdateInstance":{"input":{"type":"structure","required":["InstanceId"],"members":{"InstanceId":{},"LayerIds":{"shape":"S3"},"InstanceType":{},"AutoScalingType":{},"Hostname":{},"Os":{},"AmiId":{},"SshKeyName":{},"Architecture":{},"InstallUpdatesOnBoot":{"type":"boolean"},"EbsOptimized":{"type":"boolean"},"AgentVersion":{}}},"http":{}},"UpdateLayer":{"input":{"type":"structure","required":["LayerId"],"members":{"LayerId":{},"Name":{},"Shortname":{},"Attributes":{"shape":"S17"},"CustomInstanceProfileArn":{},"CustomJson":{},"CustomSecurityGroupIds":{"shape":"S3"},"Packages":{"shape":"S3"},"VolumeConfigurations":{"shape":"S19"},"EnableAutoHealing":{"type":"boolean"},"AutoAssignElasticIps":{"type":"boolean"},"AutoAssignPublicIps":{"type":"boolean"},"CustomRecipes":{"shape":"S1b"},"InstallUpdatesOnBoot":{"type":"boolean"},"UseEbsOptimizedInstances":{"type":"boolean"},"LifecycleEventConfiguration":{"shape":"S1c"}}},"http":{}},"UpdateMyUserProfile":{"input":{"type":"structure","members":{"SshPublicKey":{}}},"http":{}},"UpdateRdsDbInstance":{"input":{"type":"structure","required":["RdsDbInstanceArn"],"members":{"RdsDbInstanceArn":{},"DbUser":{},"DbPassword":{}}},"http":{}},"UpdateStack":{"input":{"type":"structure","required":["StackId"],"members":{"StackId":{},"Name":{},"Attributes":{"shape":"S8"},"ServiceRoleArn":{},"DefaultInstanceProfileArn":{},"DefaultOs":{},"HostnameTheme":{},"DefaultAvailabilityZone":{},"DefaultSubnetId":{},"CustomJson":{},"ConfigurationManager":{"shape":"Sa"},"ChefConfiguration":{"shape":"Sb"},"UseCustomCookbooks":{"type":"boolean"},"CustomCookbooksSource":{"shape":"Sd"},"DefaultSshKeyName":{},"DefaultRootDeviceType":{},"UseOpsworksSecurityGroups":{"type":"boolean"},"AgentVersion":{}}},"http":{}},"UpdateUserProfile":{"input":{"type":"structure","required":["IamUserArn"],"members":{"IamUserArn":{},"SshUsername":{},"SshPublicKey":{},"AllowSelfManagement":{"type":"boolean"}}},"http":{}},"UpdateVolume":{"input":{"type":"structure","required":["VolumeId"],"members":{"VolumeId":{},"Name":{},"MountPoint":{}}},"http":{}}},"shapes":{"S3":{"type":"list","member":{}},"S8":{"type":"map","key":{},"value":{}},"Sa":{"type":"structure","members":{"Name":{},"Version":{}}},"Sb":{"type":"structure","members":{"ManageBerkshelf":{"type":"boolean"},"BerkshelfVersion":{}}},"Sd":{"type":"structure","members":{"Type":{},"Url":{},"Username":{},"Password":{},"SshKey":{},"Revision":{}}},"Si":{"type":"list","member":{"type":"structure","members":{"Type":{},"Arn":{},"DatabaseName":{}}}},"Sl":{"type":"structure","required":["Certificate","PrivateKey"],"members":{"Certificate":{},"PrivateKey":{},"Chain":{}}},"Sm":{"type":"map","key":{},"value":{}},"So":{"type":"list","member":{"type":"structure","required":["Key","Value"],"members":{"Key":{},"Value":{},"Secure":{"type":"boolean"}}}},"Ss":{"type":"structure","required":["Name"],"members":{"Name":{},"Args":{"type":"map","key":{},"value":{"shape":"S3"}}}},"Sz":{"type":"list","member":{"type":"structure","members":{"DeviceName":{},"NoDevice":{},"VirtualName":{},"Ebs":{"type":"structure","members":{"SnapshotId":{},"Iops":{"type":"integer"},"VolumeSize":{"type":"integer"},"VolumeType":{},"DeleteOnTermination":{"type":"boolean"}}}}}},"S17":{"type":"map","key":{},"value":{}},"S19":{"type":"list","member":{"type":"structure","required":["MountPoint","NumberOfDisks","Size"],"members":{"MountPoint":{},"RaidLevel":{"type":"integer"},"NumberOfDisks":{"type":"integer"},"Size":{"type":"integer"},"VolumeType":{},"Iops":{"type":"integer"}}}},"S1b":{"type":"structure","members":{"Setup":{"shape":"S3"},"Configure":{"shape":"S3"},"Deploy":{"shape":"S3"},"Undeploy":{"shape":"S3"},"Shutdown":{"shape":"S3"}}},"S1c":{"type":"structure","members":{"Shutdown":{"type":"structure","members":{"ExecutionTimeout":{"type":"integer"},"DelayUntilElbConnectionsDrained":{"type":"boolean"}}}}},"S30":{"type":"structure","members":{"InstanceCount":{"type":"integer"},"ThresholdsWaitTime":{"type":"integer"},"IgnoreMetricsTime":{"type":"integer"},"CpuThreshold":{"type":"double"},"MemoryThreshold":{"type":"double"},"LoadThreshold":{"type":"double"},"Alarms":{"shape":"S3"}}},"S40":{"type":"structure","members":{"Monday":{"shape":"S41"},"Tuesday":{"shape":"S41"},"Wednesday":{"shape":"S41"},"Thursday":{"shape":"S41"},"Friday":{"shape":"S41"},"Saturday":{"shape":"S41"},"Sunday":{"shape":"S41"}}},"S41":{"type":"map","key":{},"value":{}}},"examples":{},"paginators":{"DescribeApps":{"result_key":"Apps"},"DescribeCommands":{"result_key":"Commands"},"DescribeDeployments":{"result_key":"Deployments"},"DescribeEcsClusters":{"input_token":"NextToken","output_token":"NextToken","limit_key":"MaxResults","result_key":"EcsClusters"},"DescribeElasticIps":{"result_key":"ElasticIps"},"DescribeElasticLoadBalancers":{"result_key":"ElasticLoadBalancers"},"DescribeInstances":{"result_key":"Instances"},"DescribeLayers":{"result_key":"Layers"},"DescribeLoadBasedAutoScaling":{"result_key":"LoadBasedAutoScalingConfigurations"},"DescribePermissions":{"result_key":"Permissions"},"DescribeRaidArrays":{"result_key":"RaidArrays"},"DescribeServiceErrors":{"result_key":"ServiceErrors"},"DescribeStacks":{"result_key":"Stacks"},"DescribeTimeBasedAutoScaling":{"result_key":"TimeBasedAutoScalingConfigurations"},"DescribeUserProfiles":{"result_key":"UserProfiles"},"DescribeVolumes":{"result_key":"Volumes"}}};
 AWS.apiLoader.services['s3'] = {};
 AWS.S3 = AWS.Service.defineService('s3', [ '2006-03-01' ]);
 require('./services/s3');
 
-AWS.apiLoader.services['s3']['2006-03-01'] = {"version":"2.0","metadata":{"apiVersion":"2006-03-01","checksumFormat":"md5","endpointPrefix":"s3","globalEndpoint":"s3.amazonaws.com","serviceAbbreviation":"Amazon S3","serviceFullName":"Amazon Simple Storage Service","signatureVersion":"s3","timestampFormat":"rfc822","protocol":"rest-xml"},"operations":{"AbortMultipartUpload":{"http":{"method":"DELETE","requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","Key","UploadId"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Key":{"location":"uri","locationName":"Key"},"UploadId":{"location":"querystring","locationName":"uploadId"},"RequestPayer":{"location":"header","locationName":"x-amz-request-payer"}}},"output":{"type":"structure","members":{"RequestCharged":{"location":"header","locationName":"x-amz-request-charged"}}}},"CompleteMultipartUpload":{"http":{"requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","Key","UploadId"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Key":{"location":"uri","locationName":"Key"},"MultipartUpload":{"locationName":"CompleteMultipartUpload","xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"type":"structure","members":{"Parts":{"locationName":"Part","type":"list","member":{"type":"structure","members":{"ETag":{},"PartNumber":{"type":"integer"}}},"flattened":true}}},"UploadId":{"location":"querystring","locationName":"uploadId"},"RequestPayer":{"location":"header","locationName":"x-amz-request-payer"}},"payload":"MultipartUpload"},"output":{"type":"structure","members":{"Location":{},"Bucket":{},"Key":{},"Expiration":{"location":"header","locationName":"x-amz-expiration"},"ETag":{},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"VersionId":{"location":"header","locationName":"x-amz-version-id"},"SSEKMSKeyId":{"shape":"Sj","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"},"RequestCharged":{"location":"header","locationName":"x-amz-request-charged"}}}},"CopyObject":{"http":{"method":"PUT","requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","CopySource","Key"],"members":{"ACL":{"location":"header","locationName":"x-amz-acl"},"Bucket":{"location":"uri","locationName":"Bucket"},"CacheControl":{"location":"header","locationName":"Cache-Control"},"ContentDisposition":{"location":"header","locationName":"Content-Disposition"},"ContentEncoding":{"location":"header","locationName":"Content-Encoding"},"ContentLanguage":{"location":"header","locationName":"Content-Language"},"ContentType":{"location":"header","locationName":"Content-Type"},"CopySource":{"location":"header","locationName":"x-amz-copy-source"},"CopySourceIfMatch":{"location":"header","locationName":"x-amz-copy-source-if-match"},"CopySourceIfModifiedSince":{"location":"header","locationName":"x-amz-copy-source-if-modified-since","type":"timestamp"},"CopySourceIfNoneMatch":{"location":"header","locationName":"x-amz-copy-source-if-none-match"},"CopySourceIfUnmodifiedSince":{"location":"header","locationName":"x-amz-copy-source-if-unmodified-since","type":"timestamp"},"Expires":{"location":"header","locationName":"Expires","type":"timestamp"},"GrantFullControl":{"location":"header","locationName":"x-amz-grant-full-control"},"GrantRead":{"location":"header","locationName":"x-amz-grant-read"},"GrantReadACP":{"location":"header","locationName":"x-amz-grant-read-acp"},"GrantWriteACP":{"location":"header","locationName":"x-amz-grant-write-acp"},"Key":{"location":"uri","locationName":"Key"},"Metadata":{"shape":"S11","location":"headers","locationName":"x-amz-meta-"},"MetadataDirective":{"location":"header","locationName":"x-amz-metadata-directive"},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"StorageClass":{"location":"header","locationName":"x-amz-storage-class"},"WebsiteRedirectLocation":{"location":"header","locationName":"x-amz-website-redirect-location"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKey":{"shape":"S18","location":"header","locationName":"x-amz-server-side-encryption-customer-key"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sj","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"},"CopySourceSSECustomerAlgorithm":{"location":"header","locationName":"x-amz-copy-source-server-side-encryption-customer-algorithm"},"CopySourceSSECustomerKey":{"shape":"S1b","location":"header","locationName":"x-amz-copy-source-server-side-encryption-customer-key"},"CopySourceSSECustomerKeyMD5":{"location":"header","locationName":"x-amz-copy-source-server-side-encryption-customer-key-MD5"},"RequestPayer":{"location":"header","locationName":"x-amz-request-payer"}}},"output":{"type":"structure","members":{"CopyObjectResult":{"type":"structure","members":{"ETag":{},"LastModified":{"type":"timestamp"}}},"Expiration":{"location":"header","locationName":"x-amz-expiration"},"CopySourceVersionId":{"location":"header","locationName":"x-amz-copy-source-version-id"},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sj","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"},"RequestCharged":{"location":"header","locationName":"x-amz-request-charged"}},"payload":"CopyObjectResult"},"alias":"PutObjectCopy"},"CreateBucket":{"http":{"method":"PUT","requestUri":"/{Bucket}"},"input":{"type":"structure","required":["Bucket"],"members":{"ACL":{"location":"header","locationName":"x-amz-acl"},"Bucket":{"location":"uri","locationName":"Bucket"},"CreateBucketConfiguration":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"CreateBucketConfiguration","type":"structure","members":{"LocationConstraint":{}}},"GrantFullControl":{"location":"header","locationName":"x-amz-grant-full-control"},"GrantRead":{"location":"header","locationName":"x-amz-grant-read"},"GrantReadACP":{"location":"header","locationName":"x-amz-grant-read-acp"},"GrantWrite":{"location":"header","locationName":"x-amz-grant-write"},"GrantWriteACP":{"location":"header","locationName":"x-amz-grant-write-acp"}},"payload":"CreateBucketConfiguration"},"output":{"type":"structure","members":{"Location":{"location":"header","locationName":"Location"}}},"alias":"PutBucket"},"CreateMultipartUpload":{"http":{"requestUri":"/{Bucket}/{Key+}?uploads"},"input":{"type":"structure","required":["Bucket","Key"],"members":{"ACL":{"location":"header","locationName":"x-amz-acl"},"Bucket":{"location":"uri","locationName":"Bucket"},"CacheControl":{"location":"header","locationName":"Cache-Control"},"ContentDisposition":{"location":"header","locationName":"Content-Disposition"},"ContentEncoding":{"location":"header","locationName":"Content-Encoding"},"ContentLanguage":{"location":"header","locationName":"Content-Language"},"ContentType":{"location":"header","locationName":"Content-Type"},"Expires":{"location":"header","locationName":"Expires","type":"timestamp"},"GrantFullControl":{"location":"header","locationName":"x-amz-grant-full-control"},"GrantRead":{"location":"header","locationName":"x-amz-grant-read"},"GrantReadACP":{"location":"header","locationName":"x-amz-grant-read-acp"},"GrantWriteACP":{"location":"header","locationName":"x-amz-grant-write-acp"},"Key":{"location":"uri","locationName":"Key"},"Metadata":{"shape":"S11","location":"headers","locationName":"x-amz-meta-"},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"StorageClass":{"location":"header","locationName":"x-amz-storage-class"},"WebsiteRedirectLocation":{"location":"header","locationName":"x-amz-website-redirect-location"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKey":{"shape":"S18","location":"header","locationName":"x-amz-server-side-encryption-customer-key"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sj","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"},"RequestPayer":{"location":"header","locationName":"x-amz-request-payer"}}},"output":{"type":"structure","members":{"Bucket":{"locationName":"Bucket"},"Key":{},"UploadId":{},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sj","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"},"RequestCharged":{"location":"header","locationName":"x-amz-request-charged"}}},"alias":"InitiateMultipartUpload"},"DeleteBucket":{"http":{"method":"DELETE","requestUri":"/{Bucket}"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}}},"DeleteBucketCors":{"http":{"method":"DELETE","requestUri":"/{Bucket}?cors"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}}},"DeleteBucketLifecycle":{"http":{"method":"DELETE","requestUri":"/{Bucket}?lifecycle"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}}},"DeleteBucketPolicy":{"http":{"method":"DELETE","requestUri":"/{Bucket}?policy"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}}},"DeleteBucketReplication":{"http":{"method":"DELETE","requestUri":"/{Bucket}?replication"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}}},"DeleteBucketTagging":{"http":{"method":"DELETE","requestUri":"/{Bucket}?tagging"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}}},"DeleteBucketWebsite":{"http":{"method":"DELETE","requestUri":"/{Bucket}?website"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}}},"DeleteObject":{"http":{"method":"DELETE","requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","Key"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Key":{"location":"uri","locationName":"Key"},"MFA":{"location":"header","locationName":"x-amz-mfa"},"VersionId":{"location":"querystring","locationName":"versionId"},"RequestPayer":{"location":"header","locationName":"x-amz-request-payer"}}},"output":{"type":"structure","members":{"DeleteMarker":{"location":"header","locationName":"x-amz-delete-marker","type":"boolean"},"VersionId":{"location":"header","locationName":"x-amz-version-id"},"RequestCharged":{"location":"header","locationName":"x-amz-request-charged"}}}},"DeleteObjects":{"http":{"requestUri":"/{Bucket}?delete"},"input":{"type":"structure","required":["Bucket","Delete"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Delete":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"Delete","type":"structure","required":["Objects"],"members":{"Objects":{"locationName":"Object","type":"list","member":{"type":"structure","required":["Key"],"members":{"Key":{},"VersionId":{}}},"flattened":true},"Quiet":{"type":"boolean"}}},"MFA":{"location":"header","locationName":"x-amz-mfa"},"RequestPayer":{"location":"header","locationName":"x-amz-request-payer"}},"payload":"Delete"},"output":{"type":"structure","members":{"Deleted":{"type":"list","member":{"type":"structure","members":{"Key":{},"VersionId":{},"DeleteMarker":{"type":"boolean"},"DeleteMarkerVersionId":{}}},"flattened":true},"RequestCharged":{"location":"header","locationName":"x-amz-request-charged"},"Errors":{"locationName":"Error","type":"list","member":{"type":"structure","members":{"Key":{},"VersionId":{},"Code":{},"Message":{}}},"flattened":true}}},"alias":"DeleteMultipleObjects"},"GetBucketAcl":{"http":{"method":"GET","requestUri":"/{Bucket}?acl"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"Owner":{"shape":"S2f"},"Grants":{"shape":"S2i","locationName":"AccessControlList"}}}},"GetBucketCors":{"http":{"method":"GET","requestUri":"/{Bucket}?cors"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"CORSRules":{"shape":"S2r","locationName":"CORSRule"}}}},"GetBucketLifecycle":{"http":{"method":"GET","requestUri":"/{Bucket}?lifecycle"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"Rules":{"shape":"S34","locationName":"Rule"}}}},"GetBucketLocation":{"http":{"method":"GET","requestUri":"/{Bucket}?location"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"LocationConstraint":{}}}},"GetBucketLogging":{"http":{"method":"GET","requestUri":"/{Bucket}?logging"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"LoggingEnabled":{"shape":"S3j"}}}},"GetBucketNotification":{"http":{"method":"GET","requestUri":"/{Bucket}?notification"},"input":{"shape":"S3p"},"output":{"shape":"S3q"},"deprecated":true},"GetBucketNotificationConfiguration":{"http":{"method":"GET","requestUri":"/{Bucket}?notification"},"input":{"shape":"S3p"},"output":{"shape":"S41"}},"GetBucketPolicy":{"http":{"method":"GET","requestUri":"/{Bucket}?policy"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"Policy":{}},"payload":"Policy"}},"GetBucketReplication":{"http":{"method":"GET","requestUri":"/{Bucket}?replication"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"ReplicationConfiguration":{"shape":"S4k"}},"payload":"ReplicationConfiguration"}},"GetBucketRequestPayment":{"http":{"method":"GET","requestUri":"/{Bucket}?requestPayment"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"Payer":{}}}},"GetBucketTagging":{"http":{"method":"GET","requestUri":"/{Bucket}?tagging"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","required":["TagSet"],"members":{"TagSet":{"shape":"S4v"}}}},"GetBucketVersioning":{"http":{"method":"GET","requestUri":"/{Bucket}?versioning"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"Status":{},"MFADelete":{"locationName":"MfaDelete"}}}},"GetBucketWebsite":{"http":{"method":"GET","requestUri":"/{Bucket}?website"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"RedirectAllRequestsTo":{"shape":"S54"},"IndexDocument":{"shape":"S57"},"ErrorDocument":{"shape":"S59"},"RoutingRules":{"shape":"S5a"}}}},"GetObject":{"http":{"method":"GET","requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","Key"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"IfMatch":{"location":"header","locationName":"If-Match"},"IfModifiedSince":{"location":"header","locationName":"If-Modified-Since","type":"timestamp"},"IfNoneMatch":{"location":"header","locationName":"If-None-Match"},"IfUnmodifiedSince":{"location":"header","locationName":"If-Unmodified-Since","type":"timestamp"},"Key":{"location":"uri","locationName":"Key"},"Range":{"location":"header","locationName":"Range"},"ResponseCacheControl":{"location":"querystring","locationName":"response-cache-control"},"ResponseContentDisposition":{"location":"querystring","locationName":"response-content-disposition"},"ResponseContentEncoding":{"location":"querystring","locationName":"response-content-encoding"},"ResponseContentLanguage":{"location":"querystring","locationName":"response-content-language"},"ResponseContentType":{"location":"querystring","locationName":"response-content-type"},"ResponseExpires":{"location":"querystring","locationName":"response-expires","type":"timestamp"},"VersionId":{"location":"querystring","locationName":"versionId"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKey":{"shape":"S18","location":"header","locationName":"x-amz-server-side-encryption-customer-key"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"RequestPayer":{"location":"header","locationName":"x-amz-request-payer"}}},"output":{"type":"structure","members":{"Body":{"streaming":true,"type":"blob"},"DeleteMarker":{"location":"header","locationName":"x-amz-delete-marker","type":"boolean"},"AcceptRanges":{"location":"header","locationName":"accept-ranges"},"Expiration":{"location":"header","locationName":"x-amz-expiration"},"Restore":{"location":"header","locationName":"x-amz-restore"},"LastModified":{"location":"header","locationName":"Last-Modified","type":"timestamp"},"ContentLength":{"location":"header","locationName":"Content-Length","type":"integer"},"ETag":{"location":"header","locationName":"ETag"},"MissingMeta":{"location":"header","locationName":"x-amz-missing-meta","type":"integer"},"VersionId":{"location":"header","locationName":"x-amz-version-id"},"CacheControl":{"location":"header","locationName":"Cache-Control"},"ContentDisposition":{"location":"header","locationName":"Content-Disposition"},"ContentEncoding":{"location":"header","locationName":"Content-Encoding"},"ContentLanguage":{"location":"header","locationName":"Content-Language"},"ContentRange":{"location":"header","locationName":"Content-Range"},"ContentType":{"location":"header","locationName":"Content-Type"},"Expires":{"location":"header","locationName":"Expires","type":"timestamp"},"WebsiteRedirectLocation":{"location":"header","locationName":"x-amz-website-redirect-location"},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"Metadata":{"shape":"S11","location":"headers","locationName":"x-amz-meta-"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sj","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"},"StorageClass":{"location":"header","locationName":"x-amz-storage-class"},"RequestCharged":{"location":"header","locationName":"x-amz-request-charged"},"ReplicationStatus":{"location":"header","locationName":"x-amz-replication-status"}},"payload":"Body"}},"GetObjectAcl":{"http":{"method":"GET","requestUri":"/{Bucket}/{Key+}?acl"},"input":{"type":"structure","required":["Bucket","Key"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Key":{"location":"uri","locationName":"Key"},"VersionId":{"location":"querystring","locationName":"versionId"},"RequestPayer":{"location":"header","locationName":"x-amz-request-payer"}}},"output":{"type":"structure","members":{"Owner":{"shape":"S2f"},"Grants":{"shape":"S2i","locationName":"AccessControlList"},"RequestCharged":{"location":"header","locationName":"x-amz-request-charged"}}}},"GetObjectTorrent":{"http":{"method":"GET","requestUri":"/{Bucket}/{Key+}?torrent"},"input":{"type":"structure","required":["Bucket","Key"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Key":{"location":"uri","locationName":"Key"},"RequestPayer":{"location":"header","locationName":"x-amz-request-payer"}}},"output":{"type":"structure","members":{"Body":{"streaming":true,"type":"blob"},"RequestCharged":{"location":"header","locationName":"x-amz-request-charged"}},"payload":"Body"}},"HeadBucket":{"http":{"method":"HEAD","requestUri":"/{Bucket}"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}}},"HeadObject":{"http":{"method":"HEAD","requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","Key"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"IfMatch":{"location":"header","locationName":"If-Match"},"IfModifiedSince":{"location":"header","locationName":"If-Modified-Since","type":"timestamp"},"IfNoneMatch":{"location":"header","locationName":"If-None-Match"},"IfUnmodifiedSince":{"location":"header","locationName":"If-Unmodified-Since","type":"timestamp"},"Key":{"location":"uri","locationName":"Key"},"Range":{"location":"header","locationName":"Range"},"VersionId":{"location":"querystring","locationName":"versionId"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKey":{"shape":"S18","location":"header","locationName":"x-amz-server-side-encryption-customer-key"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"RequestPayer":{"location":"header","locationName":"x-amz-request-payer"}}},"output":{"type":"structure","members":{"DeleteMarker":{"location":"header","locationName":"x-amz-delete-marker","type":"boolean"},"AcceptRanges":{"location":"header","locationName":"accept-ranges"},"Expiration":{"location":"header","locationName":"x-amz-expiration"},"Restore":{"location":"header","locationName":"x-amz-restore"},"LastModified":{"location":"header","locationName":"Last-Modified","type":"timestamp"},"ContentLength":{"location":"header","locationName":"Content-Length","type":"integer"},"ETag":{"location":"header","locationName":"ETag"},"MissingMeta":{"location":"header","locationName":"x-amz-missing-meta","type":"integer"},"VersionId":{"location":"header","locationName":"x-amz-version-id"},"CacheControl":{"location":"header","locationName":"Cache-Control"},"ContentDisposition":{"location":"header","locationName":"Content-Disposition"},"ContentEncoding":{"location":"header","locationName":"Content-Encoding"},"ContentLanguage":{"location":"header","locationName":"Content-Language"},"ContentType":{"location":"header","locationName":"Content-Type"},"Expires":{"location":"header","locationName":"Expires","type":"timestamp"},"WebsiteRedirectLocation":{"location":"header","locationName":"x-amz-website-redirect-location"},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"Metadata":{"shape":"S11","location":"headers","locationName":"x-amz-meta-"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sj","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"},"StorageClass":{"location":"header","locationName":"x-amz-storage-class"},"RequestCharged":{"location":"header","locationName":"x-amz-request-charged"},"ReplicationStatus":{"location":"header","locationName":"x-amz-replication-status"}}}},"ListBuckets":{"http":{"method":"GET"},"output":{"type":"structure","members":{"Buckets":{"type":"list","member":{"locationName":"Bucket","type":"structure","members":{"Name":{},"CreationDate":{"type":"timestamp"}}}},"Owner":{"shape":"S2f"}}},"alias":"GetService"},"ListMultipartUploads":{"http":{"method":"GET","requestUri":"/{Bucket}?uploads"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Delimiter":{"location":"querystring","locationName":"delimiter"},"EncodingType":{"location":"querystring","locationName":"encoding-type"},"KeyMarker":{"location":"querystring","locationName":"key-marker"},"MaxUploads":{"location":"querystring","locationName":"max-uploads","type":"integer"},"Prefix":{"location":"querystring","locationName":"prefix"},"UploadIdMarker":{"location":"querystring","locationName":"upload-id-marker"}}},"output":{"type":"structure","members":{"Bucket":{},"KeyMarker":{},"UploadIdMarker":{},"NextKeyMarker":{},"Prefix":{},"Delimiter":{},"NextUploadIdMarker":{},"MaxUploads":{"type":"integer"},"IsTruncated":{"type":"boolean"},"Uploads":{"locationName":"Upload","type":"list","member":{"type":"structure","members":{"UploadId":{},"Key":{},"Initiated":{"type":"timestamp"},"StorageClass":{},"Owner":{"shape":"S2f"},"Initiator":{"shape":"S6r"}}},"flattened":true},"CommonPrefixes":{"shape":"S6s"},"EncodingType":{}}}},"ListObjectVersions":{"http":{"method":"GET","requestUri":"/{Bucket}?versions"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Delimiter":{"location":"querystring","locationName":"delimiter"},"EncodingType":{"location":"querystring","locationName":"encoding-type"},"KeyMarker":{"location":"querystring","locationName":"key-marker"},"MaxKeys":{"location":"querystring","locationName":"max-keys","type":"integer"},"Prefix":{"location":"querystring","locationName":"prefix"},"VersionIdMarker":{"location":"querystring","locationName":"version-id-marker"}}},"output":{"type":"structure","members":{"IsTruncated":{"type":"boolean"},"KeyMarker":{},"VersionIdMarker":{},"NextKeyMarker":{},"NextVersionIdMarker":{},"Versions":{"locationName":"Version","type":"list","member":{"type":"structure","members":{"ETag":{},"Size":{"type":"integer"},"StorageClass":{},"Key":{},"VersionId":{},"IsLatest":{"type":"boolean"},"LastModified":{"type":"timestamp"},"Owner":{"shape":"S2f"}}},"flattened":true},"DeleteMarkers":{"locationName":"DeleteMarker","type":"list","member":{"type":"structure","members":{"Owner":{"shape":"S2f"},"Key":{},"VersionId":{},"IsLatest":{"type":"boolean"},"LastModified":{"type":"timestamp"}}},"flattened":true},"Name":{},"Prefix":{},"Delimiter":{},"MaxKeys":{"type":"integer"},"CommonPrefixes":{"shape":"S6s"},"EncodingType":{}}},"alias":"GetBucketObjectVersions"},"ListObjects":{"http":{"method":"GET","requestUri":"/{Bucket}"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Delimiter":{"location":"querystring","locationName":"delimiter"},"EncodingType":{"location":"querystring","locationName":"encoding-type"},"Marker":{"location":"querystring","locationName":"marker"},"MaxKeys":{"location":"querystring","locationName":"max-keys","type":"integer"},"Prefix":{"location":"querystring","locationName":"prefix"}}},"output":{"type":"structure","members":{"IsTruncated":{"type":"boolean"},"Marker":{},"NextMarker":{},"Contents":{"type":"list","member":{"type":"structure","members":{"Key":{},"LastModified":{"type":"timestamp"},"ETag":{},"Size":{"type":"integer"},"StorageClass":{},"Owner":{"shape":"S2f"}}},"flattened":true},"Name":{},"Prefix":{},"Delimiter":{},"MaxKeys":{"type":"integer"},"CommonPrefixes":{"shape":"S6s"},"EncodingType":{}}},"alias":"GetBucket"},"ListParts":{"http":{"method":"GET","requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","Key","UploadId"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Key":{"location":"uri","locationName":"Key"},"MaxParts":{"location":"querystring","locationName":"max-parts","type":"integer"},"PartNumberMarker":{"location":"querystring","locationName":"part-number-marker","type":"integer"},"UploadId":{"location":"querystring","locationName":"uploadId"},"RequestPayer":{"location":"header","locationName":"x-amz-request-payer"}}},"output":{"type":"structure","members":{"Bucket":{},"Key":{},"UploadId":{},"PartNumberMarker":{"type":"integer"},"NextPartNumberMarker":{"type":"integer"},"MaxParts":{"type":"integer"},"IsTruncated":{"type":"boolean"},"Parts":{"locationName":"Part","type":"list","member":{"type":"structure","members":{"PartNumber":{"type":"integer"},"LastModified":{"type":"timestamp"},"ETag":{},"Size":{"type":"integer"}}},"flattened":true},"Initiator":{"shape":"S6r"},"Owner":{"shape":"S2f"},"StorageClass":{},"RequestCharged":{"location":"header","locationName":"x-amz-request-charged"}}}},"PutBucketAcl":{"http":{"method":"PUT","requestUri":"/{Bucket}?acl"},"input":{"type":"structure","required":["Bucket"],"members":{"ACL":{"location":"header","locationName":"x-amz-acl"},"AccessControlPolicy":{"shape":"S7l","xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"AccessControlPolicy"},"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"GrantFullControl":{"location":"header","locationName":"x-amz-grant-full-control"},"GrantRead":{"location":"header","locationName":"x-amz-grant-read"},"GrantReadACP":{"location":"header","locationName":"x-amz-grant-read-acp"},"GrantWrite":{"location":"header","locationName":"x-amz-grant-write"},"GrantWriteACP":{"location":"header","locationName":"x-amz-grant-write-acp"}},"payload":"AccessControlPolicy"}},"PutBucketCors":{"http":{"method":"PUT","requestUri":"/{Bucket}?cors"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"CORSConfiguration":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"CORSConfiguration","type":"structure","members":{"CORSRules":{"shape":"S2r","locationName":"CORSRule"}}},"ContentMD5":{"location":"header","locationName":"Content-MD5"}},"payload":"CORSConfiguration"}},"PutBucketLifecycle":{"http":{"method":"PUT","requestUri":"/{Bucket}?lifecycle"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"LifecycleConfiguration":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"LifecycleConfiguration","type":"structure","required":["Rules"],"members":{"Rules":{"shape":"S34","locationName":"Rule"}}}},"payload":"LifecycleConfiguration"}},"PutBucketLogging":{"http":{"method":"PUT","requestUri":"/{Bucket}?logging"},"input":{"type":"structure","required":["Bucket","BucketLoggingStatus"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"BucketLoggingStatus":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"BucketLoggingStatus","type":"structure","members":{"LoggingEnabled":{"shape":"S3j"}}},"ContentMD5":{"location":"header","locationName":"Content-MD5"}},"payload":"BucketLoggingStatus"}},"PutBucketNotification":{"http":{"method":"PUT","requestUri":"/{Bucket}?notification"},"input":{"type":"structure","required":["Bucket","NotificationConfiguration"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"NotificationConfiguration":{"shape":"S3q","xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"NotificationConfiguration"}},"payload":"NotificationConfiguration"},"deprecated":true},"PutBucketNotificationConfiguration":{"http":{"method":"PUT","requestUri":"/{Bucket}?notification"},"input":{"type":"structure","required":["Bucket","NotificationConfiguration"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"NotificationConfiguration":{"shape":"S41","xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"NotificationConfiguration"}},"payload":"NotificationConfiguration"}},"PutBucketPolicy":{"http":{"method":"PUT","requestUri":"/{Bucket}?policy"},"input":{"type":"structure","required":["Bucket","Policy"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"Policy":{}},"payload":"Policy"}},"PutBucketReplication":{"http":{"method":"PUT","requestUri":"/{Bucket}?replication"},"input":{"type":"structure","required":["Bucket","ReplicationConfiguration"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"ReplicationConfiguration":{"shape":"S4k","xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"ReplicationConfiguration"}},"payload":"ReplicationConfiguration"}},"PutBucketRequestPayment":{"http":{"method":"PUT","requestUri":"/{Bucket}?requestPayment"},"input":{"type":"structure","required":["Bucket","RequestPaymentConfiguration"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"RequestPaymentConfiguration":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"RequestPaymentConfiguration","type":"structure","required":["Payer"],"members":{"Payer":{}}}},"payload":"RequestPaymentConfiguration"}},"PutBucketTagging":{"http":{"method":"PUT","requestUri":"/{Bucket}?tagging"},"input":{"type":"structure","required":["Bucket","Tagging"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"Tagging":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"Tagging","type":"structure","required":["TagSet"],"members":{"TagSet":{"shape":"S4v"}}}},"payload":"Tagging"}},"PutBucketVersioning":{"http":{"method":"PUT","requestUri":"/{Bucket}?versioning"},"input":{"type":"structure","required":["Bucket","VersioningConfiguration"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"MFA":{"location":"header","locationName":"x-amz-mfa"},"VersioningConfiguration":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"VersioningConfiguration","type":"structure","members":{"MFADelete":{"locationName":"MfaDelete"},"Status":{}}}},"payload":"VersioningConfiguration"}},"PutBucketWebsite":{"http":{"method":"PUT","requestUri":"/{Bucket}?website"},"input":{"type":"structure","required":["Bucket","WebsiteConfiguration"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"WebsiteConfiguration":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"WebsiteConfiguration","type":"structure","members":{"ErrorDocument":{"shape":"S59"},"IndexDocument":{"shape":"S57"},"RedirectAllRequestsTo":{"shape":"S54"},"RoutingRules":{"shape":"S5a"}}}},"payload":"WebsiteConfiguration"}},"PutObject":{"http":{"method":"PUT","requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","Key"],"members":{"ACL":{"location":"header","locationName":"x-amz-acl"},"Body":{"streaming":true,"type":"blob"},"Bucket":{"location":"uri","locationName":"Bucket"},"CacheControl":{"location":"header","locationName":"Cache-Control"},"ContentDisposition":{"location":"header","locationName":"Content-Disposition"},"ContentEncoding":{"location":"header","locationName":"Content-Encoding"},"ContentLanguage":{"location":"header","locationName":"Content-Language"},"ContentLength":{"location":"header","locationName":"Content-Length","type":"integer"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"ContentType":{"location":"header","locationName":"Content-Type"},"Expires":{"location":"header","locationName":"Expires","type":"timestamp"},"GrantFullControl":{"location":"header","locationName":"x-amz-grant-full-control"},"GrantRead":{"location":"header","locationName":"x-amz-grant-read"},"GrantReadACP":{"location":"header","locationName":"x-amz-grant-read-acp"},"GrantWriteACP":{"location":"header","locationName":"x-amz-grant-write-acp"},"Key":{"location":"uri","locationName":"Key"},"Metadata":{"shape":"S11","location":"headers","locationName":"x-amz-meta-"},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"StorageClass":{"location":"header","locationName":"x-amz-storage-class"},"WebsiteRedirectLocation":{"location":"header","locationName":"x-amz-website-redirect-location"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKey":{"shape":"S18","location":"header","locationName":"x-amz-server-side-encryption-customer-key"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sj","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"},"RequestPayer":{"location":"header","locationName":"x-amz-request-payer"}},"payload":"Body"},"output":{"type":"structure","members":{"Expiration":{"location":"header","locationName":"x-amz-expiration"},"ETag":{"location":"header","locationName":"ETag"},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"VersionId":{"location":"header","locationName":"x-amz-version-id"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sj","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"},"RequestCharged":{"location":"header","locationName":"x-amz-request-charged"}}}},"PutObjectAcl":{"http":{"method":"PUT","requestUri":"/{Bucket}/{Key+}?acl"},"input":{"type":"structure","required":["Bucket","Key"],"members":{"ACL":{"location":"header","locationName":"x-amz-acl"},"AccessControlPolicy":{"shape":"S7l","xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"AccessControlPolicy"},"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"GrantFullControl":{"location":"header","locationName":"x-amz-grant-full-control"},"GrantRead":{"location":"header","locationName":"x-amz-grant-read"},"GrantReadACP":{"location":"header","locationName":"x-amz-grant-read-acp"},"GrantWrite":{"location":"header","locationName":"x-amz-grant-write"},"GrantWriteACP":{"location":"header","locationName":"x-amz-grant-write-acp"},"Key":{"location":"uri","locationName":"Key"},"RequestPayer":{"location":"header","locationName":"x-amz-request-payer"}},"payload":"AccessControlPolicy"},"output":{"type":"structure","members":{"RequestCharged":{"location":"header","locationName":"x-amz-request-charged"}}}},"RestoreObject":{"http":{"requestUri":"/{Bucket}/{Key+}?restore"},"input":{"type":"structure","required":["Bucket","Key"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Key":{"location":"uri","locationName":"Key"},"VersionId":{"location":"querystring","locationName":"versionId"},"RestoreRequest":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"RestoreRequest","type":"structure","required":["Days"],"members":{"Days":{"type":"integer"}}},"RequestPayer":{"location":"header","locationName":"x-amz-request-payer"}},"payload":"RestoreRequest"},"output":{"type":"structure","members":{"RequestCharged":{"location":"header","locationName":"x-amz-request-charged"}}},"alias":"PostObjectRestore"},"UploadPart":{"http":{"method":"PUT","requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","Key","PartNumber","UploadId"],"members":{"Body":{"streaming":true,"type":"blob"},"Bucket":{"location":"uri","locationName":"Bucket"},"ContentLength":{"location":"header","locationName":"Content-Length","type":"integer"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"Key":{"location":"uri","locationName":"Key"},"PartNumber":{"location":"querystring","locationName":"partNumber","type":"integer"},"UploadId":{"location":"querystring","locationName":"uploadId"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKey":{"shape":"S18","location":"header","locationName":"x-amz-server-side-encryption-customer-key"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"RequestPayer":{"location":"header","locationName":"x-amz-request-payer"}},"payload":"Body"},"output":{"type":"structure","members":{"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"ETag":{"location":"header","locationName":"ETag"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sj","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"},"RequestCharged":{"location":"header","locationName":"x-amz-request-charged"}}}},"UploadPartCopy":{"http":{"method":"PUT","requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","CopySource","Key","PartNumber","UploadId"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"CopySource":{"location":"header","locationName":"x-amz-copy-source"},"CopySourceIfMatch":{"location":"header","locationName":"x-amz-copy-source-if-match"},"CopySourceIfModifiedSince":{"location":"header","locationName":"x-amz-copy-source-if-modified-since","type":"timestamp"},"CopySourceIfNoneMatch":{"location":"header","locationName":"x-amz-copy-source-if-none-match"},"CopySourceIfUnmodifiedSince":{"location":"header","locationName":"x-amz-copy-source-if-unmodified-since","type":"timestamp"},"CopySourceRange":{"location":"header","locationName":"x-amz-copy-source-range"},"Key":{"location":"uri","locationName":"Key"},"PartNumber":{"location":"querystring","locationName":"partNumber","type":"integer"},"UploadId":{"location":"querystring","locationName":"uploadId"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKey":{"shape":"S18","location":"header","locationName":"x-amz-server-side-encryption-customer-key"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"CopySourceSSECustomerAlgorithm":{"location":"header","locationName":"x-amz-copy-source-server-side-encryption-customer-algorithm"},"CopySourceSSECustomerKey":{"shape":"S1b","location":"header","locationName":"x-amz-copy-source-server-side-encryption-customer-key"},"CopySourceSSECustomerKeyMD5":{"location":"header","locationName":"x-amz-copy-source-server-side-encryption-customer-key-MD5"},"RequestPayer":{"location":"header","locationName":"x-amz-request-payer"}}},"output":{"type":"structure","members":{"CopySourceVersionId":{"location":"header","locationName":"x-amz-copy-source-version-id"},"CopyPartResult":{"type":"structure","members":{"ETag":{},"LastModified":{"type":"timestamp"}}},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sj","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"},"RequestCharged":{"location":"header","locationName":"x-amz-request-charged"}},"payload":"CopyPartResult"}}},"shapes":{"Sj":{"type":"string","sensitive":true},"S11":{"type":"map","key":{},"value":{}},"S18":{"type":"blob","sensitive":true},"S1b":{"type":"blob","sensitive":true},"S2f":{"type":"structure","members":{"DisplayName":{},"ID":{}}},"S2i":{"type":"list","member":{"locationName":"Grant","type":"structure","members":{"Grantee":{"shape":"S2k"},"Permission":{}}}},"S2k":{"type":"structure","required":["Type"],"members":{"DisplayName":{},"EmailAddress":{},"ID":{},"Type":{"xmlAttribute":true,"locationName":"xsi:type"},"URI":{}},"xmlNamespace":{"prefix":"xsi","uri":"http://www.w3.org/2001/XMLSchema-instance"}},"S2r":{"type":"list","member":{"type":"structure","members":{"AllowedHeaders":{"locationName":"AllowedHeader","type":"list","member":{},"flattened":true},"AllowedMethods":{"locationName":"AllowedMethod","type":"list","member":{},"flattened":true},"AllowedOrigins":{"locationName":"AllowedOrigin","type":"list","member":{},"flattened":true},"ExposeHeaders":{"locationName":"ExposeHeader","type":"list","member":{},"flattened":true},"MaxAgeSeconds":{"type":"integer"}}},"flattened":true},"S34":{"type":"list","member":{"type":"structure","required":["Prefix","Status"],"members":{"Expiration":{"type":"structure","members":{"Date":{"shape":"S37"},"Days":{"type":"integer"}}},"ID":{},"Prefix":{},"Status":{},"Transition":{"type":"structure","members":{"Date":{"shape":"S37"},"Days":{"type":"integer"},"StorageClass":{}}},"NoncurrentVersionTransition":{"type":"structure","members":{"NoncurrentDays":{"type":"integer"},"StorageClass":{}}},"NoncurrentVersionExpiration":{"type":"structure","members":{"NoncurrentDays":{"type":"integer"}}}}},"flattened":true},"S37":{"type":"timestamp","timestampFormat":"iso8601"},"S3j":{"type":"structure","members":{"TargetBucket":{},"TargetGrants":{"type":"list","member":{"locationName":"Grant","type":"structure","members":{"Grantee":{"shape":"S2k"},"Permission":{}}}},"TargetPrefix":{}}},"S3p":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"S3q":{"type":"structure","members":{"TopicConfiguration":{"type":"structure","members":{"Id":{},"Events":{"shape":"S3t","locationName":"Event"},"Event":{"deprecated":true},"Topic":{}}},"QueueConfiguration":{"type":"structure","members":{"Id":{},"Event":{"deprecated":true},"Events":{"shape":"S3t","locationName":"Event"},"Queue":{}}},"CloudFunctionConfiguration":{"type":"structure","members":{"Id":{},"Event":{"deprecated":true},"Events":{"shape":"S3t","locationName":"Event"},"CloudFunction":{},"InvocationRole":{}}}}},"S3t":{"type":"list","member":{},"flattened":true},"S41":{"type":"structure","members":{"TopicConfigurations":{"locationName":"TopicConfiguration","type":"list","member":{"type":"structure","required":["TopicArn","Events"],"members":{"Id":{},"TopicArn":{"locationName":"Topic"},"Events":{"shape":"S3t","locationName":"Event"},"Filter":{"shape":"S44"}}},"flattened":true},"QueueConfigurations":{"locationName":"QueueConfiguration","type":"list","member":{"type":"structure","required":["QueueArn","Events"],"members":{"Id":{},"QueueArn":{"locationName":"Queue"},"Events":{"shape":"S3t","locationName":"Event"},"Filter":{"shape":"S44"}}},"flattened":true},"LambdaFunctionConfigurations":{"locationName":"CloudFunctionConfiguration","type":"list","member":{"type":"structure","required":["LambdaFunctionArn","Events"],"members":{"Id":{},"LambdaFunctionArn":{"locationName":"CloudFunction"},"Events":{"shape":"S3t","locationName":"Event"},"Filter":{"shape":"S44"}}},"flattened":true}}},"S44":{"type":"structure","members":{"Key":{"locationName":"S3Key","type":"structure","members":{"FilterRules":{"locationName":"FilterRule","type":"list","member":{"type":"structure","members":{"Name":{},"Value":{}}},"flattened":true}}}}},"S4k":{"type":"structure","required":["Role","Rules"],"members":{"Role":{},"Rules":{"locationName":"Rule","type":"list","member":{"type":"structure","required":["Prefix","Status","Destination"],"members":{"ID":{},"Prefix":{},"Status":{},"Destination":{"type":"structure","required":["Bucket"],"members":{"Bucket":{}}}}},"flattened":true}}},"S4v":{"type":"list","member":{"locationName":"Tag","type":"structure","required":["Key","Value"],"members":{"Key":{},"Value":{}}}},"S54":{"type":"structure","required":["HostName"],"members":{"HostName":{},"Protocol":{}}},"S57":{"type":"structure","required":["Suffix"],"members":{"Suffix":{}}},"S59":{"type":"structure","required":["Key"],"members":{"Key":{}}},"S5a":{"type":"list","member":{"locationName":"RoutingRule","type":"structure","required":["Redirect"],"members":{"Condition":{"type":"structure","members":{"HttpErrorCodeReturnedEquals":{},"KeyPrefixEquals":{}}},"Redirect":{"type":"structure","members":{"HostName":{},"HttpRedirectCode":{},"Protocol":{},"ReplaceKeyPrefixWith":{},"ReplaceKeyWith":{}}}}}},"S6r":{"type":"structure","members":{"ID":{},"DisplayName":{}}},"S6s":{"type":"list","member":{"type":"structure","members":{"Prefix":{}}},"flattened":true},"S7l":{"type":"structure","members":{"Grants":{"shape":"S2i","locationName":"AccessControlList"},"Owner":{"shape":"S2f"}}}},"examples":{},"paginators":{"ListBuckets":{"result_key":"Buckets"},"ListMultipartUploads":{"limit_key":"MaxUploads","more_results":"IsTruncated","output_token":["NextKeyMarker","NextUploadIdMarker"],"input_token":["KeyMarker","UploadIdMarker"],"result_key":["Uploads","CommonPrefixes"]},"ListObjectVersions":{"more_results":"IsTruncated","limit_key":"MaxKeys","output_token":["NextKeyMarker","NextVersionIdMarker"],"input_token":["KeyMarker","VersionIdMarker"],"result_key":["Versions","DeleteMarkers","CommonPrefixes"]},"ListObjects":{"more_results":"IsTruncated","limit_key":"MaxKeys","output_token":"NextMarker || Contents[-1].Key","input_token":"Marker","result_key":["Contents","CommonPrefixes"]},"ListParts":{"more_results":"IsTruncated","limit_key":"MaxParts","output_token":"NextPartNumberMarker","input_token":"PartNumberMarker","result_key":"Parts"}},"waiters":{"__default__":{"interval":5,"max_attempts":20},"BucketExists":{"operation":"HeadBucket","ignore_errors":[404],"success_type":"output"},"BucketNotExists":{"operation":"HeadBucket","success_type":"error","success_value":404},"ObjectExists":{"operation":"HeadObject","ignore_errors":[404],"success_type":"output"},"ObjectNotExists":{"operation":"HeadObject","success_type":"error","success_value":404}}};
+AWS.apiLoader.services['s3']['2006-03-01'] = {"metadata":{"apiVersion":"2006-03-01","checksumFormat":"md5","endpointPrefix":"s3","globalEndpoint":"s3.amazonaws.com","serviceAbbreviation":"Amazon S3","serviceFullName":"Amazon Simple Storage Service","signatureVersion":"s3","timestampFormat":"rfc822","protocol":"rest-xml"},"operations":{"AbortMultipartUpload":{"http":{"method":"DELETE","requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","Key","UploadId"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Key":{"location":"uri","locationName":"Key"},"UploadId":{"location":"querystring","locationName":"uploadId"}}}},"CompleteMultipartUpload":{"http":{"requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","Key","UploadId"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Key":{"location":"uri","locationName":"Key"},"MultipartUpload":{"locationName":"CompleteMultipartUpload","xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"type":"structure","members":{"Parts":{"locationName":"Part","type":"list","member":{"type":"structure","members":{"ETag":{},"PartNumber":{"type":"integer"}}},"flattened":true}}},"UploadId":{"location":"querystring","locationName":"uploadId"}},"payload":"MultipartUpload"},"output":{"type":"structure","members":{"Location":{},"Bucket":{},"Key":{},"Expiration":{"location":"header","locationName":"x-amz-expiration","type":"timestamp"},"ETag":{},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"VersionId":{"location":"header","locationName":"x-amz-version-id"},"SSEKMSKeyId":{"shape":"Sg","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"}}}},"CopyObject":{"http":{"method":"PUT","requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","CopySource","Key"],"members":{"ACL":{"location":"header","locationName":"x-amz-acl"},"Bucket":{"location":"uri","locationName":"Bucket"},"CacheControl":{"location":"header","locationName":"Cache-Control"},"ContentDisposition":{"location":"header","locationName":"Content-Disposition"},"ContentEncoding":{"location":"header","locationName":"Content-Encoding"},"ContentLanguage":{"location":"header","locationName":"Content-Language"},"ContentType":{"location":"header","locationName":"Content-Type"},"CopySource":{"location":"header","locationName":"x-amz-copy-source"},"CopySourceIfMatch":{"location":"header","locationName":"x-amz-copy-source-if-match"},"CopySourceIfModifiedSince":{"location":"header","locationName":"x-amz-copy-source-if-modified-since","type":"timestamp"},"CopySourceIfNoneMatch":{"location":"header","locationName":"x-amz-copy-source-if-none-match"},"CopySourceIfUnmodifiedSince":{"location":"header","locationName":"x-amz-copy-source-if-unmodified-since","type":"timestamp"},"Expires":{"location":"header","locationName":"Expires","type":"timestamp"},"GrantFullControl":{"location":"header","locationName":"x-amz-grant-full-control"},"GrantRead":{"location":"header","locationName":"x-amz-grant-read"},"GrantReadACP":{"location":"header","locationName":"x-amz-grant-read-acp"},"GrantWriteACP":{"location":"header","locationName":"x-amz-grant-write-acp"},"Key":{"location":"uri","locationName":"Key"},"Metadata":{"shape":"Sy","location":"headers","locationName":"x-amz-meta-"},"MetadataDirective":{"location":"header","locationName":"x-amz-metadata-directive"},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"StorageClass":{"location":"header","locationName":"x-amz-storage-class"},"WebsiteRedirectLocation":{"location":"header","locationName":"x-amz-website-redirect-location"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKey":{"shape":"S15","location":"header","locationName":"x-amz-server-side-encryption-customer-key"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sg","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"},"CopySourceSSECustomerAlgorithm":{"location":"header","locationName":"x-amz-copy-source-server-side-encryption-customer-algorithm"},"CopySourceSSECustomerKey":{"shape":"S18","location":"header","locationName":"x-amz-copy-source-server-side-encryption-customer-key"},"CopySourceSSECustomerKeyMD5":{"location":"header","locationName":"x-amz-copy-source-server-side-encryption-customer-key-MD5"}}},"output":{"type":"structure","members":{"CopyObjectResult":{"type":"structure","members":{"ETag":{},"LastModified":{"type":"timestamp"}}},"Expiration":{"location":"header","locationName":"x-amz-expiration","type":"timestamp"},"CopySourceVersionId":{"location":"header","locationName":"x-amz-copy-source-version-id"},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sg","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"}},"payload":"CopyObjectResult"},"alias":"PutObjectCopy"},"CreateBucket":{"http":{"method":"PUT","requestUri":"/{Bucket}"},"input":{"type":"structure","required":["Bucket"],"members":{"ACL":{"location":"header","locationName":"x-amz-acl"},"Bucket":{"location":"uri","locationName":"Bucket"},"CreateBucketConfiguration":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"CreateBucketConfiguration","type":"structure","members":{"LocationConstraint":{}}},"GrantFullControl":{"location":"header","locationName":"x-amz-grant-full-control"},"GrantRead":{"location":"header","locationName":"x-amz-grant-read"},"GrantReadACP":{"location":"header","locationName":"x-amz-grant-read-acp"},"GrantWrite":{"location":"header","locationName":"x-amz-grant-write"},"GrantWriteACP":{"location":"header","locationName":"x-amz-grant-write-acp"}},"payload":"CreateBucketConfiguration"},"output":{"type":"structure","members":{"Location":{"location":"header","locationName":"Location"}}},"alias":"PutBucket"},"CreateMultipartUpload":{"http":{"requestUri":"/{Bucket}/{Key+}?uploads"},"input":{"type":"structure","required":["Bucket","Key"],"members":{"ACL":{"location":"header","locationName":"x-amz-acl"},"Bucket":{"location":"uri","locationName":"Bucket"},"CacheControl":{"location":"header","locationName":"Cache-Control"},"ContentDisposition":{"location":"header","locationName":"Content-Disposition"},"ContentEncoding":{"location":"header","locationName":"Content-Encoding"},"ContentLanguage":{"location":"header","locationName":"Content-Language"},"ContentType":{"location":"header","locationName":"Content-Type"},"Expires":{"location":"header","locationName":"Expires","type":"timestamp"},"GrantFullControl":{"location":"header","locationName":"x-amz-grant-full-control"},"GrantRead":{"location":"header","locationName":"x-amz-grant-read"},"GrantReadACP":{"location":"header","locationName":"x-amz-grant-read-acp"},"GrantWriteACP":{"location":"header","locationName":"x-amz-grant-write-acp"},"Key":{"location":"uri","locationName":"Key"},"Metadata":{"shape":"Sy","location":"headers","locationName":"x-amz-meta-"},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"StorageClass":{"location":"header","locationName":"x-amz-storage-class"},"WebsiteRedirectLocation":{"location":"header","locationName":"x-amz-website-redirect-location"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKey":{"shape":"S15","location":"header","locationName":"x-amz-server-side-encryption-customer-key"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sg","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"}}},"output":{"type":"structure","members":{"Bucket":{"locationName":"Bucket"},"Key":{},"UploadId":{},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sg","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"}}},"alias":"InitiateMultipartUpload"},"DeleteBucket":{"http":{"method":"DELETE","requestUri":"/{Bucket}"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}}},"DeleteBucketCors":{"http":{"method":"DELETE","requestUri":"/{Bucket}?cors"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}}},"DeleteBucketLifecycle":{"http":{"method":"DELETE","requestUri":"/{Bucket}?lifecycle"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}}},"DeleteBucketPolicy":{"http":{"method":"DELETE","requestUri":"/{Bucket}?policy"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}}},"DeleteBucketTagging":{"http":{"method":"DELETE","requestUri":"/{Bucket}?tagging"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}}},"DeleteBucketWebsite":{"http":{"method":"DELETE","requestUri":"/{Bucket}?website"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}}},"DeleteObject":{"http":{"method":"DELETE","requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","Key"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Key":{"location":"uri","locationName":"Key"},"MFA":{"location":"header","locationName":"x-amz-mfa"},"VersionId":{"location":"querystring","locationName":"versionId"}}},"output":{"type":"structure","members":{"DeleteMarker":{"location":"header","locationName":"x-amz-delete-marker","type":"boolean"},"VersionId":{"location":"header","locationName":"x-amz-version-id"}}}},"DeleteObjects":{"http":{"requestUri":"/{Bucket}?delete"},"input":{"type":"structure","required":["Bucket","Delete"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Delete":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"Delete","type":"structure","required":["Objects"],"members":{"Objects":{"locationName":"Object","type":"list","member":{"type":"structure","required":["Key"],"members":{"Key":{},"VersionId":{}}},"flattened":true},"Quiet":{"type":"boolean"}}},"MFA":{"location":"header","locationName":"x-amz-mfa"}},"payload":"Delete"},"output":{"type":"structure","members":{"Deleted":{"type":"list","member":{"type":"structure","members":{"Key":{},"VersionId":{},"DeleteMarker":{"type":"boolean"},"DeleteMarkerVersionId":{}}},"flattened":true},"Errors":{"locationName":"Error","type":"list","member":{"type":"structure","members":{"Key":{},"VersionId":{},"Code":{},"Message":{}}},"flattened":true}}},"alias":"DeleteMultipleObjects"},"GetBucketAcl":{"http":{"method":"GET","requestUri":"/{Bucket}?acl"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"Owner":{"shape":"S2b"},"Grants":{"shape":"S2e","locationName":"AccessControlList"}}}},"GetBucketCors":{"http":{"method":"GET","requestUri":"/{Bucket}?cors"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"CORSRules":{"shape":"S2n","locationName":"CORSRule"}}}},"GetBucketLifecycle":{"http":{"method":"GET","requestUri":"/{Bucket}?lifecycle"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"Rules":{"shape":"S30","locationName":"Rule"}}}},"GetBucketLocation":{"http":{"method":"GET","requestUri":"/{Bucket}?location"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"LocationConstraint":{}}}},"GetBucketLogging":{"http":{"method":"GET","requestUri":"/{Bucket}?logging"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"LoggingEnabled":{"shape":"S3f"}}}},"GetBucketNotification":{"http":{"method":"GET","requestUri":"/{Bucket}?notification"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"TopicConfiguration":{"shape":"S3n"},"QueueConfiguration":{"shape":"S3s"},"CloudFunctionConfiguration":{"shape":"S3u"}}}},"GetBucketPolicy":{"http":{"method":"GET","requestUri":"/{Bucket}?policy"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"Policy":{}},"payload":"Policy"}},"GetBucketRequestPayment":{"http":{"method":"GET","requestUri":"/{Bucket}?requestPayment"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"Payer":{}}}},"GetBucketTagging":{"http":{"method":"GET","requestUri":"/{Bucket}?tagging"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","required":["TagSet"],"members":{"TagSet":{"shape":"S45"}}}},"GetBucketVersioning":{"http":{"method":"GET","requestUri":"/{Bucket}?versioning"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"Status":{},"MFADelete":{"locationName":"MfaDelete"}}}},"GetBucketWebsite":{"http":{"method":"GET","requestUri":"/{Bucket}?website"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}},"output":{"type":"structure","members":{"RedirectAllRequestsTo":{"shape":"S4e"},"IndexDocument":{"shape":"S4h"},"ErrorDocument":{"shape":"S4j"},"RoutingRules":{"shape":"S4k"}}}},"GetObject":{"http":{"method":"GET","requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","Key"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"IfMatch":{"location":"header","locationName":"If-Match"},"IfModifiedSince":{"location":"header","locationName":"If-Modified-Since","type":"timestamp"},"IfNoneMatch":{"location":"header","locationName":"If-None-Match"},"IfUnmodifiedSince":{"location":"header","locationName":"If-Unmodified-Since","type":"timestamp"},"Key":{"location":"uri","locationName":"Key"},"Range":{"location":"header","locationName":"Range"},"ResponseCacheControl":{"location":"querystring","locationName":"response-cache-control"},"ResponseContentDisposition":{"location":"querystring","locationName":"response-content-disposition"},"ResponseContentEncoding":{"location":"querystring","locationName":"response-content-encoding"},"ResponseContentLanguage":{"location":"querystring","locationName":"response-content-language"},"ResponseContentType":{"location":"querystring","locationName":"response-content-type"},"ResponseExpires":{"location":"querystring","locationName":"response-expires","type":"timestamp"},"VersionId":{"location":"querystring","locationName":"versionId"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKey":{"shape":"S15","location":"header","locationName":"x-amz-server-side-encryption-customer-key"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"}}},"output":{"type":"structure","members":{"Body":{"streaming":true,"type":"blob"},"DeleteMarker":{"location":"header","locationName":"x-amz-delete-marker","type":"boolean"},"AcceptRanges":{"location":"header","locationName":"accept-ranges"},"Expiration":{"location":"header","locationName":"x-amz-expiration","type":"timestamp"},"Restore":{"location":"header","locationName":"x-amz-restore"},"LastModified":{"location":"header","locationName":"Last-Modified","type":"timestamp"},"ContentLength":{"location":"header","locationName":"Content-Length","type":"integer"},"ETag":{"location":"header","locationName":"ETag"},"MissingMeta":{"location":"header","locationName":"x-amz-missing-meta","type":"integer"},"VersionId":{"location":"header","locationName":"x-amz-version-id"},"CacheControl":{"location":"header","locationName":"Cache-Control"},"ContentDisposition":{"location":"header","locationName":"Content-Disposition"},"ContentEncoding":{"location":"header","locationName":"Content-Encoding"},"ContentLanguage":{"location":"header","locationName":"Content-Language"},"ContentType":{"location":"header","locationName":"Content-Type"},"Expires":{"location":"header","locationName":"Expires","type":"timestamp"},"WebsiteRedirectLocation":{"location":"header","locationName":"x-amz-website-redirect-location"},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"Metadata":{"shape":"Sy","location":"headers","locationName":"x-amz-meta-"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sg","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"}},"payload":"Body"}},"GetObjectAcl":{"http":{"method":"GET","requestUri":"/{Bucket}/{Key+}?acl"},"input":{"type":"structure","required":["Bucket","Key"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Key":{"location":"uri","locationName":"Key"},"VersionId":{"location":"querystring","locationName":"versionId"}}},"output":{"type":"structure","members":{"Owner":{"shape":"S2b"},"Grants":{"shape":"S2e","locationName":"AccessControlList"}}}},"GetObjectTorrent":{"http":{"method":"GET","requestUri":"/{Bucket}/{Key+}?torrent"},"input":{"type":"structure","required":["Bucket","Key"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Key":{"location":"uri","locationName":"Key"}}},"output":{"type":"structure","members":{"Body":{"streaming":true,"type":"blob"}},"payload":"Body"}},"HeadBucket":{"http":{"method":"HEAD","requestUri":"/{Bucket}"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"}}}},"HeadObject":{"http":{"method":"HEAD","requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","Key"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"IfMatch":{"location":"header","locationName":"If-Match"},"IfModifiedSince":{"location":"header","locationName":"If-Modified-Since","type":"timestamp"},"IfNoneMatch":{"location":"header","locationName":"If-None-Match"},"IfUnmodifiedSince":{"location":"header","locationName":"If-Unmodified-Since","type":"timestamp"},"Key":{"location":"uri","locationName":"Key"},"Range":{"location":"header","locationName":"Range"},"VersionId":{"location":"querystring","locationName":"versionId"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKey":{"shape":"S15","location":"header","locationName":"x-amz-server-side-encryption-customer-key"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"}}},"output":{"type":"structure","members":{"DeleteMarker":{"location":"header","locationName":"x-amz-delete-marker","type":"boolean"},"AcceptRanges":{"location":"header","locationName":"accept-ranges"},"Expiration":{"location":"header","locationName":"x-amz-expiration","type":"timestamp"},"Restore":{"location":"header","locationName":"x-amz-restore"},"LastModified":{"location":"header","locationName":"Last-Modified","type":"timestamp"},"ContentLength":{"location":"header","locationName":"Content-Length","type":"integer"},"ETag":{"location":"header","locationName":"ETag"},"MissingMeta":{"location":"header","locationName":"x-amz-missing-meta","type":"integer"},"VersionId":{"location":"header","locationName":"x-amz-version-id"},"CacheControl":{"location":"header","locationName":"Cache-Control"},"ContentDisposition":{"location":"header","locationName":"Content-Disposition"},"ContentEncoding":{"location":"header","locationName":"Content-Encoding"},"ContentLanguage":{"location":"header","locationName":"Content-Language"},"ContentType":{"location":"header","locationName":"Content-Type"},"Expires":{"location":"header","locationName":"Expires","type":"timestamp"},"WebsiteRedirectLocation":{"location":"header","locationName":"x-amz-website-redirect-location"},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"Metadata":{"shape":"Sy","location":"headers","locationName":"x-amz-meta-"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sg","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"}}}},"ListBuckets":{"http":{"method":"GET"},"output":{"type":"structure","members":{"Buckets":{"type":"list","member":{"locationName":"Bucket","type":"structure","members":{"Name":{},"CreationDate":{"type":"timestamp"}}}},"Owner":{"shape":"S2b"}}},"alias":"GetService"},"ListMultipartUploads":{"http":{"method":"GET","requestUri":"/{Bucket}?uploads"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Delimiter":{"location":"querystring","locationName":"delimiter"},"EncodingType":{"location":"querystring","locationName":"encoding-type"},"KeyMarker":{"location":"querystring","locationName":"key-marker"},"MaxUploads":{"location":"querystring","locationName":"max-uploads","type":"integer"},"Prefix":{"location":"querystring","locationName":"prefix"},"UploadIdMarker":{"location":"querystring","locationName":"upload-id-marker"}}},"output":{"type":"structure","members":{"Bucket":{},"KeyMarker":{},"UploadIdMarker":{},"NextKeyMarker":{},"Prefix":{},"Delimiter":{},"NextUploadIdMarker":{},"MaxUploads":{"type":"integer"},"IsTruncated":{"type":"boolean"},"Uploads":{"locationName":"Upload","type":"list","member":{"type":"structure","members":{"UploadId":{},"Key":{},"Initiated":{"type":"timestamp"},"StorageClass":{},"Owner":{"shape":"S2b"},"Initiator":{"shape":"S5z"}}},"flattened":true},"CommonPrefixes":{"shape":"S60"},"EncodingType":{}}}},"ListObjectVersions":{"http":{"method":"GET","requestUri":"/{Bucket}?versions"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Delimiter":{"location":"querystring","locationName":"delimiter"},"EncodingType":{"location":"querystring","locationName":"encoding-type"},"KeyMarker":{"location":"querystring","locationName":"key-marker"},"MaxKeys":{"location":"querystring","locationName":"max-keys","type":"integer"},"Prefix":{"location":"querystring","locationName":"prefix"},"VersionIdMarker":{"location":"querystring","locationName":"version-id-marker"}}},"output":{"type":"structure","members":{"IsTruncated":{"type":"boolean"},"KeyMarker":{},"VersionIdMarker":{},"NextKeyMarker":{},"NextVersionIdMarker":{},"Versions":{"locationName":"Version","type":"list","member":{"type":"structure","members":{"ETag":{},"Size":{"type":"integer"},"StorageClass":{},"Key":{},"VersionId":{},"IsLatest":{"type":"boolean"},"LastModified":{"type":"timestamp"},"Owner":{"shape":"S2b"}}},"flattened":true},"DeleteMarkers":{"locationName":"DeleteMarker","type":"list","member":{"type":"structure","members":{"Owner":{"shape":"S2b"},"Key":{},"VersionId":{},"IsLatest":{"type":"boolean"},"LastModified":{"type":"timestamp"}}},"flattened":true},"Name":{},"Prefix":{},"Delimiter":{},"MaxKeys":{"type":"integer"},"CommonPrefixes":{"shape":"S60"},"EncodingType":{}}},"alias":"GetBucketObjectVersions"},"ListObjects":{"http":{"method":"GET","requestUri":"/{Bucket}"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Delimiter":{"location":"querystring","locationName":"delimiter"},"EncodingType":{"location":"querystring","locationName":"encoding-type"},"Marker":{"location":"querystring","locationName":"marker"},"MaxKeys":{"location":"querystring","locationName":"max-keys","type":"integer"},"Prefix":{"location":"querystring","locationName":"prefix"}}},"output":{"type":"structure","members":{"IsTruncated":{"type":"boolean"},"Marker":{},"NextMarker":{},"Contents":{"type":"list","member":{"type":"structure","members":{"Key":{},"LastModified":{"type":"timestamp"},"ETag":{},"Size":{"type":"integer"},"StorageClass":{},"Owner":{"shape":"S2b"}}},"flattened":true},"Name":{},"Prefix":{},"Delimiter":{},"MaxKeys":{"type":"integer"},"CommonPrefixes":{"shape":"S60"},"EncodingType":{}}},"alias":"GetBucket"},"ListParts":{"http":{"method":"GET","requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","Key","UploadId"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Key":{"location":"uri","locationName":"Key"},"MaxParts":{"location":"querystring","locationName":"max-parts","type":"integer"},"PartNumberMarker":{"location":"querystring","locationName":"part-number-marker","type":"integer"},"UploadId":{"location":"querystring","locationName":"uploadId"}}},"output":{"type":"structure","members":{"Bucket":{},"Key":{},"UploadId":{},"PartNumberMarker":{"type":"integer"},"NextPartNumberMarker":{"type":"integer"},"MaxParts":{"type":"integer"},"IsTruncated":{"type":"boolean"},"Parts":{"locationName":"Part","type":"list","member":{"type":"structure","members":{"PartNumber":{"type":"integer"},"LastModified":{"type":"timestamp"},"ETag":{},"Size":{"type":"integer"}}},"flattened":true},"Initiator":{"shape":"S5z"},"Owner":{"shape":"S2b"},"StorageClass":{}}}},"PutBucketAcl":{"http":{"method":"PUT","requestUri":"/{Bucket}?acl"},"input":{"type":"structure","required":["Bucket"],"members":{"ACL":{"location":"header","locationName":"x-amz-acl"},"AccessControlPolicy":{"shape":"S6t","xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"AccessControlPolicy"},"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"GrantFullControl":{"location":"header","locationName":"x-amz-grant-full-control"},"GrantRead":{"location":"header","locationName":"x-amz-grant-read"},"GrantReadACP":{"location":"header","locationName":"x-amz-grant-read-acp"},"GrantWrite":{"location":"header","locationName":"x-amz-grant-write"},"GrantWriteACP":{"location":"header","locationName":"x-amz-grant-write-acp"}},"payload":"AccessControlPolicy"}},"PutBucketCors":{"http":{"method":"PUT","requestUri":"/{Bucket}?cors"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"CORSConfiguration":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"CORSConfiguration","type":"structure","members":{"CORSRules":{"shape":"S2n","locationName":"CORSRule"}}},"ContentMD5":{"location":"header","locationName":"Content-MD5"}},"payload":"CORSConfiguration"}},"PutBucketLifecycle":{"http":{"method":"PUT","requestUri":"/{Bucket}?lifecycle"},"input":{"type":"structure","required":["Bucket"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"LifecycleConfiguration":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"LifecycleConfiguration","type":"structure","required":["Rules"],"members":{"Rules":{"shape":"S30","locationName":"Rule"}}}},"payload":"LifecycleConfiguration"}},"PutBucketLogging":{"http":{"method":"PUT","requestUri":"/{Bucket}?logging"},"input":{"type":"structure","required":["Bucket","BucketLoggingStatus"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"BucketLoggingStatus":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"BucketLoggingStatus","type":"structure","members":{"LoggingEnabled":{"shape":"S3f"}}},"ContentMD5":{"location":"header","locationName":"Content-MD5"}},"payload":"BucketLoggingStatus"}},"PutBucketNotification":{"http":{"method":"PUT","requestUri":"/{Bucket}?notification"},"input":{"type":"structure","required":["Bucket","NotificationConfiguration"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"NotificationConfiguration":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"NotificationConfiguration","type":"structure","members":{"TopicConfiguration":{"shape":"S3n"},"QueueConfiguration":{"shape":"S3s"},"CloudFunctionConfiguration":{"shape":"S3u"}}}},"payload":"NotificationConfiguration"}},"PutBucketPolicy":{"http":{"method":"PUT","requestUri":"/{Bucket}?policy"},"input":{"type":"structure","required":["Bucket","Policy"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"Policy":{}},"payload":"Policy"}},"PutBucketRequestPayment":{"http":{"method":"PUT","requestUri":"/{Bucket}?requestPayment"},"input":{"type":"structure","required":["Bucket","RequestPaymentConfiguration"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"RequestPaymentConfiguration":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"RequestPaymentConfiguration","type":"structure","required":["Payer"],"members":{"Payer":{}}}},"payload":"RequestPaymentConfiguration"}},"PutBucketTagging":{"http":{"method":"PUT","requestUri":"/{Bucket}?tagging"},"input":{"type":"structure","required":["Bucket","Tagging"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"Tagging":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"Tagging","type":"structure","required":["TagSet"],"members":{"TagSet":{"shape":"S45"}}}},"payload":"Tagging"}},"PutBucketVersioning":{"http":{"method":"PUT","requestUri":"/{Bucket}?versioning"},"input":{"type":"structure","required":["Bucket","VersioningConfiguration"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"MFA":{"location":"header","locationName":"x-amz-mfa"},"VersioningConfiguration":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"VersioningConfiguration","type":"structure","members":{"MFADelete":{"locationName":"MfaDelete"},"Status":{}}}},"payload":"VersioningConfiguration"}},"PutBucketWebsite":{"http":{"method":"PUT","requestUri":"/{Bucket}?website"},"input":{"type":"structure","required":["Bucket","WebsiteConfiguration"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"WebsiteConfiguration":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"WebsiteConfiguration","type":"structure","members":{"ErrorDocument":{"shape":"S4j"},"IndexDocument":{"shape":"S4h"},"RedirectAllRequestsTo":{"shape":"S4e"},"RoutingRules":{"shape":"S4k"}}}},"payload":"WebsiteConfiguration"}},"PutObject":{"http":{"method":"PUT","requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","Key"],"members":{"ACL":{"location":"header","locationName":"x-amz-acl"},"Body":{"streaming":true,"type":"blob"},"Bucket":{"location":"uri","locationName":"Bucket"},"CacheControl":{"location":"header","locationName":"Cache-Control"},"ContentDisposition":{"location":"header","locationName":"Content-Disposition"},"ContentEncoding":{"location":"header","locationName":"Content-Encoding"},"ContentLanguage":{"location":"header","locationName":"Content-Language"},"ContentLength":{"location":"header","locationName":"Content-Length","type":"integer"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"ContentType":{"location":"header","locationName":"Content-Type"},"Expires":{"location":"header","locationName":"Expires","type":"timestamp"},"GrantFullControl":{"location":"header","locationName":"x-amz-grant-full-control"},"GrantRead":{"location":"header","locationName":"x-amz-grant-read"},"GrantReadACP":{"location":"header","locationName":"x-amz-grant-read-acp"},"GrantWriteACP":{"location":"header","locationName":"x-amz-grant-write-acp"},"Key":{"location":"uri","locationName":"Key"},"Metadata":{"shape":"Sy","location":"headers","locationName":"x-amz-meta-"},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"StorageClass":{"location":"header","locationName":"x-amz-storage-class"},"WebsiteRedirectLocation":{"location":"header","locationName":"x-amz-website-redirect-location"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKey":{"shape":"S15","location":"header","locationName":"x-amz-server-side-encryption-customer-key"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sg","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"}},"payload":"Body"},"output":{"type":"structure","members":{"Expiration":{"location":"header","locationName":"x-amz-expiration","type":"timestamp"},"ETag":{"location":"header","locationName":"ETag"},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"VersionId":{"location":"header","locationName":"x-amz-version-id"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sg","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"}}}},"PutObjectAcl":{"http":{"method":"PUT","requestUri":"/{Bucket}/{Key+}?acl"},"input":{"type":"structure","required":["Bucket","Key"],"members":{"ACL":{"location":"header","locationName":"x-amz-acl"},"AccessControlPolicy":{"shape":"S6t","xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"AccessControlPolicy"},"Bucket":{"location":"uri","locationName":"Bucket"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"GrantFullControl":{"location":"header","locationName":"x-amz-grant-full-control"},"GrantRead":{"location":"header","locationName":"x-amz-grant-read"},"GrantReadACP":{"location":"header","locationName":"x-amz-grant-read-acp"},"GrantWrite":{"location":"header","locationName":"x-amz-grant-write"},"GrantWriteACP":{"location":"header","locationName":"x-amz-grant-write-acp"},"Key":{"location":"uri","locationName":"Key"}},"payload":"AccessControlPolicy"}},"RestoreObject":{"http":{"requestUri":"/{Bucket}/{Key+}?restore"},"input":{"type":"structure","required":["Bucket","Key"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"Key":{"location":"uri","locationName":"Key"},"VersionId":{"location":"querystring","locationName":"versionId"},"RestoreRequest":{"xmlNamespace":{"uri":"http://s3.amazonaws.com/doc/2006-03-01/"},"locationName":"RestoreRequest","type":"structure","required":["Days"],"members":{"Days":{"type":"integer"}}}},"payload":"RestoreRequest"},"alias":"PostObjectRestore"},"UploadPart":{"http":{"method":"PUT","requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","Key","PartNumber","UploadId"],"members":{"Body":{"streaming":true,"type":"blob"},"Bucket":{"location":"uri","locationName":"Bucket"},"ContentLength":{"location":"header","locationName":"Content-Length","type":"integer"},"ContentMD5":{"location":"header","locationName":"Content-MD5"},"Key":{"location":"uri","locationName":"Key"},"PartNumber":{"location":"querystring","locationName":"partNumber","type":"integer"},"UploadId":{"location":"querystring","locationName":"uploadId"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKey":{"shape":"S15","location":"header","locationName":"x-amz-server-side-encryption-customer-key"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"}},"payload":"Body"},"output":{"type":"structure","members":{"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"ETag":{"location":"header","locationName":"ETag"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sg","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"}}}},"UploadPartCopy":{"http":{"method":"PUT","requestUri":"/{Bucket}/{Key+}"},"input":{"type":"structure","required":["Bucket","CopySource","Key","PartNumber","UploadId"],"members":{"Bucket":{"location":"uri","locationName":"Bucket"},"CopySource":{"location":"header","locationName":"x-amz-copy-source"},"CopySourceIfMatch":{"location":"header","locationName":"x-amz-copy-source-if-match"},"CopySourceIfModifiedSince":{"location":"header","locationName":"x-amz-copy-source-if-modified-since","type":"timestamp"},"CopySourceIfNoneMatch":{"location":"header","locationName":"x-amz-copy-source-if-none-match"},"CopySourceIfUnmodifiedSince":{"location":"header","locationName":"x-amz-copy-source-if-unmodified-since","type":"timestamp"},"CopySourceRange":{"location":"header","locationName":"x-amz-copy-source-range"},"Key":{"location":"uri","locationName":"Key"},"PartNumber":{"location":"querystring","locationName":"partNumber","type":"integer"},"UploadId":{"location":"querystring","locationName":"uploadId"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKey":{"shape":"S15","location":"header","locationName":"x-amz-server-side-encryption-customer-key"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"CopySourceSSECustomerAlgorithm":{"location":"header","locationName":"x-amz-copy-source-server-side-encryption-customer-algorithm"},"CopySourceSSECustomerKey":{"shape":"S18","location":"header","locationName":"x-amz-copy-source-server-side-encryption-customer-key"},"CopySourceSSECustomerKeyMD5":{"location":"header","locationName":"x-amz-copy-source-server-side-encryption-customer-key-MD5"}}},"output":{"type":"structure","members":{"CopySourceVersionId":{"location":"header","locationName":"x-amz-copy-source-version-id"},"CopyPartResult":{"type":"structure","members":{"ETag":{},"LastModified":{"type":"timestamp"}}},"ServerSideEncryption":{"location":"header","locationName":"x-amz-server-side-encryption"},"SSECustomerAlgorithm":{"location":"header","locationName":"x-amz-server-side-encryption-customer-algorithm"},"SSECustomerKeyMD5":{"location":"header","locationName":"x-amz-server-side-encryption-customer-key-MD5"},"SSEKMSKeyId":{"shape":"Sg","location":"header","locationName":"x-amz-server-side-encryption-aws-kms-key-id"}},"payload":"CopyPartResult"}}},"shapes":{"Sg":{"type":"string","sensitive":true},"Sy":{"type":"map","key":{},"value":{}},"S15":{"type":"string","sensitive":true},"S18":{"type":"string","sensitive":true},"S2b":{"type":"structure","members":{"DisplayName":{},"ID":{}}},"S2e":{"type":"list","member":{"locationName":"Grant","type":"structure","members":{"Grantee":{"shape":"S2g"},"Permission":{}}}},"S2g":{"type":"structure","required":["Type"],"members":{"DisplayName":{},"EmailAddress":{},"ID":{},"Type":{"type":"string","xmlAttribute":true,"locationName":"xsi:type"},"URI":{}},"xmlNamespace":{"prefix":"xsi","uri":"http://www.w3.org/2001/XMLSchema-instance"}},"S2n":{"type":"list","member":{"type":"structure","members":{"AllowedHeaders":{"locationName":"AllowedHeader","type":"list","member":{},"flattened":true},"AllowedMethods":{"locationName":"AllowedMethod","type":"list","member":{},"flattened":true},"AllowedOrigins":{"locationName":"AllowedOrigin","type":"list","member":{},"flattened":true},"ExposeHeaders":{"locationName":"ExposeHeader","type":"list","member":{},"flattened":true},"MaxAgeSeconds":{"type":"integer"}}},"flattened":true},"S30":{"type":"list","member":{"type":"structure","required":["Prefix","Status"],"members":{"Expiration":{"type":"structure","members":{"Date":{"shape":"S33"},"Days":{"type":"integer"}}},"ID":{},"Prefix":{},"Status":{},"Transition":{"type":"structure","members":{"Date":{"shape":"S33"},"Days":{"type":"integer"},"StorageClass":{}}},"NoncurrentVersionTransition":{"type":"structure","members":{"NoncurrentDays":{"type":"integer"},"StorageClass":{}}},"NoncurrentVersionExpiration":{"type":"structure","members":{"NoncurrentDays":{"type":"integer"}}}}},"flattened":true},"S33":{"type":"timestamp","timestampFormat":"iso8601"},"S3f":{"type":"structure","members":{"TargetBucket":{},"TargetGrants":{"type":"list","member":{"locationName":"Grant","type":"structure","members":{"Grantee":{"shape":"S2g"},"Permission":{}}}},"TargetPrefix":{}}},"S3n":{"type":"structure","members":{"Id":{},"Events":{"shape":"S3p","locationName":"Event"},"Event":{"deprecated":true},"Topic":{}}},"S3p":{"type":"list","member":{},"flattened":true},"S3s":{"type":"structure","members":{"Id":{},"Event":{"deprecated":true},"Events":{"shape":"S3p","locationName":"Event"},"Queue":{}}},"S3u":{"type":"structure","members":{"Id":{},"Event":{"deprecated":true},"Events":{"shape":"S3p","locationName":"Event"},"CloudFunction":{},"InvocationRole":{}}},"S45":{"type":"list","member":{"locationName":"Tag","type":"structure","required":["Key","Value"],"members":{"Key":{},"Value":{}}}},"S4e":{"type":"structure","required":["HostName"],"members":{"HostName":{},"Protocol":{}}},"S4h":{"type":"structure","required":["Suffix"],"members":{"Suffix":{}}},"S4j":{"type":"structure","required":["Key"],"members":{"Key":{}}},"S4k":{"type":"list","member":{"locationName":"RoutingRule","type":"structure","required":["Redirect"],"members":{"Condition":{"type":"structure","members":{"HttpErrorCodeReturnedEquals":{},"KeyPrefixEquals":{}}},"Redirect":{"type":"structure","members":{"HostName":{},"HttpRedirectCode":{},"Protocol":{},"ReplaceKeyPrefixWith":{},"ReplaceKeyWith":{}}}}}},"S5z":{"type":"structure","members":{"ID":{},"DisplayName":{}}},"S60":{"type":"list","member":{"type":"structure","members":{"Prefix":{}}},"flattened":true},"S6t":{"type":"structure","members":{"Grants":{"shape":"S2e","locationName":"AccessControlList"},"Owner":{"shape":"S2b"}}}},"paginators":{"ListBuckets":{"result_key":"Buckets"},"ListMultipartUploads":{"limit_key":"MaxUploads","more_results":"IsTruncated","output_token":["NextKeyMarker","NextUploadIdMarker"],"input_token":["KeyMarker","UploadIdMarker"],"result_key":["Uploads","CommonPrefixes"]},"ListObjectVersions":{"more_results":"IsTruncated","limit_key":"MaxKeys","output_token":["NextKeyMarker","NextVersionIdMarker"],"input_token":["KeyMarker","VersionIdMarker"],"result_key":["Versions","DeleteMarkers","CommonPrefixes"]},"ListObjects":{"more_results":"IsTruncated","limit_key":"MaxKeys","output_token":"NextMarker || Contents[-1].Key","input_token":"Marker","result_key":["Contents","CommonPrefixes"]},"ListParts":{"more_results":"IsTruncated","limit_key":"MaxParts","output_token":"NextPartNumberMarker","input_token":"PartNumberMarker","result_key":"Parts"}},"waiters":{"__default__":{"interval":5,"max_attempts":20},"BucketExists":{"operation":"HeadBucket","ignore_errors":[404],"success_type":"output"},"BucketNotExists":{"operation":"HeadBucket","success_type":"error","success_value":404},"ObjectExists":{"operation":"HeadObject","ignore_errors":[404],"success_type":"output"},"ObjectNotExists":{"operation":"HeadObject","success_type":"error","success_value":404}}};
 AWS.apiLoader.services['sns'] = {};
 AWS.SNS = AWS.Service.defineService('sns', [ '2010-03-31' ]);
 
@@ -33507,7 +33470,7 @@ require('./services/sts');
 
 AWS.apiLoader.services['sts']['2011-06-15'] = {"version":"2.0","metadata":{"apiVersion":"2011-06-15","endpointPrefix":"sts","globalEndpoint":"sts.amazonaws.com","serviceAbbreviation":"AWS STS","serviceFullName":"AWS Security Token Service","signatureVersion":"v4","xmlNamespace":"https://sts.amazonaws.com/doc/2011-06-15/","protocol":"query"},"operations":{"AssumeRole":{"input":{"type":"structure","required":["RoleArn","RoleSessionName"],"members":{"RoleArn":{},"RoleSessionName":{},"Policy":{},"DurationSeconds":{"type":"integer"},"ExternalId":{},"SerialNumber":{},"TokenCode":{}}},"output":{"resultWrapper":"AssumeRoleResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"}}},"http":{}},"AssumeRoleWithSAML":{"input":{"type":"structure","required":["RoleArn","PrincipalArn","SAMLAssertion"],"members":{"RoleArn":{},"PrincipalArn":{},"SAMLAssertion":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"AssumeRoleWithSAMLResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"},"Subject":{},"SubjectType":{},"Issuer":{},"Audience":{},"NameQualifier":{}}},"http":{}},"AssumeRoleWithWebIdentity":{"input":{"type":"structure","required":["RoleArn","RoleSessionName","WebIdentityToken"],"members":{"RoleArn":{},"RoleSessionName":{},"WebIdentityToken":{},"ProviderId":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"AssumeRoleWithWebIdentityResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"SubjectFromWebIdentityToken":{},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"},"Provider":{},"Audience":{}}},"http":{}},"DecodeAuthorizationMessage":{"input":{"type":"structure","required":["EncodedMessage"],"members":{"EncodedMessage":{}}},"output":{"resultWrapper":"DecodeAuthorizationMessageResult","type":"structure","members":{"DecodedMessage":{}}},"http":{}},"GetFederationToken":{"input":{"type":"structure","required":["Name"],"members":{"Name":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"GetFederationTokenResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"FederatedUser":{"type":"structure","required":["FederatedUserId","Arn"],"members":{"FederatedUserId":{},"Arn":{}}},"PackedPolicySize":{"type":"integer"}}},"http":{}},"GetSessionToken":{"input":{"type":"structure","members":{"DurationSeconds":{"type":"integer"},"SerialNumber":{},"TokenCode":{}}},"output":{"resultWrapper":"GetSessionTokenResult","type":"structure","members":{"Credentials":{"shape":"Sa"}}},"http":{}}},"shapes":{"Sa":{"type":"structure","required":["AccessKeyId","SecretAccessKey","SessionToken","Expiration"],"members":{"AccessKeyId":{},"SecretAccessKey":{},"SessionToken":{},"Expiration":{"type":"timestamp"}}},"Sf":{"type":"structure","required":["AssumedRoleId","Arn"],"members":{"AssumedRoleId":{},"Arn":{}}}}};
 
-},{"./core":3,"./http/xhr":12,"./services/cognitoidentity":36,"./services/dynamodb":37,"./services/ec2":38,"./services/machinelearning":39,"./services/s3":40,"./services/sqs":41,"./services/sts":42,"./xml/browser_parser":52}],2:[function(require,module,exports){
+},{"./core":3,"./http/xhr":12,"./services/cognitoidentity":36,"./services/dynamodb":37,"./services/s3":38,"./services/sqs":39,"./services/sts":40,"./xml/browser_parser":50}],2:[function(require,module,exports){
 var AWS = require('./core');
 require('./credentials');
 require('./credentials/credential_provider_chain');
@@ -33691,7 +33654,7 @@ module.exports = AWS;
 AWS.util.update(AWS, {
 
 
-  VERSION: '2.1.50',
+  VERSION: '2.1.18',
 
 
   Signers: {},
@@ -33754,7 +33717,7 @@ require('./param_validator');
 
 AWS.events = new AWS.SequentialExecutor();
 
-},{"./config":2,"./credentials":4,"./credentials/cognito_identity_credentials":5,"./credentials/credential_provider_chain":6,"./credentials/saml_credentials":7,"./credentials/temporary_credentials":8,"./credentials/web_identity_credentials":9,"./event_listeners":10,"./http":11,"./json/builder":13,"./json/parser":14,"./model/api":15,"./model/operation":17,"./model/paginator":18,"./model/resource_waiter":19,"./model/shape":20,"./param_validator":21,"./protocol/json":22,"./protocol/query":23,"./protocol/rest":24,"./protocol/rest_json":25,"./protocol/rest_xml":26,"./request":30,"./resource_waiter":31,"./response":32,"./sequential_executor":34,"./service":35,"./signers/request_signer":44,"./util":51,"./xml/builder":53}],4:[function(require,module,exports){
+},{"./config":2,"./credentials":4,"./credentials/cognito_identity_credentials":5,"./credentials/credential_provider_chain":6,"./credentials/saml_credentials":7,"./credentials/temporary_credentials":8,"./credentials/web_identity_credentials":9,"./event_listeners":10,"./http":11,"./json/builder":13,"./json/parser":14,"./model/api":15,"./model/operation":17,"./model/paginator":18,"./model/resource_waiter":19,"./model/shape":20,"./param_validator":21,"./protocol/json":22,"./protocol/query":23,"./protocol/rest":24,"./protocol/rest_json":25,"./protocol/rest_xml":26,"./request":30,"./resource_waiter":31,"./response":32,"./sequential_executor":34,"./service":35,"./signers/request_signer":42,"./util":49,"./xml/builder":51}],4:[function(require,module,exports){
 var AWS = require('./core');
 
 
@@ -33827,6 +33790,9 @@ AWS.CognitoIdentityCredentials = AWS.util.inherit(AWS.Credentials, {
   constructor: function CognitoIdentityCredentials(params) {
     AWS.Credentials.call(this);
     this.expired = true;
+    this.webIdentityCredentials = new AWS.WebIdentityCredentials(params);
+    this.cognito = new AWS.CognitoIdentity({params: params});
+    this.sts = new AWS.STS();
     this.params = params;
     this.data = null;
     this.identityId = null;
@@ -33836,7 +33802,6 @@ AWS.CognitoIdentityCredentials = AWS.util.inherit(AWS.Credentials, {
 
   refresh: function refresh(callback) {
     var self = this;
-    self.createClients();
     self.data = null;
     self.identityId = null;
     self.getId(function(err) {
@@ -33855,9 +33820,6 @@ AWS.CognitoIdentityCredentials = AWS.util.inherit(AWS.Credentials, {
 
 
   clearCachedId: function clearCache() {
-    this.identityId = null;
-    delete this.params.IdentityId;
-
     var poolId = this.params.IdentityPoolId;
     delete this.storage[this.localStorageKey.id + poolId];
     delete this.storage[this.localStorageKey.providers + poolId];
@@ -33953,15 +33915,6 @@ AWS.CognitoIdentityCredentials = AWS.util.inherit(AWS.Credentials, {
   },
 
 
-  createClients: function() {
-    this.webIdentityCredentials = this.webIdentityCredentials ||
-      new AWS.WebIdentityCredentials(this.params);
-    this.cognito = this.cognito ||
-      new AWS.CognitoIdentity({params: this.params});
-    this.sts = this.sts || new AWS.STS();
-  },
-
-
   cacheId: function cacheId(data) {
     this.identityId = data.IdentityId;
     this.params.IdentityId = this.identityId;
@@ -33990,7 +33943,7 @@ AWS.CognitoIdentityCredentials = AWS.util.inherit(AWS.Credentials, {
 
   storage: (function() {
     try {
-      return AWS.util.isBrowser() && window.localStorage !== null && typeof window.localStorage === 'object' ?
+      return AWS.util.isBrowser() && typeof window.localStorage === 'object' ?
              window.localStorage : {};
     } catch (_) {
       return {};
@@ -34064,12 +34017,12 @@ AWS.SAMLCredentials = AWS.util.inherit(AWS.Credentials, {
     AWS.Credentials.call(this);
     this.expired = true;
     this.params = params;
+    this.service = new AWS.STS({params: this.params});
   },
 
 
   refresh: function refresh(callback) {
     var self = this;
-    self.createClients();
     if (!callback) callback = function(err) { if (err) throw err; };
 
     self.service.assumeRoleWithSAML(function (err, data) {
@@ -34078,13 +34031,7 @@ AWS.SAMLCredentials = AWS.util.inherit(AWS.Credentials, {
       }
       callback(err);
     });
-  },
-
-
-  createClients: function() {
-    this.service = this.service || new AWS.STS({params: this.params});
   }
-
 });
 
 },{"../core":3}],8:[function(require,module,exports){
@@ -34103,12 +34050,12 @@ AWS.TemporaryCredentials = AWS.util.inherit(AWS.Credentials, {
       this.params.RoleSessionName =
         this.params.RoleSessionName || 'temporary-credentials';
     }
+    this.service = new AWS.STS({params: this.params});
   },
 
 
   refresh: function refresh(callback) {
     var self = this;
-    self.createClients();
     if (!callback) callback = function(err) { if (err) throw err; };
 
     self.service.config.credentials = self.masterCredentials;
@@ -34128,13 +34075,7 @@ AWS.TemporaryCredentials = AWS.util.inherit(AWS.Credentials, {
     while (this.masterCredentials.masterCredentials) {
       this.masterCredentials = this.masterCredentials.masterCredentials;
     }
-  },
-
-
-  createClients: function() {
-    this.service = this.service || new AWS.STS({params: this.params});
   }
-
 });
 
 },{"../core":3}],9:[function(require,module,exports){
@@ -34148,13 +34089,13 @@ AWS.WebIdentityCredentials = AWS.util.inherit(AWS.Credentials, {
     this.expired = true;
     this.params = params;
     this.params.RoleSessionName = this.params.RoleSessionName || 'web-identity';
+    this.service = new AWS.STS({params: this.params});
     this.data = null;
   },
 
 
   refresh: function refresh(callback) {
     var self = this;
-    self.createClients();
     if (!callback) callback = function(err) { if (err) throw err; };
 
     self.service.assumeRoleWithWebIdentity(function (err, data) {
@@ -34165,13 +34106,7 @@ AWS.WebIdentityCredentials = AWS.util.inherit(AWS.Credentials, {
       }
       callback(err);
     });
-  },
-
-
-  createClients: function() {
-    this.service = this.service || new AWS.STS({params: this.params});
   }
-
 });
 
 },{"../core":3}],10:[function(require,module,exports){
@@ -34210,25 +34145,6 @@ AWS.EventListeners = {
       new AWS.ParamValidator().validate(rules, req.params);
     });
 
-    addAsync('COMPUTE_SHA256', 'afterBuild', function COMPUTE_SHA256(req, done) {
-      req.haltHandlersOnError();
-      if (!req.service.api.signatureVersion) return done(); // none
-      if (req.service.getSignerClass(req) === AWS.Signers.V4) {
-        var body = req.httpRequest.body || '';
-        AWS.util.computeSha256(body, function(err, sha) {
-          if (err) {
-            done(err);
-          }
-          else {
-            req.httpRequest.headers['X-Amz-Content-Sha256'] = sha;
-            done();
-          }
-        });
-      } else {
-        done();
-      }
-    });
-
     add('SET_CONTENT_LENGTH', 'afterBuild', function SET_CONTENT_LENGTH(req) {
       if (req.httpRequest.headers['Content-Length'] === undefined) {
         var length = AWS.util.string.byteLength(req.httpRequest.body);
@@ -34243,11 +34159,6 @@ AWS.EventListeners = {
     add('RESTART', 'restart', function RESTART() {
       var err = this.response.error;
       if (!err || !err.retryable) return;
-
-      this.httpRequest = new AWS.HttpRequest(
-        this.service.endpoint,
-        this.service.region
-      );
 
       if (this.response.retryCount < this.service.config.maxRetries) {
         this.response.retryCount++;
@@ -34578,7 +34489,7 @@ AWS.EventListeners = {
   })
 };
 
-},{"./core":3,"./protocol/json":22,"./protocol/query":23,"./protocol/rest":24,"./protocol/rest_json":25,"./protocol/rest_xml":26,"./sequential_executor":34,"util":72}],11:[function(require,module,exports){
+},{"./core":3,"./protocol/json":22,"./protocol/query":23,"./protocol/rest":24,"./protocol/rest_json":25,"./protocol/rest_xml":26,"./sequential_executor":34,"util":70}],11:[function(require,module,exports){
 var AWS = require('./core');
 var inherit = AWS.util.inherit;
 
@@ -34765,7 +34676,7 @@ AWS.XHRClient = AWS.util.inherit({
     AWS.util.arrayEach(rawHeaders.split(/\r?\n/), function (line) {
       var key = line.split(':', 1)[0];
       var value = line.substring(key.length + 2);
-      if (key.length > 0) headers[key.toLowerCase()] = value;
+      if (key.length > 0) headers[key] = value;
     });
     return headers;
   },
@@ -34798,7 +34709,7 @@ AWS.HttpClient.prototype = AWS.XHRClient.prototype;
 
 AWS.HttpClient.streamsApiVersion = 1;
 
-},{"../core":3,"../http":11,"events":63}],13:[function(require,module,exports){
+},{"../core":3,"../http":11,"events":61}],13:[function(require,module,exports){
 var util = require('../util');
 
 function JsonBuilder() { }
@@ -34856,7 +34767,7 @@ function translateScalar(value, shape) {
 
 module.exports = JsonBuilder;
 
-},{"../util":51}],14:[function(require,module,exports){
+},{"../util":49}],14:[function(require,module,exports){
 var util = require('../util');
 
 function JsonParser() { }
@@ -34866,7 +34777,7 @@ JsonParser.prototype.parse = function(value, shape) {
 };
 
 function translate(value, shape) {
-  if (!shape || value === undefined) return undefined;
+  if (!shape || value === undefined || value === null) return undefined;
 
   switch (shape.type) {
     case 'structure': return translateStructure(value, shape);
@@ -34877,8 +34788,6 @@ function translate(value, shape) {
 }
 
 function translateStructure(structure, shape) {
-  if (structure == null) return undefined;
-
   var struct = {};
   util.each(structure, function(name, value) {
     var memberShape = shape.members[name];
@@ -34891,25 +34800,19 @@ function translateStructure(structure, shape) {
 }
 
 function translateList(list, shape) {
-  if (list == null) return undefined;
-
   var out = [];
   util.arrayEach(list, function(value) {
     var result = translate(value, shape.member);
-    if (result === undefined) out.push(null);
-    else out.push(result);
+    if (result !== undefined) out.push(result);
   });
   return out;
 }
 
 function translateMap(map, shape) {
-  if (map == null) return undefined;
-
   var out = {};
   util.each(map, function(key, value) {
     var result = translate(value, shape.value);
-    if (result === undefined) out[key] = null;
-    else out[key] = result;
+    if (result !== undefined) out[key] = result;
   });
   return out;
 }
@@ -34920,7 +34823,7 @@ function translateScalar(value, shape) {
 
 module.exports = JsonParser;
 
-},{"../util":51}],15:[function(require,module,exports){
+},{"../util":49}],15:[function(require,module,exports){
 var Collection = require('./collection');
 var Operation = require('./operation');
 var Shape = require('./shape');
@@ -34985,7 +34888,7 @@ function Api(api, options) {
 
 module.exports = Api;
 
-},{"../util":51,"./collection":16,"./operation":17,"./paginator":18,"./resource_waiter":19,"./shape":20}],16:[function(require,module,exports){
+},{"../util":49,"./collection":16,"./operation":17,"./paginator":18,"./resource_waiter":19,"./shape":20}],16:[function(require,module,exports){
 var memoizedProperty = require('../util').memoizedProperty;
 
 function memoize(name, value, fn, nameTr) {
@@ -35007,7 +34910,7 @@ function Collection(iterable, options, fn, nameTr) {
 
 module.exports = Collection;
 
-},{"../util":51}],17:[function(require,module,exports){
+},{"../util":49}],17:[function(require,module,exports){
 var Shape = require('./shape');
 
 var util = require('../util');
@@ -35061,7 +34964,7 @@ function Operation(name, operation, options) {
 
 module.exports = Operation;
 
-},{"../util":51,"./shape":20}],18:[function(require,module,exports){
+},{"../util":49,"./shape":20}],18:[function(require,module,exports){
 var property = require('../util').property;
 
 function Paginator(name, paginator) {
@@ -35074,7 +34977,7 @@ function Paginator(name, paginator) {
 
 module.exports = Paginator;
 
-},{"../util":51}],19:[function(require,module,exports){
+},{"../util":49}],19:[function(require,module,exports){
 var util = require('../util');
 var property = util.property;
 
@@ -35125,7 +35028,7 @@ function ResourceWaiter(name, waiter, options) {
 
 module.exports = ResourceWaiter;
 
-},{"../util":51}],20:[function(require,module,exports){
+},{"../util":49}],20:[function(require,module,exports){
 var Collection = require('./collection');
 
 var util = require('../util');
@@ -35459,7 +35362,7 @@ Shape.shapes = {
 
 module.exports = Shape;
 
-},{"../util":51,"./collection":16}],21:[function(require,module,exports){
+},{"../util":49,"./collection":16}],21:[function(require,module,exports){
 var AWS = require('./core');
 
 
@@ -35696,7 +35599,7 @@ module.exports = {
   extractData: extractData
 };
 
-},{"../json/builder":13,"../json/parser":14,"../util":51}],23:[function(require,module,exports){
+},{"../json/builder":13,"../json/parser":14,"../util":49}],23:[function(require,module,exports){
 var AWS = require('../core');
 var util = require('../util');
 var QueryParamSerializer = require('../query/query_param_serializer');
@@ -35792,7 +35695,7 @@ module.exports = {
   extractData: extractData
 };
 
-},{"../core":3,"../model/shape":20,"../query/query_param_serializer":27,"../util":51}],24:[function(require,module,exports){
+},{"../core":3,"../model/shape":20,"../query/query_param_serializer":27,"../util":49}],24:[function(require,module,exports){
 var util = require('../util');
 
 function populateMethod(req) {
@@ -35913,7 +35816,7 @@ module.exports = {
   extractData: extractData
 };
 
-},{"../util":51}],25:[function(require,module,exports){
+},{"../util":49}],25:[function(require,module,exports){
 var util = require('../util');
 var Rest = require('./rest');
 var Json = require('./json');
@@ -35981,7 +35884,7 @@ module.exports = {
   extractData: extractData
 };
 
-},{"../json/builder":13,"../json/parser":14,"../util":51,"./json":22,"./rest":24}],26:[function(require,module,exports){
+},{"../json/builder":13,"../json/parser":14,"../util":49,"./json":22,"./rest":24}],26:[function(require,module,exports){
 var AWS = require('../core');
 var util = require('../util');
 var Rest = require('./rest');
@@ -35999,7 +35902,7 @@ function populateBody(req) {
 
     if (payloadMember.type === 'structure') {
       var rootElement = payloadMember.name;
-      req.httpRequest.body = builder.toXML(params, payloadMember, rootElement, true);
+      req.httpRequest.body = builder.toXML(params, payloadMember, rootElement);
     } else { // non-xml payload
       req.httpRequest.body = params;
     }
@@ -36069,7 +35972,7 @@ module.exports = {
   extractData: extractData
 };
 
-},{"../core":3,"../util":51,"./rest":24}],27:[function(require,module,exports){
+},{"../core":3,"../util":49,"./rest":24}],27:[function(require,module,exports){
 var util = require('../util');
 
 function QueryParamSerializer() {
@@ -36151,7 +36054,7 @@ function serializeMember(name, value, rules, fn) {
 
 module.exports = QueryParamSerializer;
 
-},{"../util":51}],28:[function(require,module,exports){
+},{"../util":49}],28:[function(require,module,exports){
 var util = require('./util');
 var regionConfig = require('./region_config.json');
 
@@ -36213,7 +36116,7 @@ function configureEndpoint(service) {
 
 module.exports = configureEndpoint;
 
-},{"./region_config.json":29,"./util":51}],29:[function(require,module,exports){
+},{"./region_config.json":29,"./util":49}],29:[function(require,module,exports){
 module.exports={
   "rules": {
     "*/*": {
@@ -36294,28 +36197,26 @@ var fsm = new AcceptorStateMachine();
 fsm.setupStates = function() {
   var transition = function(_, done) {
     var self = this;
-    self._haltHandlersOnError = false;
 
-    self.emit(self._asm.currentState, function(err) {
-      if (err) {
-        if (isTerminalState(self)) {
-          if (domain && self.domain instanceof domain.Domain) {
-            err.domainEmitter = self;
-            err.domain = self.domain;
-            err.domainThrown = false;
-            self.domain.emit('error', err);
-          } else {
-            throw err;
-          }
+    try {
+      self.emit(self._asm.currentState, function() {
+        done(self.response.error);
+      });
+    } catch (err) {
+      if (isTerminalState(self)) {
+        if (domain && self.domain instanceof domain.Domain) {
+          err.domainEmitter = self;
+          err.domain = self.domain;
+          err.domainThrown = false;
+          self.domain.emit('error', err);
         } else {
-          self.response.error = err;
-          done(err);
+          throw err;
         }
       } else {
-        done(self.response.error);
+        self.response.error = err;
+        done(err);
       }
-    });
-
+    }
   };
 
   this.addState('validate', 'build', 'error', transition);
@@ -36354,7 +36255,6 @@ AWS.Request = inherit({
 
     this.response = new AWS.Response(this);
     this._asm = new AcceptorStateMachine(fsm.states, 'validate');
-    this._haltHandlersOnError = false;
 
     AWS.SequentialExecutor.call(this);
     this.emit = this.emitEvent;
@@ -36455,22 +36355,24 @@ AWS.Request = inherit({
     var streams = AWS.util.nodeRequire('stream');
     var req = this;
     var stream = null;
+    var legacyStreams = false;
 
     if (AWS.HttpClient.streamsApiVersion === 2) {
-      stream = new streams.PassThrough();
-      req.send();
+      stream = new streams.Readable();
+      stream._read = function() {};
     } else {
       stream = new streams.Stream();
       stream.readable = true;
-
-      stream.sent = false;
-      stream.on('newListener', function(event) {
-        if (!stream.sent && event === 'data') {
-          stream.sent = true;
-          process.nextTick(function() { req.send(); });
-        }
-      });
     }
+
+    stream.sent = false;
+    stream.on('newListener', function(event) {
+      if (!stream.sent && (event === 'data' || event === 'readable')) {
+        if (event === 'data') legacyStreams = true;
+        stream.sent = true;
+        process.nextTick(function() { req.send(function() { }); });
+      }
+    });
 
     this.on('httpHeaders', function streamHeaders(statusCode, headers, resp) {
       if (statusCode < 300) {
@@ -36482,14 +36384,24 @@ AWS.Request = inherit({
         });
 
         var httpStream = resp.httpResponse.createUnbufferedStream();
-        if (AWS.HttpClient.streamsApiVersion === 2) {
-          httpStream.pipe(stream);
-        } else {
+        if (legacyStreams) {
           httpStream.on('data', function(arg) {
             stream.emit('data', arg);
           });
           httpStream.on('end', function() {
             stream.emit('end');
+          });
+        } else {
+          httpStream.on('readable', function() {
+            var chunk;
+            do {
+              chunk = httpStream.read();
+              if (chunk !== null) stream.push(chunk);
+            } while (chunk !== null);
+            stream.read(0);
+          });
+          httpStream.on('end', function() {
+            stream.push(null);
           });
         }
 
@@ -36571,18 +36483,13 @@ AWS.Request = inherit({
 
     delete request.httpRequest.headers['Content-Length'];
     delete request.httpRequest.headers['Content-Type'];
-  },
-
-
-  haltHandlersOnError: function haltHandlersOnError() {
-    this._haltHandlersOnError = true;
   }
 });
 
 AWS.util.mixin(AWS.Request, AWS.SequentialExecutor);
 
 }).call(this,require("FWaASH"))
-},{"./core":3,"./state_machine":50,"FWaASH":65}],31:[function(require,module,exports){
+},{"./core":3,"./state_machine":48,"FWaASH":63}],31:[function(require,module,exports){
 
 
 var AWS = require('./core');
@@ -36833,7 +36740,6 @@ AWS.Response = inherit({
 });
 
 },{"./core":3}],33:[function(require,module,exports){
-(function (Buffer){
 var AWS = require('../core');
 var byteLength = AWS.util.string.byteLength;
 
@@ -36903,7 +36809,7 @@ AWS.S3.ManagedUpload = AWS.util.inherit({
       if (self.body instanceof Stream) {
         runFill = false;
         self.fillQueue = self.fillStream;
-        self.partBuffers = [];
+        self.partBuffer = new AWS.util.Buffer(0);
         self.body.
           on('readable', function() { self.fillQueue(); }).
           on('end', function() {
@@ -37005,23 +36911,12 @@ AWS.S3.ManagedUpload = AWS.util.inherit({
   multipartReq: null,
 
 
-  partBuffers: null,
-
-
-  partBufferLength: 0,
+  partBuffer: null,
 
 
   fillBuffer: function fillBuffer() {
     var self = this;
     var bodyLen = byteLength(self.body);
-
-    if (bodyLen === 0) {
-      self.isDoneChunking = true;
-      self.numParts = 1;
-      self.nextChunk(self.body);
-      return;
-    }
-
     while (self.activeParts < self.queueSize && self.partPos < bodyLen) {
       var endPos = Math.min(self.partPos + self.partSize, bodyLen);
       var buf = self.sliceFn.call(self.body, self.partPos, endPos);
@@ -37040,40 +36935,23 @@ AWS.S3.ManagedUpload = AWS.util.inherit({
     var self = this;
     if (self.activeParts >= self.queueSize) return;
 
-    var buf = self.body.read(self.partSize - self.partBufferLength) ||
+    var buf = self.body.read(self.partSize - self.partBuffer.length) ||
               self.body.read();
     if (buf) {
-      self.partBuffers.push(buf);
-      self.partBufferLength += buf.length;
+      self.partBuffer = AWS.util.Buffer.concat([self.partBuffer, buf]);
       self.totalChunkedBytes += buf.length;
     }
 
-    if (self.partBufferLength >= self.partSize) {
-      var pbuf = Buffer.concat(self.partBuffers);
-      self.partBuffers = [];
-      self.partBufferLength = 0;
-
-      if (pbuf.length > self.partSize) {
-        var rest = pbuf.slice(self.partSize);
-        self.partBuffers.push(rest);
-        self.partBufferLength += rest.length;
-        pbuf = pbuf.slice(0, self.partSize);
-      }
-
-      self.nextChunk(pbuf);
-    }
-
-    if (self.isDoneChunking && !self.isDoneSending) {
-      pbuf = Buffer.concat(self.partBuffers);
-      self.partBuffers = [];
-      self.partBufferLength = 0;
+    if (self.partBuffer.length >= self.partSize) {
+      self.nextChunk(self.partBuffer.slice(0, self.partSize));
+      self.partBuffer = self.partBuffer.slice(self.partSize);
+    } else if (self.isDoneChunking) {
       self.totalBytes = self.totalChunkedBytes;
-      self.isDoneSending = true;
-
-      if (self.numParts === 0 || pbuf.length > 0) {
+      if (self.partBuffer.length > 0) {
         self.numParts++;
-        self.nextChunk(pbuf);
+        self.nextChunk(self.partBuffer);
       }
+      self.partBuffer = new AWS.util.Buffer(0);
     }
 
     self.body.read(0);
@@ -37232,8 +37110,7 @@ AWS.S3.ManagedUpload = AWS.util.inherit({
 AWS.util.mixin(AWS.S3.ManagedUpload, AWS.SequentialExecutor);
 module.exports = AWS.S3.ManagedUpload;
 
-}).call(this,require("buffer").Buffer)
-},{"../core":3,"buffer":54}],34:[function(require,module,exports){
+},{"../core":3}],34:[function(require,module,exports){
 var AWS = require('./core');
 
 
@@ -37299,18 +37176,14 @@ AWS.SequentialExecutor = AWS.util.inherit({
   },
 
 
-  callListeners: function callListeners(listeners, args, doneCallback, prevError) {
+  callListeners: function callListeners(listeners, args, doneCallback) {
     var self = this;
-    var error = prevError || null;
-
     function callNextListener(err) {
       if (err) {
-        error = AWS.util.error(error || new Error(), err);
-        if (self._haltHandlersOnError) {
-          return doneCallback.call(self, error);
-        }
+        doneCallback.call(self, err);
+      } else {
+        self.callListeners(listeners, args, doneCallback);
       }
-      self.callListeners(listeners, args, doneCallback, error);
     }
 
     while (listeners.length > 0) {
@@ -37319,18 +37192,11 @@ AWS.SequentialExecutor = AWS.util.inherit({
         listener.apply(self, args.concat([callNextListener]));
         return; // stop here, callNextListener will continue
       } else { // synchronous listener
-        try {
-          listener.apply(self, args);
-        } catch (err) {
-          error = AWS.util.error(error || new Error(), err);
-        }
-        if (error && self._haltHandlersOnError) {
-          doneCallback.call(self, error);
-          return;
-        }
+        listener.apply(self, args);
       }
     }
-    doneCallback.call(self, error);
+
+    doneCallback.call(self);
   },
 
 
@@ -37630,9 +37496,6 @@ AWS.Service = inherit({
     switch (error.code) {
       case 'ProvisionedThroughputExceededException':
       case 'Throttling':
-      case 'ThrottlingException':
-      case 'RequestLimitExceeded':
-      case 'RequestThrottled':
         return true;
       default:
         return false;
@@ -37834,83 +37697,6 @@ AWS.util.update(AWS.DynamoDB.prototype, {
 },{"../core":3}],38:[function(require,module,exports){
 var AWS = require('../core');
 
-AWS.util.update(AWS.EC2.prototype, {
-
-  setupRequestListeners: function setupRequestListeners(request) {
-    request.removeListener('extractError', AWS.EventListeners.Query.EXTRACT_ERROR);
-    request.addListener('extractError', this.extractError);
-
-    if (request.operation === 'copySnapshot') {
-      request.onAsync('validate', this.buildCopySnapshotPresignedUrl);
-    }
-  },
-
-
-  buildCopySnapshotPresignedUrl: function buildCopySnapshotPresignedUrl(req, done) {
-    if (req.params.PresignedUrl || req._subRequest) {
-      return done();
-    }
-
-    req.params = AWS.util.copy(req.params);
-    req.params.DestinationRegion = req.service.config.region;
-
-    var config = AWS.util.copy(req.service.config);
-    delete config.endpoint;
-    config.region = req.params.SourceRegion;
-    var svc = new req.service.constructor(config);
-    var newReq = svc[req.operation](req.params);
-    newReq._subRequest = true;
-    newReq.presign(function(err, url) {
-      if (err) done(err);
-      else {
-        req.params.PresignedUrl = url;
-        done();
-      }
-    });
-  },
-
-
-  extractError: function extractError(resp) {
-    var httpResponse = resp.httpResponse;
-    var data = new AWS.XML.Parser().parse(httpResponse.body.toString() || '');
-    if (data.Errors) {
-      resp.error = AWS.util.error(new Error(), {
-        code: data.Errors.Error.Code,
-        message: data.Errors.Error.Message
-      });
-    } else {
-      resp.error = AWS.util.error(new Error(), {
-        code: httpResponse.statusCode,
-        message: null
-      });
-    }
-  }
-});
-
-},{"../core":3}],39:[function(require,module,exports){
-var AWS = require('../core');
-
-AWS.util.update(AWS.MachineLearning.prototype, {
-
-  setupRequestListeners: function setupRequestListeners(request) {
-    if (request.operation === 'predict') {
-      request.addListener('build', this.buildEndpoint);
-    }
-  },
-
-
-  buildEndpoint: function buildEndpoint(request) {
-    var url = request.params.PredictEndpoint;
-    if (url) {
-      request.httpRequest.endpoint = new AWS.Endpoint(url);
-    }
-  }
-
-});
-
-},{"../core":3}],40:[function(require,module,exports){
-var AWS = require('../core');
-
 require('../s3/managed_upload');
 
 AWS.util.update(AWS.S3.prototype, {
@@ -37933,6 +37719,7 @@ AWS.util.update(AWS.S3.prototype, {
     request.addListener('build', this.addContentType);
     request.addListener('build', this.populateURI);
     request.addListener('build', this.computeContentMd5);
+    request.onAsync('build', this.computeSha256);
     request.addListener('build', this.computeSseCustomerKeyMd5);
     request.addListener('afterBuild', this.addExpect100Continue);
     request.removeListener('validate',
@@ -38066,15 +37853,52 @@ AWS.util.update(AWS.S3.prototype, {
   },
 
 
+  computeSha256: function computeSha256(req, done) {
+    if (req.service.getSignerClass(req) === AWS.Signers.V4) {
+      var body = req.httpRequest.body || '';
+
+      if (AWS.util.isNode()) {
+        var Stream = AWS.util.nodeRequire('stream').Stream;
+        var fs = AWS.util.nodeRequire('fs');
+        if (body instanceof Stream) {
+          if (typeof body.path === 'string') { // assume file object
+            body = fs.createReadStream(body.path);
+          } else { // TODO support other stream types
+            done(new Error('Non-file stream objects are ' +
+                           'not supported with SigV4 in AWS.S3'));
+            return;
+          }
+        }
+      }
+
+      AWS.util.crypto.sha256(body, 'hex', function(err, sha) {
+        if (!err) {
+          req.httpRequest.headers['X-Amz-Content-Sha256'] = sha;
+        }
+        done(err);
+      });
+    } else {
+      done();
+    }
+  },
+
+
   computeSseCustomerKeyMd5: function computeSseCustomerKeyMd5(req) {
-    var keys = {
-      SSECustomerKey: 'x-amz-server-side-encryption-customer-key-MD5',
-      CopySourceSSECustomerKey: 'x-amz-copy-source-server-side-encryption-customer-key-MD5'
-    };
-    AWS.util.each(keys, function(key, header) {
-      if (req.params[key]) {
-        var value = AWS.util.crypto.md5(req.params[key], 'base64');
-        req.httpRequest.headers[header] = value;
+    var headers = [
+      'x-amz-server-side-encryption-customer-key',
+      'x-amz-copy-source-server-side-encryption-customer-key'
+    ];
+    AWS.util.arrayEach(headers, function(header) {
+      if (req.httpRequest.headers[header]) {
+        var key = req.httpRequest.headers[header];
+        var md5header = header + '-MD5';
+
+        req.httpRequest.headers[header] = AWS.util.base64.encode(key);
+        if (!req.httpRequest.headers[md5header]) {
+          var value = AWS.util.crypto.md5(key, 'base64');
+          req.httpRequest.headers[md5header] = value;
+        }
+
       }
     });
   },
@@ -38105,11 +37929,10 @@ AWS.util.update(AWS.S3.prototype, {
     var req = resp.request;
     var httpResponse = resp.httpResponse;
     if (req.operation === 'completeMultipartUpload' &&
-        httpResponse.body.toString().match('<Error>')) {
+        httpResponse.body.toString().match('<Error>'))
       return false;
-    } else {
+    else
       return httpResponse.statusCode < 300;
-    }
   },
 
 
@@ -38130,11 +37953,9 @@ AWS.util.update(AWS.S3.prototype, {
     var req = resp.request;
     if (req.operation === 'getBucketLocation') {
       var match = resp.httpResponse.body.toString().match(/>(.+)<\/Location/);
-      delete resp.data['_'];
       if (match) {
+        delete resp.data['_'];
         resp.data.LocationConstraint = match[1];
-      } else {
-        resp.data.LocationConstraint = '';
       }
     }
   },
@@ -38179,8 +38000,7 @@ AWS.util.update(AWS.S3.prototype, {
     request.removeListener('build', request.service.addContentType);
     if (!request.params.Body) {
       request.removeListener('build', request.service.computeContentMd5);
-    } else {
-      request.addListener('afterBuild', AWS.EventListeners.Core.COMPUTE_SHA256);
+      request.removeListener('build', request.service.computeSha256);
     }
   },
 
@@ -38216,7 +38036,7 @@ AWS.util.update(AWS.S3.prototype, {
   }
 });
 
-},{"../core":3,"../s3/managed_upload":33}],41:[function(require,module,exports){
+},{"../core":3,"../s3/managed_upload":33}],39:[function(require,module,exports){
 var AWS = require('../core');
 
 AWS.util.update(AWS.SQS.prototype, {
@@ -38331,7 +38151,7 @@ AWS.util.update(AWS.SQS.prototype, {
   }
 });
 
-},{"../core":3}],42:[function(require,module,exports){
+},{"../core":3}],40:[function(require,module,exports){
 var AWS = require('../core');
 
 AWS.util.update(AWS.STS.prototype, {
@@ -38356,7 +38176,7 @@ AWS.util.update(AWS.STS.prototype, {
   }
 });
 
-},{"../core":3}],43:[function(require,module,exports){
+},{"../core":3}],41:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -38434,8 +38254,6 @@ AWS.Signers.Presign = inherit({
     request.on('sign', signedUrlSigner);
     request.removeListener('afterBuild',
       AWS.EventListeners.Core.SET_CONTENT_LENGTH);
-    request.removeListener('afterBuild',
-      AWS.EventListeners.Core.COMPUTE_SHA256);
 
     request.emit('beforePresign', [request]);
 
@@ -38456,7 +38274,7 @@ AWS.Signers.Presign = inherit({
 
 module.exports = AWS.Signers.Presign;
 
-},{"../core":3}],44:[function(require,module,exports){
+},{"../core":3}],42:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -38485,7 +38303,7 @@ require('./v4');
 require('./s3');
 require('./presign');
 
-},{"../core":3,"./presign":43,"./s3":45,"./v2":46,"./v3":47,"./v3https":48,"./v4":49}],45:[function(require,module,exports){
+},{"../core":3,"./presign":41,"./s3":43,"./v2":44,"./v3":45,"./v3https":46,"./v4":47}],43:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -38619,11 +38437,10 @@ AWS.Signers.S3 = inherit(AWS.Signers.RequestSigner, {
 
         querystring = [];
         AWS.util.arrayEach(resources, function (res) {
-          if (res.value === undefined) {
+          if (res.value === undefined)
             querystring.push(res.name);
-          } else {
+          else
             querystring.push(res.name + '=' + res.value);
-          }
         });
 
         resource += '?' + querystring.join('&');
@@ -38642,7 +38459,7 @@ AWS.Signers.S3 = inherit(AWS.Signers.RequestSigner, {
 
 module.exports = AWS.Signers.S3;
 
-},{"../core":3}],46:[function(require,module,exports){
+},{"../core":3}],44:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -38687,7 +38504,7 @@ AWS.Signers.V2 = inherit(AWS.Signers.RequestSigner, {
 
 module.exports = AWS.Signers.V2;
 
-},{"../core":3}],47:[function(require,module,exports){
+},{"../core":3}],45:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -38761,7 +38578,7 @@ AWS.Signers.V3 = inherit(AWS.Signers.RequestSigner, {
 
 module.exports = AWS.Signers.V3;
 
-},{"../core":3}],48:[function(require,module,exports){
+},{"../core":3}],46:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -38783,7 +38600,7 @@ AWS.Signers.V3Https = inherit(AWS.Signers.V3, {
 
 module.exports = AWS.Signers.V3Https;
 
-},{"../core":3,"./v3":47}],49:[function(require,module,exports){
+},{"../core":3,"./v3":45}],47:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -38838,9 +38655,6 @@ AWS.Signers.V4 = inherit(AWS.Signers.RequestSigner, {
 
     if (this.request.headers['Content-Type']) {
       qs['Content-Type'] = this.request.headers['Content-Type'];
-    }
-    if (this.request.headers['Content-MD5']) {
-      qs['Content-MD5'] = this.request.headers['Content-MD5'];
     }
 
     AWS.util.each.call(this, this.request.headers, function(key, value) {
@@ -38980,7 +38794,7 @@ AWS.Signers.V4 = inherit(AWS.Signers.RequestSigner, {
 
 module.exports = AWS.Signers.V4;
 
-},{"../core":3}],50:[function(require,module,exports){
+},{"../core":3}],48:[function(require,module,exports){
 function AcceptorStateMachine(states, state) {
   this.currentState = state || null;
   this.states = states || {};
@@ -39024,7 +38838,7 @@ AcceptorStateMachine.prototype.addState = function addState(name, acceptState, f
 
 module.exports = AcceptorStateMachine;
 
-},{}],51:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 (function (process){
 
 
@@ -39308,7 +39122,7 @@ var util = {
 
     iso8601: function iso8601(date) {
       if (date === undefined) { date = util.date.getDate(); }
-      return date.toISOString().replace(/\.\d{3}Z$/, 'Z');
+      return date.toISOString();
     },
 
 
@@ -39585,14 +39399,8 @@ var util = {
 
     if (typeof options === 'string') {
       err.message = options;
-    } else if (typeof options === 'object') {
+    } else {
       util.update(err, options);
-      if (options.message)
-        err.message = options.message;
-      if (options.code || options.name)
-        err.code = options.code || options.name;
-      if (options.stack)
-        err.stack = options.stack;
     }
 
     if (typeof Object.defineProperty === 'function') {
@@ -39600,7 +39408,7 @@ var util = {
       Object.defineProperty(err, 'message', {enumerable: true});
     }
 
-    err.name = options && options.name || err.name || err.code || 'Error';
+    err.name = err.name || err.code || 'Error';
     err.time = new Date();
 
     if (originalError) err.originalError = originalError;
@@ -39696,32 +39504,11 @@ var util = {
       var payloadMember = output.members[output.payload];
       var responsePayload = resp.data[output.payload];
       if (payloadMember.type === 'structure') {
-        util.each(responsePayload, function(key, value) {
-          util.property(resp.data, key, value, false);
+        AWS.util.each(responsePayload, function(key, value) {
+          AWS.util.property(resp.data, key, value, false);
         });
       }
     }
-  },
-
-
-  computeSha256: function computeSha256(body, done) {
-    if (util.isNode()) {
-      var Stream = util.nodeRequire('stream').Stream;
-      var fs = util.nodeRequire('fs');
-      if (body instanceof Stream) {
-        if (typeof body.path === 'string') { // assume file object
-          body = fs.createReadStream(body.path);
-        } else { // TODO support other stream types
-          return done(new Error('Non-file stream objects are ' +
-                                'not supported with SigV4'));
-        }
-      }
-    }
-
-    util.crypto.sha256(body, 'hex', function(err, sha) {
-      if (err) done(err);
-      else done(null, sha);
-    });
   }
 
 };
@@ -39729,7 +39516,7 @@ var util = {
 module.exports = util;
 
 }).call(this,require("FWaASH"))
-},{"./core":3,"FWaASH":65,"buffer":54,"crypto":58,"querystring":69,"url":70}],52:[function(require,module,exports){
+},{"./core":3,"FWaASH":63,"buffer":52,"crypto":56,"querystring":67,"url":68}],50:[function(require,module,exports){
 var util = require('../util');
 var Shape = require('../model/shape');
 
@@ -39895,17 +39682,17 @@ function parseUnknown(xml) {
 
 module.exports = DomXmlParser;
 
-},{"../model/shape":20,"../util":51}],53:[function(require,module,exports){
+},{"../model/shape":20,"../util":49}],51:[function(require,module,exports){
 var util = require('../util');
 var builder = require('xmlbuilder');
 
 function XmlBuilder() { }
 
-XmlBuilder.prototype.toXML = function(params, shape, rootElement, noEmpty) {
+XmlBuilder.prototype.toXML = function(params, shape, rootElement) {
   var xml = builder.create(rootElement);
   applyNamespaces(xml, shape);
   serialize(xml, params, shape);
-  return xml.children.length > 0 || noEmpty ? xml.root().toString() : '';
+  return xml.children.length === 0 ? '' : xml.root().toString();
 };
 
 function serialize(xml, value, shape) {
@@ -39983,7 +39770,7 @@ function applyNamespaces(xml, shape) {
 
 module.exports = XmlBuilder;
 
-},{"../util":51,"xmlbuilder":75}],54:[function(require,module,exports){
+},{"../util":49,"xmlbuilder":73}],52:[function(require,module,exports){
 
 
 var base64 = require('base64-js')
@@ -41028,7 +40815,7 @@ function assert (test, message) {
   if (!test) throw new Error(message || 'Failed assertion')
 }
 
-},{"base64-js":55,"ieee754":56}],55:[function(require,module,exports){
+},{"base64-js":53,"ieee754":54}],53:[function(require,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 ;(function (exports) {
@@ -41145,93 +40932,93 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-},{}],56:[function(require,module,exports){
-exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-  var e, m
-  var eLen = nBytes * 8 - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var nBits = -7
-  var i = isLE ? (nBytes - 1) : 0
-  var d = isLE ? -1 : 1
-  var s = buffer[offset + i]
+},{}],54:[function(require,module,exports){
+exports.read = function(buffer, offset, isLE, mLen, nBytes) {
+  var e, m,
+      eLen = nBytes * 8 - mLen - 1,
+      eMax = (1 << eLen) - 1,
+      eBias = eMax >> 1,
+      nBits = -7,
+      i = isLE ? (nBytes - 1) : 0,
+      d = isLE ? -1 : 1,
+      s = buffer[offset + i];
 
-  i += d
+  i += d;
 
-  e = s & ((1 << (-nBits)) - 1)
-  s >>= (-nBits)
-  nBits += eLen
-  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+  e = s & ((1 << (-nBits)) - 1);
+  s >>= (-nBits);
+  nBits += eLen;
+  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8);
 
-  m = e & ((1 << (-nBits)) - 1)
-  e >>= (-nBits)
-  nBits += mLen
-  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+  m = e & ((1 << (-nBits)) - 1);
+  e >>= (-nBits);
+  nBits += mLen;
+  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8);
 
   if (e === 0) {
-    e = 1 - eBias
+    e = 1 - eBias;
   } else if (e === eMax) {
-    return m ? NaN : ((s ? -1 : 1) * Infinity)
+    return m ? NaN : ((s ? -1 : 1) * Infinity);
   } else {
-    m = m + Math.pow(2, mLen)
-    e = e - eBias
+    m = m + Math.pow(2, mLen);
+    e = e - eBias;
   }
-  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
-}
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen);
+};
 
-exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c
-  var eLen = nBytes * 8 - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
-  var i = isLE ? 0 : (nBytes - 1)
-  var d = isLE ? 1 : -1
-  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
+  var e, m, c,
+      eLen = nBytes * 8 - mLen - 1,
+      eMax = (1 << eLen) - 1,
+      eBias = eMax >> 1,
+      rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0),
+      i = isLE ? 0 : (nBytes - 1),
+      d = isLE ? 1 : -1,
+      s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0;
 
-  value = Math.abs(value)
+  value = Math.abs(value);
 
   if (isNaN(value) || value === Infinity) {
-    m = isNaN(value) ? 1 : 0
-    e = eMax
+    m = isNaN(value) ? 1 : 0;
+    e = eMax;
   } else {
-    e = Math.floor(Math.log(value) / Math.LN2)
+    e = Math.floor(Math.log(value) / Math.LN2);
     if (value * (c = Math.pow(2, -e)) < 1) {
-      e--
-      c *= 2
+      e--;
+      c *= 2;
     }
     if (e + eBias >= 1) {
-      value += rt / c
+      value += rt / c;
     } else {
-      value += rt * Math.pow(2, 1 - eBias)
+      value += rt * Math.pow(2, 1 - eBias);
     }
     if (value * c >= 2) {
-      e++
-      c /= 2
+      e++;
+      c /= 2;
     }
 
     if (e + eBias >= eMax) {
-      m = 0
-      e = eMax
+      m = 0;
+      e = eMax;
     } else if (e + eBias >= 1) {
-      m = (value * c - 1) * Math.pow(2, mLen)
-      e = e + eBias
+      m = (value * c - 1) * Math.pow(2, mLen);
+      e = e + eBias;
     } else {
-      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
-      e = 0
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen);
+      e = 0;
     }
   }
 
-  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8);
 
-  e = (e << mLen) | m
-  eLen += mLen
-  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+  e = (e << mLen) | m;
+  eLen += mLen;
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8);
 
-  buffer[offset + i - d] |= s * 128
-}
+  buffer[offset + i - d] |= s * 128;
+};
 
-},{}],57:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 var Buffer = require('buffer').Buffer;
 var intSize = 4;
 var zeroBuffer = new Buffer(intSize); zeroBuffer.fill(0);
@@ -41268,7 +41055,7 @@ function hash(buf, fn, hashSize, bigEndian) {
 
 module.exports = { hash: hash };
 
-},{"buffer":54}],58:[function(require,module,exports){
+},{"buffer":52}],56:[function(require,module,exports){
 var Buffer = require('buffer').Buffer
 var sha = require('./sha')
 var sha256 = require('./sha256')
@@ -41366,7 +41153,7 @@ each(['createCredentials'
   }
 })
 
-},{"./md5":59,"./rng":60,"./sha":61,"./sha256":62,"buffer":54}],59:[function(require,module,exports){
+},{"./md5":57,"./rng":58,"./sha":59,"./sha256":60,"buffer":52}],57:[function(require,module,exports){
 
 
 var helpers = require('./helpers');
@@ -41513,7 +41300,7 @@ module.exports = function md5(buf) {
   return helpers.hash(buf, core_md5, 16);
 };
 
-},{"./helpers":57}],60:[function(require,module,exports){
+},{"./helpers":55}],58:[function(require,module,exports){
 (function() {
   var _global = this;
 
@@ -41543,7 +41330,7 @@ module.exports = function md5(buf) {
 
 }())
 
-},{}],61:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 
 
 var helpers = require('./helpers');
@@ -41627,7 +41414,7 @@ module.exports = function sha1(buf) {
   return helpers.hash(buf, core_sha1, 20, true);
 };
 
-},{"./helpers":57}],62:[function(require,module,exports){
+},{"./helpers":55}],60:[function(require,module,exports){
 
 
 
@@ -41702,7 +41489,7 @@ module.exports = function sha256(buf) {
   return helpers.hash(buf, core_sha256, 32, true);
 };
 
-},{"./helpers":57}],63:[function(require,module,exports){
+},{"./helpers":55}],61:[function(require,module,exports){
 
 function EventEmitter() {
   this._events = this._events || {};
@@ -41966,7 +41753,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],64:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   module.exports = function inherits(ctor, superCtor) {
     ctor.super_ = superCtor
@@ -41989,7 +41776,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],65:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 
 var process = module.exports = {};
 
@@ -42052,7 +41839,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],66:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 (function (global){
 
 ;(function(root) {
@@ -42425,7 +42212,7 @@ process.chdir = function (dir) {
 }(this));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],67:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 
 'use strict';
 
@@ -42487,7 +42274,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],68:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 
 'use strict';
 
@@ -42554,13 +42341,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],69:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":67,"./encode":68}],70:[function(require,module,exports){
+},{"./decode":65,"./encode":66}],68:[function(require,module,exports){
 
 var punycode = require('punycode');
 
@@ -43127,14 +42914,14 @@ function isNullOrUndefined(arg) {
   return  arg == null;
 }
 
-},{"punycode":66,"querystring":69}],71:[function(require,module,exports){
+},{"punycode":64,"querystring":67}],69:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],72:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 (function (process,global){
 
 var formatRegExp = /%[sdj%]/g;
@@ -43654,7 +43441,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require("FWaASH"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":71,"FWaASH":65,"inherits":64}],73:[function(require,module,exports){
+},{"./support/isBuffer":69,"FWaASH":63,"inherits":62}],71:[function(require,module,exports){
 (function() {
   var XMLBuilder, XMLFragment;
 
@@ -43774,7 +43561,7 @@ function hasOwnProperty(obj, prop) {
 
 }).call(this);
 
-},{"./XMLFragment":74}],74:[function(require,module,exports){
+},{"./XMLFragment":72}],72:[function(require,module,exports){
 (function() {
   var XMLFragment,
     __hasProp = {}.hasOwnProperty;
@@ -44197,7 +43984,7 @@ function hasOwnProperty(obj, prop) {
 
 }).call(this);
 
-},{}],75:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 (function() {
   var XMLBuilder;
 
@@ -44213,7 +44000,7 @@ function hasOwnProperty(obj, prop) {
 
 }).call(this);
 
-},{"./XMLBuilder":73}]},{},[1])
+},{"./XMLBuilder":71}]},{},[1])
 
 /**
  *  logglyLogger is a module which will send your log messages to a configured
@@ -44229,303 +44016,263 @@ function hasOwnProperty(obj, prop) {
 
   angular.module( 'logglyLogger.logger', [] )
     .provider( 'LogglyLogger', function() {
-      var self = this;
+        var self = this;
 
-      var logSuccessHandler;
-      var logFailureHandler;
+        var logSuccessHandler;
+        var logFailureHandler;
 
-      var logLevels = [ 'DEBUG', 'INFO', 'WARN', 'ERROR' ];
+        var logLevels = [ 'DEBUG', 'INFO', 'WARN', 'ERROR' ];
 
-      var https = true;
-      var extra = {};
-      var includeCurrentUrl = false;
-      var includeTimestamp = false;
-      var tag = null;
-      var sendConsoleErrors = false;
-      var logToConsole = true;
+        var https = true;
+        var extra = {};
+        var includeCurrentUrl = false;
+        var includeTimestamp = false;
+        var tag = 'angular';
+        var sendConsoleErrors = false;
+        var logToConsole = true;
 
-      // The minimum level of messages that should be sent to loggly.
-      var level = 0;
+        // The minimum level of messages that should be sent to loggly.
+        var level = 0;
 
-      var token = null;
-      var endpoint = '://logs-01.loggly.com/inputs/';
+        var token = null;
+        var endpoint = '://logs-01.loggly.com/inputs/';
 
         var buildUrl = function ( data ) {
           var msg = encodeURIComponent( angular.toJson( data ) );
-          return (https ? 'https' : 'http') + endpoint + token + (tag ? '/tag/'+ tag +'/': '') + '.gif?PLAINTEXT=' + msg;
+          return (https ? 'https' : 'http') + endpoint + token + '/tag/'+ tag + '/.gif?PLAINTEXT=' + msg;
         };
 
-      this.setExtra = function (d) {
-        extra = d;
-        return self;
-      };
-
-      this.fields = function ( d ) {
-        if( angular.isDefined( d ) ) {
+        this.setExtra = function (d) {
           extra = d;
           return self;
-        }
-
-        return extra;
-      };
-
-      this.inputToken = function ( s ) {
-        if (angular.isDefined(s)) {
-          token = s;
-          return self;
-        }
-
-        return token;
-      };
-
-      this.useHttps = function (flag) {
-        if (angular.isDefined(flag)) {
-          https = !!flag;
-          return self;
-        }
-
-        return https;
-      };
-
-      this.includeUrl = function (flag) {
-        if (angular.isDefined(flag)) {
-          includeCurrentUrl = !!flag;
-          return self;
-        }
-
-        return includeCurrentUrl;
-      };
-
-      this.includeTimestamp = function (flag) {
-        if (angular.isDefined(flag)) {
-          includeTimestamp = !!flag;
-          return self;
-        }
-
-        return includeTimestamp;
-      };
-
-      this.inputTag = function (usrTag){
-        if (angular.isDefined(usrTag)) {
-          tag = usrTag;
-          return self;
-        }
-
-        return tag;
-      };
-
-      this.sendConsoleErrors = function (flag){
-        if (angular.isDefined(flag)) {
-          sendConsoleErrors = !!flag;
-          return self;
-        }
-
-        return sendConsoleErrors;
-      };
-
-      this.level = function ( name ) {
-
-        if( angular.isDefined( name ) ) {
-          var newLevel = logLevels.indexOf( name.toUpperCase() );
-
-          if( newLevel < 0 ) {
-            throw "Invalid logging level specified: " + name;
-          } else {
-            level = newLevel;
-          }
-
-          return self;
-        }
-
-        return logLevels[level];
-      };
-
-      this.isLevelEnabled = function( name ) {
-        return logLevels.indexOf( name.toUpperCase() ) >= level;
-      };
-
-
-      this.logToConsole = function (flag) {
-        if (angular.isDefined(flag)) {
-          logToConsole = !!flag;
-          return self;
-        }
-
-        return logToConsole;
-      };
-
-      this.$get = [ '$injector', function ($injector) {
-
-        var lastLog = null;
-
-
-        /**
-         * Send the specified data to loggly as a json message.
-         * @param data
-         */
-        var sendMessage = function (data) {
-          //If a token is not configured, don't do anything.
-          if (!token) {
-            return;
-          }
-
-          //TODO we're injecting this here to resolve circular dependency issues.  Is this safe?
-          var $location = $injector.get( '$location' );
-
-          lastLog = new Date();
-
-          var sentData = angular.extend({}, extra, data);
-
-          if (includeCurrentUrl) {
-            sentData.url = $location.absUrl()
-          }
-
-          if( includeTimestamp ) {
-            sentData.timestamp = lastLog.toISOString();
-          }
-
-          //Loggly's API doesn't send us cross-domain headers, so we can't interact directly
-          new Image().src = buildUrl(sentData);
         };
 
-        var attach = function() {
+        this.inputToken = function ( s ) {
+          if (angular.isDefined(s)) {
+            token = s;
+            return self;
+          }
+
+          return token;
         };
 
-        return {
-          lastLog: function(){ return lastLog },
-          sendConsoleErrors: function(){ return sendConsoleErrors },
-          level : function() { return level },
-          isLevelEnabled : self.isLevelEnabled,
-          attach: attach,
-          sendMessage: sendMessage,
-          logToConsole: logToConsole,
+        this.useHttps = function (flag) {
+          if (angular.isDefined(flag)) {
+            https = !!flag;
+            return self;
+          }
+
+          return https;
+        };
+
+        this.includeUrl = function (flag) {
+          if (angular.isDefined(flag)) {
+            includeCurrentUrl = !!flag;
+            return self;
+          }
+
+          return includeCurrentUrl;
+        };
+
+        this.includeTimestamp = function (flag) {
+          if (angular.isDefined(flag)) {
+            includeTimestamp = !!flag;
+            return self;
+          }
+
+          return includeTimestamp;
+        };
+
+        this.inputTag = function (usrTag){
+          if (angular.isDefined(usrTag)) {
+            tag = usrTag;
+            return self;
+          }
+
+          return tag;
+        };
+
+        this.sendConsoleErrors = function (flag){
+          if (angular.isDefined(flag)) {
+            sendConsoleErrors = !!flag;
+            return self;
+          }
+
+          return sendConsoleErrors;
+        };
+
+        this.level = function ( name ) {
+
+          if( angular.isDefined( name ) ) {
+            var newLevel = logLevels.indexOf( name.toUpperCase() );
+
+            if( newLevel < 0 ) {
+                throw "Invalid logging level specified: " + name;
+            } else {
+                level = newLevel;
+            }
+
+            return self;
+          }
+
+          return logLevels[level];
+        };
+
+        this.isLevelEnabled = function( name ) {
+            return logLevels.indexOf( name.toUpperCase() ) >= level;
+        };
+
+
+        this.logToConsole = function (flag) {
+          if (angular.isDefined(flag)) {
+            logToConsole = !!flag;
+            return self;
+          }
+
+          return logToConsole;
+        };
+
+        this.$get = [ '$injector', function ($injector) {
+
+          var lastLog = null;
+
 
           /**
-           * Get or set the fields to be sent with all logged events.
-           * @param d
-           * @returns {*}
+           * Send the specified data to loggly as a json message.
+           * @param data
            */
-          fields: function( d ) {
-            if( angular.isDefined( d ) ) {
-              self.fields( d );
+          var sendMessage = function (data) {
+            //If a token is not configured, don't do anything.
+            if (!token) {
+              return;
             }
-            return self.fields();
+
+            //TODO we're injecting this here to resolve circular dependency issues.  Is this safe?
+            var $location = $injector.get( '$location' );
+
+            lastLog = new Date();
+
+            var sentData = angular.extend({}, extra, data);
+
+            if (includeCurrentUrl) {
+              sentData.url = $location.absUrl()
+            }
+
+            if( includeTimestamp ) {
+              sentData.timestamp = lastLog.toISOString();
+            }
+
+            //Loggly's API doesn't send us cross-domain headers, so we can't interact directly
+            new Image().src = buildUrl(sentData);
+          };
+
+          var attach = function() {
+          };
+
+          return {
+            lastLog: function(){ return lastLog },
+            sendConsoleErrors: function(){ return sendConsoleErrors },
+            level : function() { return level },
+            isLevelEnabled : self.isLevelEnabled,
+            attach: attach,
+            sendMessage: sendMessage,
+            logToConsole: logToConsole
           }
-        }
-      }];
+        }];
 
     } );
 
 
-  angular.module( 'logglyLogger', ['logglyLogger.logger'] )
-    .config( [ '$provide', function( $provide ) {
+    angular.module( 'logglyLogger', ['logglyLogger.logger'] )
+      .config( [ '$provide', function( $provide ) {
 
-      $provide.decorator('$log', [ "$delegate", '$injector', function ( $delegate, $injector ) {
+        $provide.decorator('$log', [ "$delegate", '$injector', function ( $delegate, $injector ) {
 
-        var logger = $injector.get('LogglyLogger');
 
-        // install a window error handler
-        if(logger.sendConsoleErrors() === true) {
-          var _onerror = window.onerror;
+          var wrapLogFunction = function(logFn, level, loggerName) {
 
-          //send console error messages to Loggly
-          window.onerror = function (msg, url, line, col) {
-            logger.sendMessage({
-              level : 'ERROR',
-              message: msg,
-              url: url,
-              line: line,
-              col: col
-            });
+            var logger = $injector.get('LogglyLogger');
 
-            if (_onerror && typeof _onerror === 'function') {
-              _onerror.apply(window, arguments);
-            }
-          };
-        }
+            var wrappedFn = function () {
+              var args = Array.prototype.slice.call(arguments);
 
-        var wrapLogFunction = function(logFn, level, loggerName) {
-
-          var wrappedFn = function () {
-            var args = Array.prototype.slice.call(arguments);
-
-            if(logger.logToConsole) {
-              logFn.apply(null, args);
-            }
-
-            // Skip messages that have a level that's lower than the configured level for this logger.
-            if( !logger.isLevelEnabled( level ) ) {
-              return;
-            }
-
-            var msg = (args.length == 1 ? args[0] : args) || {};
-            var sending = { level: level };
-
-            if(angular.isDefined(msg.stack) || (angular.isDefined(msg[0]) && angular.isDefined(msg[0].stack))) {
-              //handling console errors
-              if(logger.sendConsoleErrors() === true){
-                sending.message = msg.message || msg[0].message;
-                sending.stack = msg.stack || msg[0].stack;
+              if(logger.logToConsole) {
+                logFn.apply(null, args);
               }
-              else {
+
+              // Skip messages that have a level that's lower than the configured level for this logger.
+              if( !logger.isLevelEnabled( level ) ) {
                 return;
               }
-            }
-            else if(angular.isObject(msg)) {
-              //handling JSON objects
-              sending = angular.extend({}, msg, sending);
-            }
-            else{
-              //sending plain text
-              sending.message = msg;
-            }
 
-            if( loggerName ) {
-              sending.logger = msg
-            }
+              var msg = args.length == 1 ? args[0] : args;
+              var sending = { level: level };
 
-            //Send the message to through the loggly sender
-            logger.sendMessage( sending );
+              if(angular.isDefined(msg.stack)){
+                //handling console errors
+                if(logger.sendConsoleErrors() === true){
+                    sending.message = msg.message;
+                    sending.stack = msg.stack;
+                }
+                else{
+                  return;
+                }
+              }
+              else if(angular.isObject(msg)){
+                //handling JSON objects
+                sending = angular.extend({}, msg, sending);
+              }
+              else{
+                //sending plain text
+                sending.message = msg;
+              }
+
+              if( loggerName ) {
+                sending.logger = msg
+              }
+
+              //Send the message to through the loggly sender
+              logger.sendMessage( sending );
+            };
+
+            wrappedFn.logs = [];
+
+            return wrappedFn;
           };
 
-          wrappedFn.logs = [];
+          var _$log = (function ($delegate) {
+            return {
+              log: $delegate.log,
+              info: $delegate.info,
+              warn: $delegate.warn,
+              error: $delegate.error
+            };
+          })($delegate);
 
-          return wrappedFn;
-        };
-
-        var _$log = (function ($delegate) {
-          return {
-            log: $delegate.log,
-            info: $delegate.info,
-            warn: $delegate.warn,
-            error: $delegate.error
+          var getLogger = function ( name ) {
+            return {
+              log:    wrapLogFunction( _$log.log, 'INFO', name ),
+              debug:  wrapLogFunction( _$log.debug, 'DEBUG', name ),
+              info:   wrapLogFunction( _$log.info, 'INFO', name ),
+              warn:   wrapLogFunction( _$log.warn, 'WARN', name ),
+              error:  wrapLogFunction( _$log.error, 'ERROR', name )
+            }
           };
-        })($delegate);
 
-        var getLogger = function ( name ) {
-          return {
-            log:    wrapLogFunction( _$log.log, 'INFO', name ),
-            debug:  wrapLogFunction( _$log.debug, 'DEBUG', name ),
-            info:   wrapLogFunction( _$log.info, 'INFO', name ),
-            warn:   wrapLogFunction( _$log.warn, 'WARN', name ),
-            error:  wrapLogFunction( _$log.error, 'ERROR', name )
-          }
-        };
+          //wrap the existing API
+          $delegate.log =    wrapLogFunction($delegate.log, 'INFO');
+          $delegate.debug =  wrapLogFunction($delegate.debug, 'DEBUG');
+          $delegate.info =   wrapLogFunction($delegate.info, 'INFO');
+          $delegate.warn =   wrapLogFunction($delegate.warn, 'WARN');
+          $delegate.error =  wrapLogFunction($delegate.error, 'ERROR');
 
-        //wrap the existing API
-        $delegate.log =    wrapLogFunction($delegate.log, 'INFO');
-        $delegate.debug =  wrapLogFunction($delegate.debug, 'DEBUG');
-        $delegate.info =   wrapLogFunction($delegate.info, 'INFO');
-        $delegate.warn =   wrapLogFunction($delegate.warn, 'WARN');
-        $delegate.error =  wrapLogFunction($delegate.error, 'ERROR');
+          //Add some methods
+          $delegate.getLogger = getLogger;
 
-        //Add some methods
-        $delegate.getLogger = getLogger;
+          return $delegate;
+        }]);
 
-        return $delegate;
       }]);
-
-    }]);
 
 
 
@@ -44662,7 +44409,6 @@ function hasOwnProperty(obj, prop) {
             WINDOWS_8: "windows-8",
             WINDOWS_10: "windows-10",
             WINDOWS_PHONE_7_5: "windows-phone-7-5",
-            WINDOWS_PHONE_8_1: "windows-phone-8-1",
             WINDOWS_PHONE_10: "windows-phone-10",
             WINDOWS_NT_4_0: "windows-nt-4-0",
             UNKNOWN: "unknown"
@@ -44689,8 +44435,8 @@ function hasOwnProperty(obj, prop) {
 
                 var OS_RE = {
                     WINDOWS: {and: [{or: [/\bWindows|(Win\d\d)\b/, /\bWin 9x\b/]}, {not: /\bWindows Phone\b/}]},
-                    MAC: {and:[/\bMac OS\b/,{not:/Windows Phone/}]},
-                    IOS: {and: [{or: [/\biPad\b/, /\biPhone\b/, /\biPod\b/]}, {not: /Windows Phone/}]},
+                    MAC: /\bMac OS\b/,
+                    IOS: {or: [/\biPad\b/, /\biPhone\b/, /\biPod\b/]},
                     ANDROID: {and:[/\bAndroid\b/,{not:/Windows Phone/}]},
                     LINUX: /\bLinux\b/,
                     UNIX: /\bUNIX\b/,
@@ -44704,7 +44450,7 @@ function hasOwnProperty(obj, prop) {
                 var BROWSERS_RE = {
                     CHROME: {and:[{or: [/\bChrome\b/, /\bCriOS\b/]},{not:{or:[/\bOPR\b/,/\bEdge\b/]}}]},
                     FIREFOX: /\bFirefox\b/,
-                    SAFARI: {and:[/^((?!CriOS).)*\Safari\b.*$/,{not:{or:[/\bOPR\b/,/\bEdge\b/,/Windows Phone/]}}]},
+                    SAFARI: {and:[/^((?!CriOS).)*\Safari\b.*$/,{not:{or:[/\bOPR\b/,/\bEdge\b/]}}]},
                     OPERA: {or:[/Opera\b/,/\bOPR\b/]},
                     IE: {or: [/\bMSIE\b/, /\bTrident\b/]},
                     MS_EDGE: {or: [/\bEdge\b/]},
@@ -44715,7 +44461,7 @@ function hasOwnProperty(obj, prop) {
                 var DEVICES_RE = {
                     ANDROID: {and:[/\bAndroid\b/,{not:/Windows Phone/}]},
                     I_PAD: /\biPad\b/,
-                    IPHONE: {and: [/\biPhone\b/, {not:/Windows Phone/}]},
+                    IPHONE: /\biPhone\b/,
                     I_POD: /\biPod\b/,
                     BLACKBERRY: /\bblackberry\b/,
                     FIREFOX_OS: {and: [/\bFirefox\b/, /\bMobile\b/]},
@@ -44740,7 +44486,6 @@ function hasOwnProperty(obj, prop) {
                     WINDOWS_8: /(Windows 8|Windows NT 6.2)/,
                     WINDOWS_10: /(Windows NT 10.0)/,
                     WINDOWS_PHONE_7_5: /(Windows Phone OS 7.5)/,
-                    WINDOWS_PHONE_8_1: /(Windows Phone 8.1)/,
                     WINDOWS_PHONE_10: /(Windows Phone 10)/,
                     WINDOWS_NT_4_0: {and:[/(Windows NT 4.0|WinNT4.0|WinNT|Windows NT)/,{not:/Windows NT 10.0/}]}
                 };
@@ -44849,7 +44594,6 @@ function hasOwnProperty(obj, prop) {
                     OS_VERSIONS.WINDOWS_8,
                     OS_VERSIONS.WINDOWS_10,
                     OS_VERSIONS.WINDOWS_PHONE_7_5,
-                    OS_VERSIONS.WINDOWS_PHONE_8_1,
                     OS_VERSIONS.WINDOWS_PHONE_10,
                     OS_VERSIONS.WINDOWS_NT_4_0
                 ].reduce(function (previousValue, currentValue) {
@@ -47116,7 +46860,7 @@ $templateCache.put("selectize/select.tpl.html","<div class=\"ui-select-container
  * angular-ui-bootstrap
  * http://angular-ui.github.io/bootstrap/
 
- * Version: 0.13.2 - 2015-08-02
+ * Version: 0.13.3 - 2015-08-09
  * License: MIT
  */
 angular.module("ui.bootstrap", ["ui.bootstrap.tpls", "ui.bootstrap.collapse","ui.bootstrap.accordion","ui.bootstrap.alert","ui.bootstrap.bindHtml","ui.bootstrap.buttons","ui.bootstrap.carousel","ui.bootstrap.dateparser","ui.bootstrap.position","ui.bootstrap.datepicker","ui.bootstrap.dropdown","ui.bootstrap.modal","ui.bootstrap.pagination","ui.bootstrap.tooltip","ui.bootstrap.popover","ui.bootstrap.progressbar","ui.bootstrap.rating","ui.bootstrap.tabs","ui.bootstrap.timepicker","ui.bootstrap.transition","ui.bootstrap.typeahead"]);
@@ -47229,11 +46973,14 @@ angular.module('ui.bootstrap.accordion', ['ui.bootstrap.collapse'])
 // and adds an accordion CSS class to itself element.
 .directive('accordion', function () {
   return {
-    restrict:'EA',
-    controller:'AccordionController',
+    restrict: 'EA',
+    controller: 'AccordionController',
+    controllerAs: 'accordion',
     transclude: true,
     replace: false,
-    templateUrl: 'template/accordion/accordion.html'
+    templateUrl: function(element, attrs) {
+      return attrs.templateUrl || 'template/accordion/accordion.html';
+    }
   };
 })
 
@@ -47244,7 +46991,9 @@ angular.module('ui.bootstrap.accordion', ['ui.bootstrap.collapse'])
     restrict:'EA',
     transclude:true,              // It transcludes the contents of the directive into the template
     replace: true,                // The element containing the directive will be replaced with the template
-    templateUrl:'template/accordion/accordion-group.html',
+    templateUrl: function(element, attrs) {
+      return attrs.templateUrl || 'template/accordion/accordion-group.html';
+    },
     scope: {
       heading: '@',               // Interpolate the heading attribute onto this scope
       isOpen: '=?',
@@ -47324,11 +47073,14 @@ angular.module('ui.bootstrap.alert', [])
 
 .directive('alert', function () {
   return {
-    restrict:'EA',
-    controller:'AlertController',
-    templateUrl:'template/alert/alert.html',
-    transclude:true,
-    replace:true,
+    restrict: 'EA',
+    controller: 'AlertController',
+    controllerAs: 'alert',
+    templateUrl: function(element, attrs) {
+      return attrs.templateUrl || 'template/alert/alert.html';
+    },
+    transclude: true,
+    replace: true,
     scope: {
       type: '@',
       close: '&'
@@ -47378,6 +47130,7 @@ angular.module('ui.bootstrap.buttons', [])
   return {
     require: ['btnRadio', 'ngModel'],
     controller: 'ButtonsController',
+    controllerAs: 'buttons',
     link: function (scope, element, attrs, ctrls) {
       var buttonsCtrl = ctrls[0], ngModelCtrl = ctrls[1];
 
@@ -47388,7 +47141,7 @@ angular.module('ui.bootstrap.buttons', [])
 
       //ui->model
       element.bind(buttonsCtrl.toggleEvent, function () {
-        if ('disabled' in attrs) {
+        if (attrs.disabled) {
           return;
         }
 
@@ -47409,6 +47162,7 @@ angular.module('ui.bootstrap.buttons', [])
   return {
     require: ['btnCheckbox', 'ngModel'],
     controller: 'ButtonsController',
+    controllerAs: 'button',
     link: function (scope, element, attrs, ctrls) {
       var buttonsCtrl = ctrls[0], ngModelCtrl = ctrls[1];
 
@@ -47432,7 +47186,7 @@ angular.module('ui.bootstrap.buttons', [])
 
       //ui->model
       element.bind(buttonsCtrl.toggleEvent, function () {
-        if ('disabled' in attrs) {
+        if (attrs.disabled) {
           return;
         }
 
@@ -47454,10 +47208,10 @@ angular.module('ui.bootstrap.buttons', [])
 *
 */
 angular.module('ui.bootstrap.carousel', [])
-.constant('ANIMATE_CSS', angular.version.minor >= 4)
-.controller('CarouselController', ['$scope', '$element', '$interval', '$animate', 'ANIMATE_CSS', function ($scope, $element, $interval, $animate, ANIMATE_CSS) {
+.controller('CarouselController', ['$scope', '$element', '$interval', '$animate', function ($scope, $element, $interval, $animate) {
   var self = this,
     slides = self.slides = $scope.slides = [],
+    NEW_ANIMATE = angular.version.minor >= 4,
     NO_TRANSITION = 'uib-noTransition',
     SLIDE_DIRECTION = 'uib-slideDirection',
     currentIndex = -1,
@@ -47467,7 +47221,7 @@ angular.module('ui.bootstrap.carousel', [])
   var destroyed = false;
   /* direction: "prev" or "next" */
   self.select = $scope.select = function(nextSlide, direction) {
-    var nextIndex = self.indexOfSlide(nextSlide);
+    var nextIndex = $scope.indexOfSlide(nextSlide);
     //Decide direction if it's not given
     if (direction === undefined) {
       direction = nextIndex > self.getCurrentIndex() ? 'next' : 'prev';
@@ -47485,13 +47239,17 @@ angular.module('ui.bootstrap.carousel', [])
     angular.extend(slide, {direction: direction, active: true});
     angular.extend(self.currentSlide || {}, {direction: direction, active: false});
     if ($animate.enabled() && !$scope.noTransition && !$scope.$currentTransition &&
-      slide.$element) {
+      slide.$element && self.slides.length > 1) {
       slide.$element.data(SLIDE_DIRECTION, slide.direction);
+      if (self.currentSlide && self.currentSlide.$element) {
+        self.currentSlide.$element.data(SLIDE_DIRECTION, slide.direction);
+      }
+
       $scope.$currentTransition = true;
-      if (ANIMATE_CSS) {
+      if (NEW_ANIMATE) {
         $animate.on('addClass', slide.$element, function (element, phase) {
-          $scope.$currentTransition = null;
-          if (!$scope.$currentTransition) {
+          if (phase === 'close') {
+            $scope.$currentTransition = null;
             $animate.off('addClass', element);
           }
         });
@@ -47533,7 +47291,7 @@ angular.module('ui.bootstrap.carousel', [])
   };
 
   /* Allow outside people to call indexOf on slides array */
-  self.indexOfSlide = function(slide) {
+  $scope.indexOfSlide = function(slide) {
     return angular.isDefined(slide.index) ? +slide.index : slides.indexOf(slide);
   };
 
@@ -47604,12 +47362,6 @@ angular.module('ui.bootstrap.carousel', [])
   };
 
   self.addSlide = function(slide, element) {
-    // add default direction for initial transition
-    // necessary for angular 1.4+
-    if (!slides.length && element) {
-      element.data(SLIDE_DIRECTION, 'next');
-    }
-
     slide.$element = element;
     slides.push(slide);
     //if this is the first slide or the slide is set to active, select it
@@ -47698,8 +47450,11 @@ angular.module('ui.bootstrap.carousel', [])
     transclude: true,
     replace: true,
     controller: 'CarouselController',
+    controllerAs: 'carousel',
     require: 'carousel',
-    templateUrl: 'template/carousel/carousel.html',
+    templateUrl: function(element, attrs) {
+      return attrs.templateUrl || 'template/carousel/carousel.html';
+    },
     scope: {
       interval: '=',
       noTransition: '=',
@@ -47757,7 +47512,9 @@ function CarouselDemoCtrl($scope) {
     restrict: 'EA',
     transclude: true,
     replace: true,
-    templateUrl: 'template/carousel/slide.html',
+    templateUrl: function(element, attrs) {
+      return attrs.templateUrl || 'template/carousel/slide.html';
+    },
     scope: {
       active: '=?',
       index: '=?'
@@ -47779,11 +47536,15 @@ function CarouselDemoCtrl($scope) {
 })
 
 .animation('.item', [
-         '$injector', '$animate', 'ANIMATE_CSS',
-function ($injector, $animate, ANIMATE_CSS) {
+         '$injector', '$animate',
+function ($injector, $animate) {
   var NO_TRANSITION = 'uib-noTransition',
     SLIDE_DIRECTION = 'uib-slideDirection',
-    $animateCss = ANIMATE_CSS ? $injector.get('$animateCss') : null;
+    $animateCss = null;
+
+  if ($injector.has('$animateCss')) {
+    $animateCss = $injector.get('$animateCss');
+  }
 
   function removeClass(element, className, callback) {
     element.removeClass(className);
@@ -47912,6 +47673,10 @@ angular.module('ui.bootstrap.dateparser', [])
       regex: '(?:0|1)[0-9]|2[0-3]',
       apply: function(value) { this.hours = +value; }
     },
+    'hh': {
+      regex: '0[0-9]|1[0-2]',
+      apply: function(value) { this.hours = +value; }
+    },
     'H': {
       regex: '1?[0-9]|2[0-3]',
       apply: function(value) { this.hours = +value; }
@@ -47935,6 +47700,18 @@ angular.module('ui.bootstrap.dateparser', [])
     's': {
       regex: '[0-9]|[1-5][0-9]',
       apply: function(value) { this.seconds = +value; }
+    },
+    'a': {
+      regex: $locale.DATETIME_FORMATS.AMPMS.join('|'),
+      apply: function(value) {
+        if (this.hours === 12) {
+          this.hours = 0;
+        }
+
+        if (value === 'PM') {
+          this.hours += 12;
+        }
+      }
     }
   };
 
@@ -48191,6 +47968,8 @@ angular.module('ui.bootstrap.position', [])
 
 angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootstrap.position'])
 
+.value('$datepickerSuppressError', false)
+
 .constant('datepickerConfig', {
   formatDay: 'dd',
   formatMonth: 'MMMM',
@@ -48209,7 +47988,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
   shortcutPropagation: false
 })
 
-.controller('DatepickerController', ['$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'datepickerConfig', function($scope, $attrs, $parse, $interpolate, $log, dateFilter, datepickerConfig) {
+.controller('DatepickerController', ['$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'datepickerConfig', '$datepickerSuppressError', function($scope, $attrs, $parse, $interpolate, $log, dateFilter, datepickerConfig, $datepickerSuppressError) {
   var self = this,
       ngModelCtrl = { $setViewValue: angular.noop }; // nullModelCtrl;
 
@@ -48218,8 +47997,8 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
 
   // Configuration attributes
   angular.forEach(['formatDay', 'formatMonth', 'formatYear', 'formatDayHeader', 'formatDayTitle', 'formatMonthTitle',
-                   'minMode', 'maxMode', 'showWeeks', 'startingDay', 'yearRange', 'shortcutPropagation'], function( key, index ) {
-    self[key] = angular.isDefined($attrs[key]) ? (index < 8 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : datepickerConfig[key];
+                   'showWeeks', 'startingDay', 'yearRange', 'shortcutPropagation'], function( key, index ) {
+    self[key] = angular.isDefined($attrs[key]) ? (index < 6 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : datepickerConfig[key];
   });
 
   // Watchable date attributes
@@ -48234,8 +48013,22 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
     }
   });
 
+  angular.forEach(['minMode', 'maxMode'], function( key ) {
+    if ( $attrs[key] ) {
+      $scope.$parent.$watch($parse($attrs[key]), function(value) {
+        self[key] = angular.isDefined(value) ? value : $attrs[key];
+        $scope[key] = self[key];
+        if ((key == 'minMode' && self.modes.indexOf( $scope.datepickerMode ) < self.modes.indexOf( self[key] )) || (key == 'maxMode' && self.modes.indexOf( $scope.datepickerMode ) > self.modes.indexOf( self[key] ))) {
+          $scope.datepickerMode = self[key];
+        }
+      });
+    } else {
+      self[key] = datepickerConfig[key] || null;
+      $scope[key] = self[key];
+    }
+  });
+
   $scope.datepickerMode = $scope.datepickerMode || datepickerConfig.datepickerMode;
-  $scope.maxMode = self.maxMode;
   $scope.uniqueId = 'datepicker-' + $scope.$id + '-' + Math.floor(Math.random() * 10000);
 
   if(angular.isDefined($attrs.initDate)) {
@@ -48273,7 +48066,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
 
       if ( isValid ) {
         this.activeDate = date;
-      } else {
+      } else if ( !$datepickerSuppressError ) {
         $log.error('Datepicker directive: "ng-model" value must be a Date object, a number of milliseconds since 01.01.1970 or a string representing an RFC2822 or ISO 8601 date.');
       }
     }
@@ -48285,7 +48078,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
       this._refreshView();
 
       var date = ngModelCtrl.$viewValue ? new Date(ngModelCtrl.$viewValue) : null;
-      ngModelCtrl.$setValidity('date-disabled', !date || (this.element && !this.isDisabled(date)));
+      ngModelCtrl.$setValidity('dateDisabled', !date || (this.element && !this.isDisabled(date)));
     }
   };
 
@@ -48305,9 +48098,9 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
     return ((this.minDate && this.compare(date, this.minDate) < 0) || (this.maxDate && this.compare(date, this.maxDate) > 0) || ($attrs.dateDisabled && $scope.dateDisabled({date: date, mode: $scope.datepickerMode})));
   };
 
-    this.customClass = function( date ) {
-      return $scope.customClass({date: date, mode: $scope.datepickerMode});
-    };
+  this.customClass = function( date ) {
+    return $scope.customClass({date: date, mode: $scope.datepickerMode});
+  };
 
   // Split array into smaller arrays
   this.split = function(arr, size) {
@@ -48400,21 +48193,22 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
   return {
     restrict: 'EA',
     replace: true,
-    templateUrl: 'template/datepicker/datepicker.html',
+    templateUrl: function(element, attrs) {
+      return attrs.templateUrl || 'template/datepicker/datepicker.html';
+    },
     scope: {
       datepickerMode: '=?',
       dateDisabled: '&',
       customClass: '&',
       shortcutPropagation: '&?'
     },
-    require: ['datepicker', '?^ngModel'],
+    require: ['datepicker', '^ngModel'],
     controller: 'DatepickerController',
+    controllerAs: 'datepicker',
     link: function(scope, element, attrs, ctrls) {
       var datepickerCtrl = ctrls[0], ngModelCtrl = ctrls[1];
 
-      if ( ngModelCtrl ) {
-        datepickerCtrl.init( ngModelCtrl );
-      }
+      datepickerCtrl.init(ngModelCtrl);
     }
   };
 })
@@ -48652,6 +48446,8 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
 
 .constant('datepickerPopupConfig', {
   datepickerPopup: 'yyyy-MM-dd',
+  datepickerPopupTemplateUrl: 'template/datepicker/popup.html',
+  datepickerTemplateUrl: 'template/datepicker/datepicker.html',
   html5Types: {
     date: 'yyyy-MM-dd',
     'datetime-local': 'yyyy-MM-ddTHH:mm:ss.sss',
@@ -48662,11 +48458,12 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
   closeText: 'Done',
   closeOnDateSelection: true,
   appendToBody: false,
-  showButtonBar: true
+  showButtonBar: true,
+  onOpenFocus: true
 })
 
-.directive('datepickerPopup', ['$compile', '$parse', '$document', '$position', 'dateFilter', 'dateParser', 'datepickerPopupConfig', '$timeout',
-function ($compile, $parse, $document, $position, dateFilter, dateParser, datepickerPopupConfig, $timeout) {
+.directive('datepickerPopup', ['$compile', '$parse', '$document', '$rootScope', '$position', 'dateFilter', 'dateParser', 'datepickerPopupConfig', '$timeout',
+function ($compile, $parse, $document, $rootScope, $position, dateFilter, dateParser, datepickerPopupConfig, $timeout) {
   return {
     restrict: 'EA',
     require: 'ngModel',
@@ -48681,7 +48478,10 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
     link: function(scope, element, attrs, ngModel) {
       var dateFormat,
           closeOnDateSelection = angular.isDefined(attrs.closeOnDateSelection) ? scope.$parent.$eval(attrs.closeOnDateSelection) : datepickerPopupConfig.closeOnDateSelection,
-          appendToBody = angular.isDefined(attrs.datepickerAppendToBody) ? scope.$parent.$eval(attrs.datepickerAppendToBody) : datepickerPopupConfig.appendToBody;
+          appendToBody = angular.isDefined(attrs.datepickerAppendToBody) ? scope.$parent.$eval(attrs.datepickerAppendToBody) : datepickerPopupConfig.appendToBody,
+          onOpenFocus = angular.isDefined(attrs.onOpenFocus) ? scope.$parent.$eval(attrs.onOpenFocus) : datepickerPopupConfig.onOpenFocus,
+          datepickerPopupTemplateUrl = angular.isDefined(attrs.datepickerPopupTemplateUrl) ? attrs.datepickerPopupTemplateUrl : datepickerPopupConfig.datepickerPopupTemplateUrl,
+          datepickerTemplateUrl = angular.isDefined(attrs.datepickerTemplateUrl) ? attrs.datepickerTemplateUrl : datepickerPopupConfig.datepickerTemplateUrl;
 
       scope.showButtonBar = angular.isDefined(attrs.showButtonBar) ? scope.$parent.$eval(attrs.showButtonBar) : datepickerPopupConfig.showButtonBar;
 
@@ -48722,7 +48522,8 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
       var popupEl = angular.element('<div datepicker-popup-wrap><div datepicker></div></div>');
       popupEl.attr({
         'ng-model': 'date',
-        'ng-change': 'dateSelection(date)'
+        'ng-change': 'dateSelection(date)',
+        'template-url': datepickerPopupTemplateUrl
       });
 
       function cameltoDash( string ){
@@ -48731,6 +48532,8 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
 
       // datepicker element
       var datepickerEl = angular.element(popupEl.children()[0]);
+      datepickerEl.attr('template-url', datepickerTemplateUrl);
+
       if (isHtml5DateInput) {
         if (attrs.type == 'month') {
           datepickerEl.attr('datepicker-mode', '"month"');
@@ -48751,7 +48554,7 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
       }
 
       scope.watchData = {};
-      angular.forEach(['minDate', 'maxDate', 'datepickerMode', 'initDate', 'shortcutPropagation'], function( key ) {
+      angular.forEach(['minMode', 'maxMode', 'minDate', 'maxDate', 'datepickerMode', 'initDate', 'shortcutPropagation'], function( key ) {
         if ( attrs[key] ) {
           var getAttribute = $parse(attrs[key]);
           scope.$parent.$watch(getAttribute, function(value){
@@ -48902,7 +48705,9 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
           scope.position.top = scope.position.top + element.prop('offsetHeight');
 
           $timeout(function() {
-            scope.$broadcast('datepicker.focus');
+            if (onOpenFocus) {
+              scope.$broadcast('datepicker.focus');
+            }
             $document.bind('click', documentClickBind);
           }, 0, false);
         } else {
@@ -48940,9 +48745,11 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
 
       scope.$on('$destroy', function() {
         if (scope.isOpen === true) {
-          scope.$apply(function() {
-            scope.isOpen = false;
-          });
+          if (!$rootScope.$$phase) {
+            scope.$apply(function() {
+              scope.isOpen = false;
+            });
+          }
         }
 
         $popup.remove();
@@ -48958,7 +48765,9 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
     restrict:'EA',
     replace: true,
     transclude: true,
-    templateUrl: 'template/datepicker/popup.html'
+    templateUrl: function(element, attrs) {
+      return attrs.templateUrl || 'template/datepicker/popup.html';
+    }
   };
 });
 
@@ -49242,9 +49051,9 @@ angular.module('ui.bootstrap.dropdown', ['ui.bootstrap.position'])
           e.preventDefault();
           e.stopPropagation();
 
-          var elems = angular.element(element).find('a');
+          var elems = dropdownCtrl.dropdownMenu.find('a');
 
-          switch (e.keyCode) {
+          switch (e.which) {
             case (40): { // Down
               if ( !angular.isNumber(dropdownCtrl.selectedOption)) {
                 dropdownCtrl.selectedOption = 0;
@@ -49364,8 +49173,14 @@ angular.module('ui.bootstrap.modal', [])
  * A helper directive for the $modal service. It creates a backdrop element.
  */
   .directive('modalBackdrop', [
-           '$animate', '$modalStack',
-  function ($animate ,  $modalStack) {
+           '$animate', '$injector', '$modalStack',
+  function ($animate ,  $injector,   $modalStack) {
+    var $animateCss = null;
+
+    if ($injector.has('$animateCss')) {
+      $animateCss = $injector.get('$animateCss');
+    }
+
     return {
       restrict: 'EA',
       replace: true,
@@ -49378,19 +49193,37 @@ angular.module('ui.bootstrap.modal', [])
 
     function linkFn(scope, element, attrs) {
       if (attrs.modalInClass) {
-        $animate.addClass(element, attrs.modalInClass);
+        if ($animateCss) {
+          $animateCss(element, {
+            addClass: attrs.modalInClass
+          }).start();
+        } else {
+          $animate.addClass(element, attrs.modalInClass);
+        }
 
         scope.$on($modalStack.NOW_CLOSING_EVENT, function (e, setIsAsync) {
           var done = setIsAsync();
-          $animate.removeClass(element, attrs.modalInClass).then(done);
+          if ($animateCss) {
+            $animateCss(element, {
+              removeClass: attrs.modalInClass
+            }).start().then(done);
+          } else {
+            $animate.removeClass(element, attrs.modalInClass).then(done);
+          }
         });
       }
     }
   }])
 
   .directive('modalWindow', [
-           '$modalStack', '$q', '$animate',
-  function ($modalStack ,  $q ,  $animate) {
+           '$modalStack', '$q', '$animate', '$injector',
+  function ($modalStack ,  $q ,  $animate,   $injector) {
+    var $animateCss = null;
+
+    if ($injector.has('$animateCss')) {
+      $animateCss = $injector.get('$animateCss');
+    }
+
     return {
       restrict: 'EA',
       scope: {
@@ -49431,11 +49264,23 @@ angular.module('ui.bootstrap.modal', [])
 
         modalRenderDeferObj.promise.then(function () {
           if (attrs.modalInClass) {
-            $animate.addClass(element, attrs.modalInClass);
+            if ($animateCss) {
+              $animateCss(element, {
+                addClass: attrs.modalInClass
+              }).start();
+            } else {
+              $animate.addClass(element, attrs.modalInClass);
+            }
 
             scope.$on($modalStack.NOW_CLOSING_EVENT, function (e, setIsAsync) {
               var done = setIsAsync();
-              $animate.removeClass(element, attrs.modalInClass).then(done);
+              if ($animateCss) {
+                $animateCss(element, {
+                  removeClass: attrs.modalInClass
+                }).start().then(done);
+              } else {
+                $animate.removeClass(element, attrs.modalInClass).then(done);
+              }
             });
           }
 
@@ -49489,10 +49334,17 @@ angular.module('ui.bootstrap.modal', [])
   .factory('$modalStack', [
              '$animate', '$timeout', '$document', '$compile', '$rootScope',
              '$q',
+             '$injector',
              '$$stackedMap',
     function ($animate ,  $timeout ,  $document ,  $compile ,  $rootScope ,
               $q,
+              $injector,
               $$stackedMap) {
+      var $animateCss = null;
+
+      if ($injector.has('$animateCss')) {
+        $animateCss = $injector.get('$animateCss');
+      }
 
       var OPENED_MODAL_CLASS = 'modal-open';
 
@@ -49535,7 +49387,7 @@ angular.module('ui.bootstrap.modal', [])
         openedWindows.remove(modalInstance);
 
         removeAfterAnimate(modalWindow.modalDomEl, modalWindow.modalScope, function() {
-          body.toggleClass(OPENED_MODAL_CLASS, openedWindows.length() > 0);
+          body.toggleClass(modalInstance.openedClass || OPENED_MODAL_CLASS, openedWindows.length() > 0);
         });
         checkRemoveBackdrop();
 
@@ -49585,7 +49437,15 @@ angular.module('ui.bootstrap.modal', [])
           }
           afterAnimating.done = true;
 
-          $animate.leave(domEl);
+          if ($animateCss) {
+            $animateCss(domEl, {
+              event: 'leave'
+            }).start().then(function() {
+              domEl.remove();
+            });
+          } else {
+            $animate.leave(domEl);
+          }
           scope.$destroy();
           if (done) {
             done();
@@ -49594,6 +49454,10 @@ angular.module('ui.bootstrap.modal', [])
       }
 
       $document.bind('keydown', function (evt) {
+        if (evt.isDefaultPrevented()) {
+          return evt;
+        }
+
         var modal = openedWindows.top();
         if (modal && modal.value.keyboard) {
           switch (evt.which){
@@ -49636,7 +49500,8 @@ angular.module('ui.bootstrap.modal', [])
           renderDeferred: modal.renderDeferred,
           modalScope: modal.scope,
           backdrop: modal.backdrop,
-          keyboard: modal.keyboard
+          keyboard: modal.keyboard,
+          openedClass: modal.openedClass
         });
 
         var body = $document.find('body').eq(0),
@@ -49670,7 +49535,7 @@ angular.module('ui.bootstrap.modal', [])
         openedWindows.top().value.modalDomEl = modalDomEl;
         openedWindows.top().value.modalOpener = modalOpener;
         body.append(modalDomEl);
-        body.addClass(OPENED_MODAL_CLASS);
+        body.addClass(modal.openedClass || OPENED_MODAL_CLASS);
         $modalStack.clearFocusListCache();
       };
 
@@ -49681,6 +49546,7 @@ angular.module('ui.bootstrap.modal', [])
       $modalStack.close = function (modalInstance, result) {
         var modalWindow = openedWindows.get(modalInstance);
         if (modalWindow && broadcastClosing(modalWindow, result, true)) {
+          modalWindow.value.modalScope.$$uibDestructionScheduled = true;
           modalWindow.value.deferred.resolve(result);
           removeModalWindow(modalInstance, modalWindow.value.modalOpener);
           return true;
@@ -49691,6 +49557,7 @@ angular.module('ui.bootstrap.modal', [])
       $modalStack.dismiss = function (modalInstance, reason) {
         var modalWindow = openedWindows.get(modalInstance);
         if (modalWindow && broadcastClosing(modalWindow, reason, false)) {
+          modalWindow.value.modalScope.$$uibDestructionScheduled = true;
           modalWindow.value.deferred.reject(reason);
           removeModalWindow(modalInstance, modalWindow.value.modalOpener);
           return true;
@@ -49787,6 +49654,8 @@ angular.module('ui.bootstrap.modal', [])
             angular.forEach(resolves, function (value) {
               if (angular.isFunction(value) || angular.isArray(value)) {
                 promisesArr.push($q.when($injector.invoke(value)));
+              } else if (angular.isString(value)) {
+                promisesArr.push($q.when($injector.get(value)));
               }
             });
             return promisesArr;
@@ -49830,6 +49699,12 @@ angular.module('ui.bootstrap.modal', [])
               modalScope.$close = modalInstance.close;
               modalScope.$dismiss = modalInstance.dismiss;
 
+              modalScope.$on('$destroy', function() {
+                if (!modalScope.$$uibDestructionScheduled) {
+                  modalScope.$dismiss('$uibUnscheduledDestruction');
+                }
+              });
+
               var ctrlInstance, ctrlLocals = {};
               var resolveIter = 1;
 
@@ -49862,7 +49737,8 @@ angular.module('ui.bootstrap.modal', [])
                 backdropClass: modalOptions.backdropClass,
                 windowClass: modalOptions.windowClass,
                 windowTemplateUrl: modalOptions.windowTemplateUrl,
-                size: modalOptions.size
+                size: modalOptions.size,
+                openedClass: modalOptions.openedClass
               });
 
             }, function resolveError(reason) {
@@ -49933,6 +49809,10 @@ angular.module('ui.bootstrap.pagination', [])
   };
 
   $scope.selectPage = function(page, evt) {
+    if (evt) {
+      evt.preventDefault();
+    }
+
     var clickAllowed = !$scope.ngDisabled || !evt;
     if (clickAllowed && $scope.page !== page && page > 0 && page <= $scope.totalPages) {
       if (evt && evt.target) {
@@ -49978,7 +49858,10 @@ angular.module('ui.bootstrap.pagination', [])
     },
     require: ['pagination', '?ngModel'],
     controller: 'PaginationController',
-    templateUrl: 'template/pagination/pagination.html',
+    controllerAs: 'pagination',
+    templateUrl: function(element, attrs) {
+      return attrs.templateUrl || 'template/pagination/pagination.html';
+    },
     replace: true,
     link: function(scope, element, attrs, ctrls) {
       var paginationCtrl = ctrls[0], ngModelCtrl = ctrls[1];
@@ -50171,7 +50054,7 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
    * Returns the actual instance of the $tooltip service.
    * TODO support multiple triggers
    */
-  this.$get = [ '$window', '$compile', '$timeout', '$document', '$position', '$interpolate', function ( $window, $compile, $timeout, $document, $position, $interpolate ) {
+  this.$get = [ '$window', '$compile', '$timeout', '$document', '$position', '$interpolate', '$rootScope', function ( $window, $compile, $timeout, $document, $position, $interpolate, $rootScope ) {
     return function $tooltip ( type, prefix, defaultTriggerShow, options ) {
       options = angular.extend( {}, defaultOptions, globalOptions, options );
 
@@ -50190,8 +50073,10 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
        * trigger; else it will just use the show trigger.
        */
       function getTriggers ( trigger ) {
-        var show = trigger || options.trigger || defaultTriggerShow;
-        var hide = triggerMap[show] || show;
+        var show = (trigger || options.trigger || defaultTriggerShow).split(' ');
+        var hide = show.map(function(trigger) {
+          return triggerMap[trigger] || trigger;
+        });
         return {
           show: show,
           hide: hide
@@ -50230,6 +50115,7 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
             var triggers = getTriggers( undefined );
             var hasEnableExp = angular.isDefined(attrs[prefix+'Enable']);
             var ttScope = scope.$new(true);
+            var repositionScheduled = false;
 
             var positionTooltip = function () {
               if (!tooltip) { return; }
@@ -50282,9 +50168,10 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
             }
 
             function hideTooltipBind () {
-              scope.$apply(function () {
-                hide();
-              });
+              hide();
+              if (!$rootScope.$$phase) {
+                $rootScope.$digest();
+              }
             }
 
             // Show the tooltip popup element.
@@ -50308,7 +50195,6 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
 
               // Set the initial positioning.
               tooltip.css({ top: 0, left: 0, display: 'block' });
-              ttScope.$digest();
 
               positionTooltip();
 
@@ -50358,11 +50244,21 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
 
               if (options.useContentExp) {
                 tooltipLinkedScope.$watch('contentExp()', function (val) {
-                  positionTooltipAsync();
-                  if (!val && ttScope.isOpen ) {
+                  if (!val && ttScope.isOpen) {
                     hide();
                   }
                 });
+                
+                tooltipLinkedScope.$watch(function() {
+                  if (!repositionScheduled) {
+                    repositionScheduled = true;
+                    tooltipLinkedScope.$$postDigest(function() {
+                      repositionScheduled = false;
+                      positionTooltipAsync();
+                    });
+                  }
+                });
+                
               }
             }
 
@@ -50394,15 +50290,20 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
             if (!options.useContentExp) {
               attrs.$observe( type, function ( val ) {
                 ttScope.content = val;
-                positionTooltipAsync();
 
-                if (!val && ttScope.isOpen ) {
+                if (!val && ttScope.isOpen) {
                   hide();
+                } else {
+                  positionTooltipAsync();
                 }
               });
             }
 
             attrs.$observe( 'disabled', function ( val ) {
+              if (popupTimeout && val) {
+                $timeout.cancel(popupTimeout);
+              }
+
               if (val && ttScope.isOpen ) {
                 hide();
               }
@@ -50438,8 +50339,12 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
             }
 
             var unregisterTriggers = function () {
-              element.unbind(triggers.show, showTooltipBind);
-              element.unbind(triggers.hide, hideTooltipBind);
+              triggers.show.forEach(function(trigger) {
+                element.unbind(trigger, showTooltipBind);
+              });
+              triggers.hide.forEach(function(trigger) {
+                element.unbind(trigger, hideTooltipBind);
+              });
             };
 
             function prepTriggers() {
@@ -50448,12 +50353,14 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
 
               triggers = getTriggers( val );
 
-              if ( triggers.show === triggers.hide ) {
-                element.bind( triggers.show, toggleTooltipBind );
-              } else {
-                element.bind( triggers.show, showTooltipBind );
-                element.bind( triggers.hide, hideTooltipBind );
-              }
+              triggers.show.forEach(function(trigger, idx) {
+                if (trigger === triggers.hide[idx]) {
+                  element.bind(trigger, toggleTooltipBind);
+                } else if (trigger) {
+                  element.bind(trigger, showTooltipBind);
+                  element.bind(triggers.hide[idx], hideTooltipBind);
+                }
+              });
             }
             prepTriggers();
 
@@ -51252,6 +51159,50 @@ angular.module('ui.bootstrap.timepicker', [])
     });
   }
 
+  var min;
+  $scope.$parent.$watch($parse($attrs.min), function(value) {
+    var dt = new Date(value);
+    min = isNaN(dt) ? undefined : dt;
+  });
+
+  var max;
+  $scope.$parent.$watch($parse($attrs.max), function(value) {
+    var dt = new Date(value);
+    max = isNaN(dt) ? undefined : dt;
+  });
+
+  $scope.noIncrementHours = function() {
+    var incrementedSelected = addMinutes(selected, hourStep * 60);
+    return incrementedSelected > max ||
+      (incrementedSelected < selected && incrementedSelected < min);
+  };
+
+  $scope.noDecrementHours = function() {
+    var decrementedSelected = addMinutes(selected, - hourStep * 60);
+    return decrementedSelected < min ||
+      (decrementedSelected > selected && decrementedSelected > max);
+  };
+
+  $scope.noIncrementMinutes = function() {
+    var incrementedSelected = addMinutes(selected, minuteStep);
+    return incrementedSelected > max ||
+      (incrementedSelected < selected && incrementedSelected < min);
+  };
+
+  $scope.noDecrementMinutes = function() {
+    var decrementedSelected = addMinutes(selected, - minuteStep);
+    return decrementedSelected < min ||
+      (decrementedSelected > selected && decrementedSelected > max);
+  };
+
+  $scope.noToggleMeridian = function() {
+    if (selected.getHours() < 13) {
+      return addMinutes(selected, 12 * 60) > max;
+    } else {
+      return addMinutes(selected, - 12 * 60) < min;
+    }
+  };
+
   // 12H / 24H mode
   $scope.showMeridian = timepickerConfig.showMeridian;
   if ($attrs.showMeridian) {
@@ -51374,7 +51325,11 @@ angular.module('ui.bootstrap.timepicker', [])
 
       if ( angular.isDefined(hours) ) {
         selected.setHours( hours );
-        refresh( 'h' );
+        if (selected < min || selected > max) {
+          invalidate(true);
+        } else {
+          refresh( 'h' );
+        }
       } else {
         invalidate(true);
       }
@@ -51393,7 +51348,11 @@ angular.module('ui.bootstrap.timepicker', [])
 
       if ( angular.isDefined(minutes) ) {
         selected.setMinutes( minutes );
-        refresh( 'm' );
+        if (selected < min || selected > max) {
+          invalidate(undefined, true);
+        } else {
+          refresh( 'm' );
+        }
       } else {
         invalidate(undefined, true);
       }
@@ -51419,7 +51378,14 @@ angular.module('ui.bootstrap.timepicker', [])
       if ( date ) {
         selected = date;
       }
-      makeValid();
+
+      if (selected < min || selected > max) {
+        ngModelCtrl.$setValidity('time', false);
+        $scope.invalidHours = true;
+        $scope.invalidMinutes = true;
+      } else {
+        makeValid();
+      }
       updateTemplate();
     }
   };
@@ -51451,9 +51417,15 @@ angular.module('ui.bootstrap.timepicker', [])
     $scope.meridian = selected.getHours() < 12 ? meridians[0] : meridians[1];
   }
 
-  function addMinutes( minutes ) {
-    var dt = new Date( selected.getTime() + minutes * 60000 );
-    selected.setHours( dt.getHours(), dt.getMinutes() );
+  function addMinutes(date,  minutes) {
+    var dt = new Date(date.getTime() + minutes * 60000);
+    var newDate = new Date(date);
+    newDate.setHours(dt.getHours(), dt.getMinutes());
+    return newDate;
+  }
+
+  function addMinutesToSelected( minutes ) {
+    selected = addMinutes( selected, minutes );
     refresh();
   }
   
@@ -51461,19 +51433,29 @@ angular.module('ui.bootstrap.timepicker', [])
     $scope.$parent.$eval($attrs.showSpinners) : timepickerConfig.showSpinners;
   
   $scope.incrementHours = function() {
-    addMinutes( hourStep * 60 );
+    if (!$scope.noIncrementHours()) {
+      addMinutesToSelected(hourStep * 60);
+    }
   };
   $scope.decrementHours = function() {
-    addMinutes( - hourStep * 60 );
+    if (!$scope.noDecrementHours()) {
+      addMinutesToSelected(-hourStep * 60);
+    }
   };
   $scope.incrementMinutes = function() {
-    addMinutes( minuteStep );
+    if (!$scope.noIncrementMinutes()) {
+      addMinutesToSelected(minuteStep);
+    }
   };
   $scope.decrementMinutes = function() {
-    addMinutes( - minuteStep );
+    if (!$scope.noDecrementMinutes()) {
+      addMinutesToSelected(-minuteStep);
+    }
   };
   $scope.toggleMeridian = function() {
-    addMinutes( 12 * 60 * (( selected.getHours() < 12 ) ? 1 : -1) );
+    if (!$scope.noToggleMeridian()) {
+      addMinutesToSelected(12 * 60 * (selected.getHours() < 12 ? 1 : -1));
+    }
   };
 }])
 
@@ -51877,7 +51859,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
           if (!inputValue) {
             // Reset in case user had typed something previously.
             modelCtrl.$setValidity('editable', true);
-            return inputValue;
+            return null;
           } else {
             modelCtrl.$setValidity('editable', false);
             return undefined;
@@ -52092,10 +52074,10 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
 
 angular.module("template/accordion/accordion-group.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/accordion/accordion-group.html",
-    "<div class=\"panel panel-default\">\n" +
+    "<div class=\"panel panel-default\" ng-class=\"{'panel-open': isOpen}\">\n" +
     "  <div class=\"panel-heading\">\n" +
     "    <h4 class=\"panel-title\">\n" +
-    "      <a href=\"#\" tabindex=\"0\" class=\"accordion-toggle\" ng-click=\"$event.preventDefault(); toggleOpen()\" accordion-transclude=\"heading\"><span ng-class=\"{'text-muted': isDisabled}\">{{heading}}</span></a>\n" +
+    "      <a href tabindex=\"0\" class=\"accordion-toggle\" ng-click=\"toggleOpen()\" accordion-transclude=\"heading\"><span ng-class=\"{'text-muted': isDisabled}\">{{heading}}</span></a>\n" +
     "    </h4>\n" +
     "  </div>\n" +
     "  <div class=\"panel-collapse collapse\" collapse=\"!isOpen\">\n" +
@@ -52126,7 +52108,7 @@ angular.module("template/carousel/carousel.html", []).run(["$templateCache", fun
   $templateCache.put("template/carousel/carousel.html",
     "<div ng-mouseenter=\"pause()\" ng-mouseleave=\"play()\" class=\"carousel\" ng-swipe-right=\"prev()\" ng-swipe-left=\"next()\">\n" +
     "    <ol class=\"carousel-indicators\" ng-show=\"slides.length > 1\">\n" +
-    "        <li ng-repeat=\"slide in slides | orderBy:'index' track by $index\" ng-class=\"{active: isActive(slide)}\" ng-click=\"select(slide)\"></li>\n" +
+    "        <li ng-repeat=\"slide in slides | orderBy:indexOfSlide track by $index\" ng-class=\"{active: isActive(slide)}\" ng-click=\"select(slide)\"></li>\n" +
     "    </ol>\n" +
     "    <div class=\"carousel-inner\" ng-transclude></div>\n" +
     "    <a class=\"left carousel-control\" ng-click=\"prev()\" ng-show=\"slides.length > 1\"><span class=\"glyphicon glyphicon-chevron-left\"></span></a>\n" +
@@ -52267,11 +52249,11 @@ angular.module("template/pagination/pager.html", []).run(["$templateCache", func
 angular.module("template/pagination/pagination.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/pagination/pagination.html",
     "<ul class=\"pagination\">\n" +
-    "  <li ng-if=\"::boundaryLinks\" ng-class=\"{disabled: noPrevious()||ngDisabled}\"><a href ng-click=\"selectPage(1, $event)\">{{::getText('first')}}</a></li>\n" +
-    "  <li ng-if=\"::directionLinks\" ng-class=\"{disabled: noPrevious()||ngDisabled}\"><a href ng-click=\"selectPage(page - 1, $event)\">{{::getText('previous')}}</a></li>\n" +
-    "  <li ng-repeat=\"page in pages track by $index\" ng-class=\"{active: page.active,disabled: ngDisabled&&!page.active}\"><a href ng-click=\"selectPage(page.number, $event)\">{{page.text}}</a></li>\n" +
-    "  <li ng-if=\"::directionLinks\" ng-class=\"{disabled: noNext()||ngDisabled}\"><a href ng-click=\"selectPage(page + 1, $event)\">{{::getText('next')}}</a></li>\n" +
-    "  <li ng-if=\"::boundaryLinks\" ng-class=\"{disabled: noNext()||ngDisabled}\"><a href ng-click=\"selectPage(totalPages, $event)\">{{::getText('last')}}</a></li>\n" +
+    "  <li ng-if=\"::boundaryLinks\" ng-class=\"{disabled: noPrevious()||ngDisabled}\" class=\"pagination-first\"><a href ng-click=\"selectPage(1, $event)\">{{::getText('first')}}</a></li>\n" +
+    "  <li ng-if=\"::directionLinks\" ng-class=\"{disabled: noPrevious()||ngDisabled}\" class=\"pagination-prev\"><a href ng-click=\"selectPage(page - 1, $event)\">{{::getText('previous')}}</a></li>\n" +
+    "  <li ng-repeat=\"page in pages track by $index\" ng-class=\"{active: page.active,disabled: ngDisabled&&!page.active}\" class=\"pagination-page\"><a href ng-click=\"selectPage(page.number, $event)\">{{page.text}}</a></li>\n" +
+    "  <li ng-if=\"::directionLinks\" ng-class=\"{disabled: noNext()||ngDisabled}\" class=\"pagination-next\"><a href ng-click=\"selectPage(page + 1, $event)\">{{::getText('next')}}</a></li>\n" +
+    "  <li ng-if=\"::boundaryLinks\" ng-class=\"{disabled: noNext()||ngDisabled}\" class=\"pagination-last\"><a href ng-click=\"selectPage(totalPages, $event)\">{{::getText('last')}}</a></li>\n" +
     "</ul>\n" +
     "");
 }]);
@@ -52378,7 +52360,7 @@ angular.module("template/popover/popover.html", []).run(["$templateCache", funct
 
 angular.module("template/progressbar/bar.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/progressbar/bar.html",
-    "<div class=\"progress-bar\" ng-class=\"type && 'progress-bar-' + type\" role=\"progressbar\" aria-valuenow=\"{{value}}\" aria-valuemin=\"0\" aria-valuemax=\"{{max}}\" ng-style=\"{width: (percent < 100 ? percent : 100) + '%'}\" aria-valuetext=\"{{percent | number:0}}%\" ng-transclude></div>\n" +
+    "<div class=\"progress-bar\" ng-class=\"type && 'progress-bar-' + type\" role=\"progressbar\" aria-valuenow=\"{{value}}\" aria-valuemin=\"0\" aria-valuemax=\"{{max}}\" ng-style=\"{width: (percent < 100 ? percent : 100) + '%'}\" aria-valuetext=\"{{percent | number:0}}%\" style=\"min-width: 0;\" ng-transclude></div>\n" +
     "");
 }]);
 
@@ -52390,7 +52372,7 @@ angular.module("template/progressbar/progress.html", []).run(["$templateCache", 
 angular.module("template/progressbar/progressbar.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/progressbar/progressbar.html",
     "<div class=\"progress\">\n" +
-    "  <div class=\"progress-bar\" ng-class=\"type && 'progress-bar-' + type\" role=\"progressbar\" aria-valuenow=\"{{value}}\" aria-valuemin=\"0\" aria-valuemax=\"{{max}}\" ng-style=\"{width: (percent < 100 ? percent : 100) + '%'}\" aria-valuetext=\"{{percent | number:0}}%\" ng-transclude></div>\n" +
+    "  <div class=\"progress-bar\" ng-class=\"type && 'progress-bar-' + type\" role=\"progressbar\" aria-valuenow=\"{{value}}\" aria-valuemin=\"0\" aria-valuemax=\"{{max}}\" ng-style=\"{width: (percent < 100 ? percent : 100) + '%'}\" aria-valuetext=\"{{percent | number:0}}%\" style=\"min-width: 0;\" ng-transclude></div>\n" +
     "</div>\n" +
     "");
 }]);
@@ -52398,9 +52380,8 @@ angular.module("template/progressbar/progressbar.html", []).run(["$templateCache
 angular.module("template/rating/rating.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/rating/rating.html",
     "<span ng-mouseleave=\"reset()\" ng-keydown=\"onKeydown($event)\" tabindex=\"0\" role=\"slider\" aria-valuemin=\"0\" aria-valuemax=\"{{range.length}}\" aria-valuenow=\"{{value}}\">\n" +
-    "    <i ng-repeat=\"r in range track by $index\" ng-mouseenter=\"enter($index + 1)\" ng-click=\"rate($index + 1)\" class=\"glyphicon\" ng-class=\"$index < value && (r.stateOn || 'glyphicon-star') || (r.stateOff || 'glyphicon-star-empty')\" ng-attr-title=\"{{r.title}}\" >\n" +
-    "        <span class=\"sr-only\">({{ $index < value ? '*' : ' ' }})</span>\n" +
-    "    </i>\n" +
+    "    <span ng-repeat-start=\"r in range track by $index\" class=\"sr-only\">({{ $index < value ? '*' : ' ' }})</span>\n" +
+    "    <i ng-repeat-end ng-mouseenter=\"enter($index + 1)\" ng-click=\"rate($index + 1)\" class=\"glyphicon\" ng-class=\"$index < value && (r.stateOn || 'glyphicon-star') || (r.stateOff || 'glyphicon-star-empty')\" ng-attr-title=\"{{r.title}}\" ></i>\n" +
     "</span>\n" +
     "");
 }]);
@@ -52408,7 +52389,7 @@ angular.module("template/rating/rating.html", []).run(["$templateCache", functio
 angular.module("template/tabs/tab.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/tabs/tab.html",
     "<li ng-class=\"{active: active, disabled: disabled}\">\n" +
-    "  <a href=\"#\" ng-click=\"$event.preventDefault(); select()\" tab-heading-transclude>{{heading}}</a>\n" +
+    "  <a href ng-click=\"select()\" tab-heading-transclude>{{heading}}</a>\n" +
     "</li>\n" +
     "");
 }]);
@@ -52433,9 +52414,9 @@ angular.module("template/timepicker/timepicker.html", []).run(["$templateCache",
     "<table>\n" +
     "  <tbody>\n" +
     "    <tr class=\"text-center\" ng-show=\"::showSpinners\">\n" +
-    "      <td><a ng-click=\"incrementHours()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-up\"></span></a></td>\n" +
+    "      <td><a ng-click=\"incrementHours()\" ng-class=\"{disabled: noIncrementHours()}\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-up\"></span></a></td>\n" +
     "      <td>&nbsp;</td>\n" +
-    "      <td><a ng-click=\"incrementMinutes()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-up\"></span></a></td>\n" +
+    "      <td><a ng-click=\"incrementMinutes()\" ng-class=\"{disabled: noIncrementMinutes()}\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-up\"></span></a></td>\n" +
     "      <td ng-show=\"showMeridian\"></td>\n" +
     "    </tr>\n" +
     "    <tr>\n" +
@@ -52446,12 +52427,12 @@ angular.module("template/timepicker/timepicker.html", []).run(["$templateCache",
     "      <td class=\"form-group\" ng-class=\"{'has-error': invalidMinutes}\">\n" +
     "        <input style=\"width:50px;\" type=\"text\" ng-model=\"minutes\" ng-change=\"updateMinutes()\" class=\"form-control text-center\" ng-readonly=\"::readonlyInput\" maxlength=\"2\">\n" +
     "      </td>\n" +
-    "      <td ng-show=\"showMeridian\"><button type=\"button\" class=\"btn btn-default text-center\" ng-click=\"toggleMeridian()\">{{meridian}}</button></td>\n" +
+    "      <td ng-show=\"showMeridian\"><button type=\"button\" ng-class=\"{disabled: noToggleMeridian()}\" class=\"btn btn-default text-center\" ng-click=\"toggleMeridian()\">{{meridian}}</button></td>\n" +
     "    </tr>\n" +
     "    <tr class=\"text-center\" ng-show=\"::showSpinners\">\n" +
-    "      <td><a ng-click=\"decrementHours()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-down\"></span></a></td>\n" +
+    "      <td><a ng-click=\"decrementHours()\" ng-class=\"{disabled: noDecrementHours()}\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-down\"></span></a></td>\n" +
     "      <td>&nbsp;</td>\n" +
-    "      <td><a ng-click=\"decrementMinutes()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-down\"></span></a></td>\n" +
+    "      <td><a ng-click=\"decrementMinutes()\" ng-class=\"{disabled: noDecrementMinutes()}\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-down\"></span></a></td>\n" +
     "      <td ng-show=\"showMeridian\"></td>\n" +
     "    </tr>\n" +
     "  </tbody>\n" +
@@ -52461,7 +52442,7 @@ angular.module("template/timepicker/timepicker.html", []).run(["$templateCache",
 
 angular.module("template/typeahead/typeahead-match.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/typeahead/typeahead-match.html",
-    "<a href=\"#\" ng-click=\"$event.preventDefault()\" tabindex=\"-1\" bind-html-unsafe=\"match.label | typeaheadHighlight:query\"></a>\n" +
+    "<a href tabindex=\"-1\" bind-html-unsafe=\"match.label | typeaheadHighlight:query\"></a>\n" +
     "");
 }]);
 
@@ -55306,36 +55287,22 @@ ngFileUpload.service('UploadBase', ['$http', '$q', '$timeout', function ($http, 
 
 }());
 /**
- * Rangy, a cross-browser JavaScript range and selection library
- * https://github.com/timdown/rangy
+ * @license Rangy, a cross-browser JavaScript range and selection library
+ * http://code.google.com/p/rangy/
  *
- * Copyright 2015, Tim Down
+ * Copyright 2012, Tim Down
  * Licensed under the MIT license.
- * Version: 1.3.0
- * Build date: 10 May 2015
+ * Version: 1.2.3
+ * Build date: 26 February 2012
  */
+window['rangy'] = (function() {
 
-(function(factory, root) {
-    if (typeof define == "function" && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(factory);
-    } else if (typeof module != "undefined" && typeof exports == "object") {
-        // Node/CommonJS style
-        module.exports = factory();
-    } else {
-        // No AMD or CommonJS support so we place Rangy in (probably) the global variable
-        root.rangy = factory();
-    }
-})(function() {
 
     var OBJECT = "object", FUNCTION = "function", UNDEFINED = "undefined";
 
-    // Minimal set of properties required for DOM Level 2 Range compliance. Comparison constants such as START_TO_START
-    // are omitted because ranges in KHTML do not have them but otherwise work perfectly well. See issue 113.
     var domRangeProperties = ["startContainer", "startOffset", "endContainer", "endOffset", "collapsed",
-        "commonAncestorContainer"];
+        "commonAncestorContainer", "START_TO_START", "START_TO_END", "END_TO_START", "END_TO_END"];
 
-    // Minimal set of methods required for DOM Level 2 Range compliance
     var domRangeMethods = ["setStart", "setStartBefore", "setStartAfter", "setEnd", "setEndBefore",
         "setEndAfter", "collapse", "selectNode", "selectNodeContents", "compareBoundaryPoints", "deleteContents",
         "extractContents", "cloneContents", "insertNode", "surroundContents", "cloneRange", "toString", "detach"];
@@ -55343,8 +55310,8 @@ ngFileUpload.service('UploadBase', ['$http', '$q', '$timeout', function ($http, 
     var textRangeProperties = ["boundingHeight", "boundingLeft", "boundingTop", "boundingWidth", "htmlText", "text"];
 
     // Subset of TextRange's full set of methods that we're interested in
-    var textRangeMethods = ["collapse", "compareEndPoints", "duplicate", "moveToElementText", "parentElement", "select",
-        "setEndPoint", "getBoundingClientRect"];
+    var textRangeMethods = ["collapse", "compareEndPoints", "duplicate", "getBookmark", "moveToBookmark",
+        "moveToElementText", "parentElement", "pasteHTML", "select", "setEndPoint", "getBoundingClientRect"];
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
@@ -55385,177 +55352,67 @@ ngFileUpload.service('UploadBase', ['$http', '$q', '$timeout', function ($http, 
         return range && areHostMethods(range, textRangeMethods) && areHostProperties(range, textRangeProperties);
     }
 
-    function getBody(doc) {
-        return isHostObject(doc, "body") ? doc.body : doc.getElementsByTagName("body")[0];
-    }
-
-    var forEach = [].forEach ?
-        function(arr, func) {
-            arr.forEach(func);
-        } :
-        function(arr, func) {
-            for (var i = 0, len = arr.length; i < len; ++i) {
-                func(arr[i], i);
-            }
-        };
-
-    var modules = {};
-
-    var isBrowser = (typeof window != UNDEFINED && typeof document != UNDEFINED);
-
-    var util = {
-        isHostMethod: isHostMethod,
-        isHostObject: isHostObject,
-        isHostProperty: isHostProperty,
-        areHostMethods: areHostMethods,
-        areHostObjects: areHostObjects,
-        areHostProperties: areHostProperties,
-        isTextRange: isTextRange,
-        getBody: getBody,
-        forEach: forEach
-    };
-
     var api = {
-        version: "1.3.0",
+        version: "1.2.3",
         initialized: false,
-        isBrowser: isBrowser,
         supported: true,
-        util: util,
+
+        util: {
+            isHostMethod: isHostMethod,
+            isHostObject: isHostObject,
+            isHostProperty: isHostProperty,
+            areHostMethods: areHostMethods,
+            areHostObjects: areHostObjects,
+            areHostProperties: areHostProperties,
+            isTextRange: isTextRange
+        },
+
         features: {},
-        modules: modules,
+
+        modules: {},
         config: {
-            alertOnFail: false,
             alertOnWarn: false,
-            preferTextRange: false,
-            autoInitialize: (typeof rangyAutoInitialize == UNDEFINED) ? true : rangyAutoInitialize
+            preferTextRange: false
         }
     };
-
-    function consoleLog(msg) {
-        if (typeof console != UNDEFINED && isHostMethod(console, "log")) {
-            console.log(msg);
-        }
-    }
-
-    function alertOrLog(msg, shouldAlert) {
-        if (isBrowser && shouldAlert) {
-            alert(msg);
-        } else  {
-            consoleLog(msg);
-        }
-    }
 
     function fail(reason) {
+        window.alert("Rangy not supported in your browser. Reason: " + reason);
         api.initialized = true;
         api.supported = false;
-        alertOrLog("Rangy is not supported in this environment. Reason: " + reason, api.config.alertOnFail);
     }
 
     api.fail = fail;
 
     function warn(msg) {
-        alertOrLog("Rangy warning: " + msg, api.config.alertOnWarn);
+        var warningMessage = "Rangy warning: " + msg;
+        if (api.config.alertOnWarn) {
+            window.alert(warningMessage);
+        } else if (typeof window.console != UNDEFINED && typeof window.console.log != UNDEFINED) {
+            window.console.log(warningMessage);
+        }
     }
 
     api.warn = warn;
 
-    // Add utility extend() method
-    var extend;
     if ({}.hasOwnProperty) {
-        util.extend = extend = function(obj, props, deep) {
-            var o, p;
+        api.util.extend = function(o, props) {
             for (var i in props) {
                 if (props.hasOwnProperty(i)) {
-                    o = obj[i];
-                    p = props[i];
-                    if (deep && o !== null && typeof o == "object" && p !== null && typeof p == "object") {
-                        extend(o, p, true);
-                    }
-                    obj[i] = p;
+                    o[i] = props[i];
                 }
             }
-            // Special case for toString, which does not show up in for...in loops in IE <= 8
-            if (props.hasOwnProperty("toString")) {
-                obj.toString = props.toString;
-            }
-            return obj;
-        };
-
-        util.createOptions = function(optionsParam, defaults) {
-            var options = {};
-            extend(options, defaults);
-            if (optionsParam) {
-                extend(options, optionsParam);
-            }
-            return options;
         };
     } else {
         fail("hasOwnProperty not supported");
     }
 
-    // Test whether we're in a browser and bail out if not
-    if (!isBrowser) {
-        fail("Rangy can only run in a browser");
-    }
-
-    // Test whether Array.prototype.slice can be relied on for NodeLists and use an alternative toArray() if not
-    (function() {
-        var toArray;
-
-        if (isBrowser) {
-            var el = document.createElement("div");
-            el.appendChild(document.createElement("span"));
-            var slice = [].slice;
-            try {
-                if (slice.call(el.childNodes, 0)[0].nodeType == 1) {
-                    toArray = function(arrayLike) {
-                        return slice.call(arrayLike, 0);
-                    };
-                }
-            } catch (e) {}
-        }
-
-        if (!toArray) {
-            toArray = function(arrayLike) {
-                var arr = [];
-                for (var i = 0, len = arrayLike.length; i < len; ++i) {
-                    arr[i] = arrayLike[i];
-                }
-                return arr;
-            };
-        }
-
-        util.toArray = toArray;
-    })();
-
-    // Very simple event handler wrapper function that doesn't attempt to solve issues such as "this" handling or
-    // normalization of event properties
-    var addListener;
-    if (isBrowser) {
-        if (isHostMethod(document, "addEventListener")) {
-            addListener = function(obj, eventType, listener) {
-                obj.addEventListener(eventType, listener, false);
-            };
-        } else if (isHostMethod(document, "attachEvent")) {
-            addListener = function(obj, eventType, listener) {
-                obj.attachEvent("on" + eventType, listener);
-            };
-        } else {
-            fail("Document does not have required addEventListener or attachEvent method");
-        }
-
-        util.addListener = addListener;
-    }
-
     var initListeners = [];
-
-    function getErrorDesc(ex) {
-        return ex.message || ex.description || String(ex);
-    }
+    var moduleInitializers = [];
 
     // Initialization
     function init() {
-        if (!isBrowser || api.initialized) {
+        if (api.initialized) {
             return;
         }
         var testRange;
@@ -55568,13 +55425,10 @@ ngFileUpload.service('UploadBase', ['$http', '$q', '$timeout', function ($http, 
             if (areHostMethods(testRange, domRangeMethods) && areHostProperties(testRange, domRangeProperties)) {
                 implementsDomRange = true;
             }
+            testRange.detach();
         }
 
-        var body = getBody(document);
-        if (!body || body.nodeName.toLowerCase() != "body") {
-            fail("No body element found");
-            return;
-        }
+        var body = isHostObject(document, "body") ? document.body : document.getElementsByTagName("body")[0];
 
         if (body && isHostMethod(body, "createTextRange")) {
             testRange = body.createTextRange();
@@ -55584,8 +55438,7 @@ ngFileUpload.service('UploadBase', ['$http', '$q', '$timeout', function ($http, 
         }
 
         if (!implementsDomRange && !implementsTextRange) {
-            fail("Neither Range nor TextRange are available");
-            return;
+            fail("Neither Range nor TextRange are implemented");
         }
 
         api.initialized = true;
@@ -55594,42 +55447,19 @@ ngFileUpload.service('UploadBase', ['$http', '$q', '$timeout', function ($http, 
             implementsTextRange: implementsTextRange
         };
 
-        // Initialize modules
-        var module, errorMessage;
-        for (var moduleName in modules) {
-            if ( (module = modules[moduleName]) instanceof Module ) {
-                module.init(module, api);
-            }
-        }
-
-        // Call init listeners
-        for (var i = 0, len = initListeners.length; i < len; ++i) {
+        // Initialize modules and call init listeners
+        var allListeners = moduleInitializers.concat(initListeners);
+        for (var i = 0, len = allListeners.length; i < len; ++i) {
             try {
-                initListeners[i](api);
+                allListeners[i](api);
             } catch (ex) {
-                errorMessage = "Rangy init listener threw an exception. Continuing. Detail: " + getErrorDesc(ex);
-                consoleLog(errorMessage);
+                if (isHostObject(window, "console") && isHostMethod(window.console, "log")) {
+                    window.console.log("Init listener threw an exception. Continuing.", ex);
+                }
+
             }
         }
     }
-
-    function deprecationNotice(deprecated, replacement, module) {
-        if (module) {
-            deprecated += " in module " + module.name;
-        }
-        api.warn("DEPRECATED: " + deprecated + " is deprecated. Please use " +
-        replacement + " instead.");
-    }
-
-    function createAliasForDeprecatedMethod(owner, deprecated, replacement, module) {
-        owner[deprecated] = function() {
-            deprecationNotice(deprecated, replacement, module);
-            return owner[replacement].apply(owner, util.toArray(arguments));
-        };
-    }
-
-    util.deprecationNotice = deprecationNotice;
-    util.createAliasForDeprecatedMethod = createAliasForDeprecatedMethod;
 
     // Allow external scripts to initialize this library in case it's loaded after the document has loaded
     api.init = init;
@@ -55643,1204 +55473,1486 @@ ngFileUpload.service('UploadBase', ['$http', '$q', '$timeout', function ($http, 
         }
     };
 
-    var shimListeners = [];
+    var createMissingNativeApiListeners = [];
 
-    api.addShimListener = function(listener) {
-        shimListeners.push(listener);
+    api.addCreateMissingNativeApiListener = function(listener) {
+        createMissingNativeApiListeners.push(listener);
     };
 
-    function shim(win) {
+    function createMissingNativeApi(win) {
         win = win || window;
         init();
 
         // Notify listeners
-        for (var i = 0, len = shimListeners.length; i < len; ++i) {
-            shimListeners[i](win);
+        for (var i = 0, len = createMissingNativeApiListeners.length; i < len; ++i) {
+            createMissingNativeApiListeners[i](win);
         }
     }
 
-    if (isBrowser) {
-        api.shim = api.createMissingNativeApi = shim;
-        createAliasForDeprecatedMethod(api, "createMissingNativeApi", "shim");
-    }
+    api.createMissingNativeApi = createMissingNativeApi;
 
-    function Module(name, dependencies, initializer) {
+    /**
+     * @constructor
+     */
+    function Module(name) {
         this.name = name;
-        this.dependencies = dependencies;
         this.initialized = false;
         this.supported = false;
-        this.initializer = initializer;
     }
 
-    Module.prototype = {
-        init: function() {
-            var requiredModuleNames = this.dependencies || [];
-            for (var i = 0, len = requiredModuleNames.length, requiredModule, moduleName; i < len; ++i) {
-                moduleName = requiredModuleNames[i];
+    Module.prototype.fail = function(reason) {
+        this.initialized = true;
+        this.supported = false;
 
-                requiredModule = modules[moduleName];
-                if (!requiredModule || !(requiredModule instanceof Module)) {
-                    throw new Error("required module '" + moduleName + "' not found");
-                }
-
-                requiredModule.init();
-
-                if (!requiredModule.supported) {
-                    throw new Error("required module '" + moduleName + "' not supported");
-                }
-            }
-
-            // Now run initializer
-            this.initializer(this);
-        },
-
-        fail: function(reason) {
-            this.initialized = true;
-            this.supported = false;
-            throw new Error(reason);
-        },
-
-        warn: function(msg) {
-            api.warn("Module " + this.name + ": " + msg);
-        },
-
-        deprecationNotice: function(deprecated, replacement) {
-            api.warn("DEPRECATED: " + deprecated + " in module " + this.name + " is deprecated. Please use " +
-                replacement + " instead");
-        },
-
-        createError: function(msg) {
-            return new Error("Error in Rangy " + this.name + " module: " + msg);
-        }
+        throw new Error("Module '" + this.name + "' failed to load: " + reason);
     };
 
-    function createModule(name, dependencies, initFunc) {
-        var newModule = new Module(name, dependencies, function(module) {
-            if (!module.initialized) {
-                module.initialized = true;
-                try {
-                    initFunc(api, module);
-                    module.supported = true;
-                } catch (ex) {
-                    var errorMessage = "Module '" + name + "' failed to load: " + getErrorDesc(ex);
-                    consoleLog(errorMessage);
-                    if (ex.stack) {
-                        consoleLog(ex.stack);
-                    }
-                }
-            }
+    Module.prototype.warn = function(msg) {
+        api.warn("Module " + this.name + ": " + msg);
+    };
+
+    Module.prototype.createError = function(msg) {
+        return new Error("Error in Rangy " + this.name + " module: " + msg);
+    };
+
+    api.createModule = function(name, initFunc) {
+        var module = new Module(name);
+        api.modules[name] = module;
+
+        moduleInitializers.push(function(api) {
+            initFunc(api, module);
+            module.initialized = true;
+            module.supported = true;
         });
-        modules[name] = newModule;
-        return newModule;
+    };
+
+    api.requireModules = function(modules) {
+        for (var i = 0, len = modules.length, module, moduleName; i < len; ++i) {
+            moduleName = modules[i];
+            module = api.modules[moduleName];
+            if (!module || !(module instanceof Module)) {
+                throw new Error("Module '" + moduleName + "' not found");
+            }
+            if (!module.supported) {
+                throw new Error("Module '" + moduleName + "' not supported");
+            }
+        }
+    };
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    // Wait for document to load before running tests
+
+    var docReady = false;
+
+    var loadHandler = function(e) {
+
+        if (!docReady) {
+            docReady = true;
+            if (!api.initialized) {
+                init();
+            }
+        }
+    };
+
+    // Test whether we have window and document objects that we will need
+    if (typeof window == UNDEFINED) {
+        fail("No window found");
+        return;
+    }
+    if (typeof document == UNDEFINED) {
+        fail("No document found");
+        return;
     }
 
-    api.createModule = function(name) {
-        // Allow 2 or 3 arguments (second argument is an optional array of dependencies)
-        var initFunc, dependencies;
-        if (arguments.length == 2) {
-            initFunc = arguments[1];
-            dependencies = [];
-        } else {
-            initFunc = arguments[2];
-            dependencies = arguments[1];
-        }
+    if (isHostMethod(document, "addEventListener")) {
+        document.addEventListener("DOMContentLoaded", loadHandler, false);
+    }
 
-        var module = createModule(name, dependencies, initFunc);
+    // Add a fallback in case the DOMContentLoaded event isn't supported
+    if (isHostMethod(window, "addEventListener")) {
+        window.addEventListener("load", loadHandler, false);
+    } else if (isHostMethod(window, "attachEvent")) {
+        window.attachEvent("onload", loadHandler);
+    } else {
+        fail("Window does not have required addEventListener or attachEvent method");
+    }
 
-        // Initialize the module immediately if the core is already initialized
-        if (api.initialized && api.supported) {
-            module.init();
-        }
-    };
+    return api;
+})();
+rangy.createModule("DomUtil", function(api, module) {
 
-    api.createCoreModule = function(name, dependencies, initFunc) {
-        createModule(name, dependencies, initFunc);
-    };
+    var UNDEF = "undefined";
+    var util = api.util;
+
+    // Perform feature tests
+    if (!util.areHostMethods(document, ["createDocumentFragment", "createElement", "createTextNode"])) {
+        module.fail("document missing a Node creation method");
+    }
+
+    if (!util.isHostMethod(document, "getElementsByTagName")) {
+        module.fail("document missing getElementsByTagName method");
+    }
+
+    var el = document.createElement("div");
+    if (!util.areHostMethods(el, ["insertBefore", "appendChild", "cloneNode"] ||
+            !util.areHostObjects(el, ["previousSibling", "nextSibling", "childNodes", "parentNode"]))) {
+        module.fail("Incomplete Element implementation");
+    }
+
+    // innerHTML is required for Range's createContextualFragment method
+    if (!util.isHostProperty(el, "innerHTML")) {
+        module.fail("Element is missing innerHTML property");
+    }
+
+    var textNode = document.createTextNode("test");
+    if (!util.areHostMethods(textNode, ["splitText", "deleteData", "insertData", "appendData", "cloneNode"] ||
+            !util.areHostObjects(el, ["previousSibling", "nextSibling", "childNodes", "parentNode"]) ||
+            !util.areHostProperties(textNode, ["data"]))) {
+        module.fail("Incomplete Text Node implementation");
+    }
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    // Ensure rangy.rangePrototype and rangy.selectionPrototype are available immediately
+    // Removed use of indexOf because of a bizarre bug in Opera that is thrown in one of the Acid3 tests. I haven't been
+    // able to replicate it outside of the test. The bug is that indexOf returns -1 when called on an Array that
+    // contains just the document as a single element and the value searched for is the document.
+    var arrayContains = /*Array.prototype.indexOf ?
+        function(arr, val) {
+            return arr.indexOf(val) > -1;
+        }:*/
 
-    function RangePrototype() {}
-    api.RangePrototype = RangePrototype;
-    api.rangePrototype = new RangePrototype();
-
-    function SelectionPrototype() {}
-    api.selectionPrototype = new SelectionPrototype();
-
-    /*----------------------------------------------------------------------------------------------------------------*/
-
-    // DOM utility methods used by Rangy
-    api.createCoreModule("DomUtil", [], function(api, module) {
-        var UNDEF = "undefined";
-        var util = api.util;
-        var getBody = util.getBody;
-
-        // Perform feature tests
-        if (!util.areHostMethods(document, ["createDocumentFragment", "createElement", "createTextNode"])) {
-            module.fail("document missing a Node creation method");
-        }
-
-        if (!util.isHostMethod(document, "getElementsByTagName")) {
-            module.fail("document missing getElementsByTagName method");
-        }
-
-        var el = document.createElement("div");
-        if (!util.areHostMethods(el, ["insertBefore", "appendChild", "cloneNode"] ||
-                !util.areHostObjects(el, ["previousSibling", "nextSibling", "childNodes", "parentNode"]))) {
-            module.fail("Incomplete Element implementation");
-        }
-
-        // innerHTML is required for Range's createContextualFragment method
-        if (!util.isHostProperty(el, "innerHTML")) {
-            module.fail("Element is missing innerHTML property");
-        }
-
-        var textNode = document.createTextNode("test");
-        if (!util.areHostMethods(textNode, ["splitText", "deleteData", "insertData", "appendData", "cloneNode"] ||
-                !util.areHostObjects(el, ["previousSibling", "nextSibling", "childNodes", "parentNode"]) ||
-                !util.areHostProperties(textNode, ["data"]))) {
-            module.fail("Incomplete Text Node implementation");
-        }
-
-        /*----------------------------------------------------------------------------------------------------------------*/
-
-        // Removed use of indexOf because of a bizarre bug in Opera that is thrown in one of the Acid3 tests. I haven't been
-        // able to replicate it outside of the test. The bug is that indexOf returns -1 when called on an Array that
-        // contains just the document as a single element and the value searched for is the document.
-        var arrayContains = /*Array.prototype.indexOf ?
-            function(arr, val) {
-                return arr.indexOf(val) > -1;
-            }:*/
-
-            function(arr, val) {
-                var i = arr.length;
-                while (i--) {
-                    if (arr[i] === val) {
-                        return true;
-                    }
-                }
-                return false;
-            };
-
-        // Opera 11 puts HTML elements in the null namespace, it seems, and IE 7 has undefined namespaceURI
-        function isHtmlNamespace(node) {
-            var ns;
-            return typeof node.namespaceURI == UNDEF || ((ns = node.namespaceURI) === null || ns == "http://www.w3.org/1999/xhtml");
-        }
-
-        function parentElement(node) {
-            var parent = node.parentNode;
-            return (parent.nodeType == 1) ? parent : null;
-        }
-
-        function getNodeIndex(node) {
-            var i = 0;
-            while( (node = node.previousSibling) ) {
-                ++i;
-            }
-            return i;
-        }
-
-        function getNodeLength(node) {
-            switch (node.nodeType) {
-                case 7:
-                case 10:
-                    return 0;
-                case 3:
-                case 8:
-                    return node.length;
-                default:
-                    return node.childNodes.length;
-            }
-        }
-
-        function getCommonAncestor(node1, node2) {
-            var ancestors = [], n;
-            for (n = node1; n; n = n.parentNode) {
-                ancestors.push(n);
-            }
-
-            for (n = node2; n; n = n.parentNode) {
-                if (arrayContains(ancestors, n)) {
-                    return n;
-                }
-            }
-
-            return null;
-        }
-
-        function isAncestorOf(ancestor, descendant, selfIsAncestor) {
-            var n = selfIsAncestor ? descendant : descendant.parentNode;
-            while (n) {
-                if (n === ancestor) {
+        function(arr, val) {
+            var i = arr.length;
+            while (i--) {
+                if (arr[i] === val) {
                     return true;
-                } else {
-                    n = n.parentNode;
                 }
             }
             return false;
+        };
+
+    // Opera 11 puts HTML elements in the null namespace, it seems, and IE 7 has undefined namespaceURI
+    function isHtmlNamespace(node) {
+        var ns;
+        return typeof node.namespaceURI == UNDEF || ((ns = node.namespaceURI) === null || ns == "http://www.w3.org/1999/xhtml");
+    }
+
+    function parentElement(node) {
+        var parent = node.parentNode;
+        return (parent.nodeType == 1) ? parent : null;
+    }
+
+    function getNodeIndex(node) {
+        var i = 0;
+        while( (node = node.previousSibling) ) {
+            i++;
+        }
+        return i;
+    }
+
+    function getNodeLength(node) {
+        var childNodes;
+        return isCharacterDataNode(node) ? node.length : ((childNodes = node.childNodes) ? childNodes.length : 0);
+    }
+
+    function getCommonAncestor(node1, node2) {
+        var ancestors = [], n;
+        for (n = node1; n; n = n.parentNode) {
+            ancestors.push(n);
         }
 
-        function isOrIsAncestorOf(ancestor, descendant) {
-            return isAncestorOf(ancestor, descendant, true);
-        }
-
-        function getClosestAncestorIn(node, ancestor, selfIsAncestor) {
-            var p, n = selfIsAncestor ? node : node.parentNode;
-            while (n) {
-                p = n.parentNode;
-                if (p === ancestor) {
-                    return n;
-                }
-                n = p;
-            }
-            return null;
-        }
-
-        function isCharacterDataNode(node) {
-            var t = node.nodeType;
-            return t == 3 || t == 4 || t == 8 ; // Text, CDataSection or Comment
-        }
-
-        function isTextOrCommentNode(node) {
-            if (!node) {
-                return false;
-            }
-            var t = node.nodeType;
-            return t == 3 || t == 8 ; // Text or Comment
-        }
-
-        function insertAfter(node, precedingNode) {
-            var nextNode = precedingNode.nextSibling, parent = precedingNode.parentNode;
-            if (nextNode) {
-                parent.insertBefore(node, nextNode);
-            } else {
-                parent.appendChild(node);
-            }
-            return node;
-        }
-
-        // Note that we cannot use splitText() because it is bugridden in IE 9.
-        function splitDataNode(node, index, positionsToPreserve) {
-            var newNode = node.cloneNode(false);
-            newNode.deleteData(0, index);
-            node.deleteData(index, node.length - index);
-            insertAfter(newNode, node);
-
-            // Preserve positions
-            if (positionsToPreserve) {
-                for (var i = 0, position; position = positionsToPreserve[i++]; ) {
-                    // Handle case where position was inside the portion of node after the split point
-                    if (position.node == node && position.offset > index) {
-                        position.node = newNode;
-                        position.offset -= index;
-                    }
-                    // Handle the case where the position is a node offset within node's parent
-                    else if (position.node == node.parentNode && position.offset > getNodeIndex(node)) {
-                        ++position.offset;
-                    }
-                }
-            }
-            return newNode;
-        }
-
-        function getDocument(node) {
-            if (node.nodeType == 9) {
-                return node;
-            } else if (typeof node.ownerDocument != UNDEF) {
-                return node.ownerDocument;
-            } else if (typeof node.document != UNDEF) {
-                return node.document;
-            } else if (node.parentNode) {
-                return getDocument(node.parentNode);
-            } else {
-                throw module.createError("getDocument: no document found for node");
+        for (n = node2; n; n = n.parentNode) {
+            if (arrayContains(ancestors, n)) {
+                return n;
             }
         }
 
-        function getWindow(node) {
-            var doc = getDocument(node);
-            if (typeof doc.defaultView != UNDEF) {
-                return doc.defaultView;
-            } else if (typeof doc.parentWindow != UNDEF) {
-                return doc.parentWindow;
-            } else {
-                throw module.createError("Cannot get a window object for node");
-            }
-        }
+        return null;
+    }
 
-        function getIframeDocument(iframeEl) {
-            if (typeof iframeEl.contentDocument != UNDEF) {
-                return iframeEl.contentDocument;
-            } else if (typeof iframeEl.contentWindow != UNDEF) {
-                return iframeEl.contentWindow.document;
-            } else {
-                throw module.createError("getIframeDocument: No Document object found for iframe element");
-            }
-        }
-
-        function getIframeWindow(iframeEl) {
-            if (typeof iframeEl.contentWindow != UNDEF) {
-                return iframeEl.contentWindow;
-            } else if (typeof iframeEl.contentDocument != UNDEF) {
-                return iframeEl.contentDocument.defaultView;
-            } else {
-                throw module.createError("getIframeWindow: No Window object found for iframe element");
-            }
-        }
-
-        // This looks bad. Is it worth it?
-        function isWindow(obj) {
-            return obj && util.isHostMethod(obj, "setTimeout") && util.isHostObject(obj, "document");
-        }
-
-        function getContentDocument(obj, module, methodName) {
-            var doc;
-
-            if (!obj) {
-                doc = document;
-            }
-
-            // Test if a DOM node has been passed and obtain a document object for it if so
-            else if (util.isHostProperty(obj, "nodeType")) {
-                doc = (obj.nodeType == 1 && obj.tagName.toLowerCase() == "iframe") ?
-                    getIframeDocument(obj) : getDocument(obj);
-            }
-
-            // Test if the doc parameter appears to be a Window object
-            else if (isWindow(obj)) {
-                doc = obj.document;
-            }
-
-            if (!doc) {
-                throw module.createError(methodName + "(): Parameter must be a Window object or DOM node");
-            }
-
-            return doc;
-        }
-
-        function getRootContainer(node) {
-            var parent;
-            while ( (parent = node.parentNode) ) {
-                node = parent;
-            }
-            return node;
-        }
-
-        function comparePoints(nodeA, offsetA, nodeB, offsetB) {
-            // See http://www.w3.org/TR/DOM-Level-2-Traversal-Range/ranges.html#Level-2-Range-Comparing
-            var nodeC, root, childA, childB, n;
-            if (nodeA == nodeB) {
-                // Case 1: nodes are the same
-                return offsetA === offsetB ? 0 : (offsetA < offsetB) ? -1 : 1;
-            } else if ( (nodeC = getClosestAncestorIn(nodeB, nodeA, true)) ) {
-                // Case 2: node C (container B or an ancestor) is a child node of A
-                return offsetA <= getNodeIndex(nodeC) ? -1 : 1;
-            } else if ( (nodeC = getClosestAncestorIn(nodeA, nodeB, true)) ) {
-                // Case 3: node C (container A or an ancestor) is a child node of B
-                return getNodeIndex(nodeC) < offsetB  ? -1 : 1;
-            } else {
-                root = getCommonAncestor(nodeA, nodeB);
-                if (!root) {
-                    throw new Error("comparePoints error: nodes have no common ancestor");
-                }
-
-                // Case 4: containers are siblings or descendants of siblings
-                childA = (nodeA === root) ? root : getClosestAncestorIn(nodeA, root, true);
-                childB = (nodeB === root) ? root : getClosestAncestorIn(nodeB, root, true);
-
-                if (childA === childB) {
-                    // This shouldn't be possible
-                    throw module.createError("comparePoints got to case 4 and childA and childB are the same!");
-                } else {
-                    n = root.firstChild;
-                    while (n) {
-                        if (n === childA) {
-                            return -1;
-                        } else if (n === childB) {
-                            return 1;
-                        }
-                        n = n.nextSibling;
-                    }
-                }
-            }
-        }
-
-        /*----------------------------------------------------------------------------------------------------------------*/
-
-        // Test for IE's crash (IE 6/7) or exception (IE >= 8) when a reference to garbage-collected text node is queried
-        var crashyTextNodes = false;
-
-        function isBrokenNode(node) {
-            var n;
-            try {
-                n = node.parentNode;
-                return false;
-            } catch (e) {
+    function isAncestorOf(ancestor, descendant, selfIsAncestor) {
+        var n = selfIsAncestor ? descendant : descendant.parentNode;
+        while (n) {
+            if (n === ancestor) {
                 return true;
+            } else {
+                n = n.parentNode;
             }
         }
+        return false;
+    }
 
-        (function() {
-            var el = document.createElement("b");
-            el.innerHTML = "1";
-            var textNode = el.firstChild;
-            el.innerHTML = "<br />";
-            crashyTextNodes = isBrokenNode(textNode);
+    function getClosestAncestorIn(node, ancestor, selfIsAncestor) {
+        var p, n = selfIsAncestor ? node : node.parentNode;
+        while (n) {
+            p = n.parentNode;
+            if (p === ancestor) {
+                return n;
+            }
+            n = p;
+        }
+        return null;
+    }
 
-            api.features.crashyTextNodes = crashyTextNodes;
-        })();
+    function isCharacterDataNode(node) {
+        var t = node.nodeType;
+        return t == 3 || t == 4 || t == 8 ; // Text, CDataSection or Comment
+    }
 
-        /*----------------------------------------------------------------------------------------------------------------*/
+    function insertAfter(node, precedingNode) {
+        var nextNode = precedingNode.nextSibling, parent = precedingNode.parentNode;
+        if (nextNode) {
+            parent.insertBefore(node, nextNode);
+        } else {
+            parent.appendChild(node);
+        }
+        return node;
+    }
 
-        function inspectNode(node) {
-            if (!node) {
-                return "[No node]";
+    // Note that we cannot use splitText() because it is bugridden in IE 9.
+    function splitDataNode(node, index) {
+        var newNode = node.cloneNode(false);
+        newNode.deleteData(0, index);
+        node.deleteData(index, node.length - index);
+        insertAfter(newNode, node);
+        return newNode;
+    }
+
+    function getDocument(node) {
+        if (node.nodeType == 9) {
+            return node;
+        } else if (typeof node.ownerDocument != UNDEF) {
+            return node.ownerDocument;
+        } else if (typeof node.document != UNDEF) {
+            return node.document;
+        } else if (node.parentNode) {
+            return getDocument(node.parentNode);
+        } else {
+            throw new Error("getDocument: no document found for node");
+        }
+    }
+
+    function getWindow(node) {
+        var doc = getDocument(node);
+        if (typeof doc.defaultView != UNDEF) {
+            return doc.defaultView;
+        } else if (typeof doc.parentWindow != UNDEF) {
+            return doc.parentWindow;
+        } else {
+            throw new Error("Cannot get a window object for node");
+        }
+    }
+
+    function getIframeDocument(iframeEl) {
+        if (typeof iframeEl.contentDocument != UNDEF) {
+            return iframeEl.contentDocument;
+        } else if (typeof iframeEl.contentWindow != UNDEF) {
+            return iframeEl.contentWindow.document;
+        } else {
+            throw new Error("getIframeWindow: No Document object found for iframe element");
+        }
+    }
+
+    function getIframeWindow(iframeEl) {
+        if (typeof iframeEl.contentWindow != UNDEF) {
+            return iframeEl.contentWindow;
+        } else if (typeof iframeEl.contentDocument != UNDEF) {
+            return iframeEl.contentDocument.defaultView;
+        } else {
+            throw new Error("getIframeWindow: No Window object found for iframe element");
+        }
+    }
+
+    function getBody(doc) {
+        return util.isHostObject(doc, "body") ? doc.body : doc.getElementsByTagName("body")[0];
+    }
+
+    function getRootContainer(node) {
+        var parent;
+        while ( (parent = node.parentNode) ) {
+            node = parent;
+        }
+        return node;
+    }
+
+    function comparePoints(nodeA, offsetA, nodeB, offsetB) {
+        // See http://www.w3.org/TR/DOM-Level-2-Traversal-Range/ranges.html#Level-2-Range-Comparing
+        var nodeC, root, childA, childB, n;
+        if (nodeA == nodeB) {
+
+            // Case 1: nodes are the same
+            return offsetA === offsetB ? 0 : (offsetA < offsetB) ? -1 : 1;
+        } else if ( (nodeC = getClosestAncestorIn(nodeB, nodeA, true)) ) {
+
+            // Case 2: node C (container B or an ancestor) is a child node of A
+            return offsetA <= getNodeIndex(nodeC) ? -1 : 1;
+        } else if ( (nodeC = getClosestAncestorIn(nodeA, nodeB, true)) ) {
+
+            // Case 3: node C (container A or an ancestor) is a child node of B
+            return getNodeIndex(nodeC) < offsetB  ? -1 : 1;
+        } else {
+
+            // Case 4: containers are siblings or descendants of siblings
+            root = getCommonAncestor(nodeA, nodeB);
+            childA = (nodeA === root) ? root : getClosestAncestorIn(nodeA, root, true);
+            childB = (nodeB === root) ? root : getClosestAncestorIn(nodeB, root, true);
+
+            if (childA === childB) {
+                // This shouldn't be possible
+
+                throw new Error("comparePoints got to case 4 and childA and childB are the same!");
+            } else {
+                n = root.firstChild;
+                while (n) {
+                    if (n === childA) {
+                        return -1;
+                    } else if (n === childB) {
+                        return 1;
+                    }
+                    n = n.nextSibling;
+                }
+                throw new Error("Should not be here!");
             }
-            if (crashyTextNodes && isBrokenNode(node)) {
-                return "[Broken node]";
-            }
-            if (isCharacterDataNode(node)) {
-                return '"' + node.data + '"';
-            }
-            if (node.nodeType == 1) {
-                var idAttr = node.id ? ' id="' + node.id + '"' : "";
-                return "<" + node.nodeName + idAttr + ">[index:" + getNodeIndex(node) + ",length:" + node.childNodes.length + "][" + (node.innerHTML || "[innerHTML not supported]").slice(0, 25) + "]";
-            }
+        }
+    }
+
+    function fragmentFromNodeChildren(node) {
+        var fragment = getDocument(node).createDocumentFragment(), child;
+        while ( (child = node.firstChild) ) {
+            fragment.appendChild(child);
+        }
+        return fragment;
+    }
+
+    function inspectNode(node) {
+        if (!node) {
+            return "[No node]";
+        }
+        if (isCharacterDataNode(node)) {
+            return '"' + node.data + '"';
+        } else if (node.nodeType == 1) {
+            var idAttr = node.id ? ' id="' + node.id + '"' : "";
+            return "<" + node.nodeName + idAttr + ">[" + node.childNodes.length + "]";
+        } else {
             return node.nodeName;
         }
+    }
 
-        function fragmentFromNodeChildren(node) {
-            var fragment = getDocument(node).createDocumentFragment(), child;
-            while ( (child = node.firstChild) ) {
-                fragment.appendChild(child);
+    /**
+     * @constructor
+     */
+    function NodeIterator(root) {
+        this.root = root;
+        this._next = root;
+    }
+
+    NodeIterator.prototype = {
+        _current: null,
+
+        hasNext: function() {
+            return !!this._next;
+        },
+
+        next: function() {
+            var n = this._current = this._next;
+            var child, next;
+            if (this._current) {
+                child = n.firstChild;
+                if (child) {
+                    this._next = child;
+                } else {
+                    next = null;
+                    while ((n !== this.root) && !(next = n.nextSibling)) {
+                        n = n.parentNode;
+                    }
+                    this._next = next;
+                }
             }
-            return fragment;
-        }
+            return this._current;
+        },
 
-        var getComputedStyleProperty;
-        if (typeof window.getComputedStyle != UNDEF) {
-            getComputedStyleProperty = function(el, propName) {
-                return getWindow(el).getComputedStyle(el, null)[propName];
-            };
-        } else if (typeof document.documentElement.currentStyle != UNDEF) {
-            getComputedStyleProperty = function(el, propName) {
-                return el.currentStyle ? el.currentStyle[propName] : "";
-            };
-        } else {
-            module.fail("No means of obtaining computed style properties found");
+        detach: function() {
+            this._current = this._next = this.root = null;
         }
+    };
 
-        function createTestElement(doc, html, contentEditable) {
-            var body = getBody(doc);
-            var el = doc.createElement("div");
-            el.contentEditable = "" + !!contentEditable;
-            if (html) {
-                el.innerHTML = html;
+    function createIterator(root) {
+        return new NodeIterator(root);
+    }
+
+    /**
+     * @constructor
+     */
+    function DomPosition(node, offset) {
+        this.node = node;
+        this.offset = offset;
+    }
+
+    DomPosition.prototype = {
+        equals: function(pos) {
+            return this.node === pos.node & this.offset == pos.offset;
+        },
+
+        inspect: function() {
+            return "[DomPosition(" + inspectNode(this.node) + ":" + this.offset + ")]";
+        }
+    };
+
+    /**
+     * @constructor
+     */
+    function DOMException(codeName) {
+        this.code = this[codeName];
+        this.codeName = codeName;
+        this.message = "DOMException: " + this.codeName;
+    }
+
+    DOMException.prototype = {
+        INDEX_SIZE_ERR: 1,
+        HIERARCHY_REQUEST_ERR: 3,
+        WRONG_DOCUMENT_ERR: 4,
+        NO_MODIFICATION_ALLOWED_ERR: 7,
+        NOT_FOUND_ERR: 8,
+        NOT_SUPPORTED_ERR: 9,
+        INVALID_STATE_ERR: 11
+    };
+
+    DOMException.prototype.toString = function() {
+        return this.message;
+    };
+
+    api.dom = {
+        arrayContains: arrayContains,
+        isHtmlNamespace: isHtmlNamespace,
+        parentElement: parentElement,
+        getNodeIndex: getNodeIndex,
+        getNodeLength: getNodeLength,
+        getCommonAncestor: getCommonAncestor,
+        isAncestorOf: isAncestorOf,
+        getClosestAncestorIn: getClosestAncestorIn,
+        isCharacterDataNode: isCharacterDataNode,
+        insertAfter: insertAfter,
+        splitDataNode: splitDataNode,
+        getDocument: getDocument,
+        getWindow: getWindow,
+        getIframeWindow: getIframeWindow,
+        getIframeDocument: getIframeDocument,
+        getBody: getBody,
+        getRootContainer: getRootContainer,
+        comparePoints: comparePoints,
+        inspectNode: inspectNode,
+        fragmentFromNodeChildren: fragmentFromNodeChildren,
+        createIterator: createIterator,
+        DomPosition: DomPosition
+    };
+
+    api.DOMException = DOMException;
+});rangy.createModule("DomRange", function(api, module) {
+    api.requireModules( ["DomUtil"] );
+
+
+    var dom = api.dom;
+    var DomPosition = dom.DomPosition;
+    var DOMException = api.DOMException;
+    
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    // Utility functions
+
+    function isNonTextPartiallySelected(node, range) {
+        return (node.nodeType != 3) &&
+               (dom.isAncestorOf(node, range.startContainer, true) || dom.isAncestorOf(node, range.endContainer, true));
+    }
+
+    function getRangeDocument(range) {
+        return dom.getDocument(range.startContainer);
+    }
+
+    function dispatchEvent(range, type, args) {
+        var listeners = range._listeners[type];
+        if (listeners) {
+            for (var i = 0, len = listeners.length; i < len; ++i) {
+                listeners[i].call(range, {target: range, args: args});
             }
+        }
+    }
 
-            // Insert the test element at the start of the body to prevent scrolling to the bottom in iOS (issue #292)
-            var bodyFirstChild = body.firstChild;
-            if (bodyFirstChild) {
-                body.insertBefore(el, bodyFirstChild);
+    function getBoundaryBeforeNode(node) {
+        return new DomPosition(node.parentNode, dom.getNodeIndex(node));
+    }
+
+    function getBoundaryAfterNode(node) {
+        return new DomPosition(node.parentNode, dom.getNodeIndex(node) + 1);
+    }
+
+    function insertNodeAtPosition(node, n, o) {
+        var firstNodeInserted = node.nodeType == 11 ? node.firstChild : node;
+        if (dom.isCharacterDataNode(n)) {
+            if (o == n.length) {
+                dom.insertAfter(node, n);
             } else {
-                body.appendChild(el);
+                n.parentNode.insertBefore(node, o == 0 ? n : dom.splitDataNode(n, o));
+            }
+        } else if (o >= n.childNodes.length) {
+            n.appendChild(node);
+        } else {
+            n.insertBefore(node, n.childNodes[o]);
+        }
+        return firstNodeInserted;
+    }
+
+    function cloneSubtree(iterator) {
+        var partiallySelected;
+        for (var node, frag = getRangeDocument(iterator.range).createDocumentFragment(), subIterator; node = iterator.next(); ) {
+            partiallySelected = iterator.isPartiallySelectedSubtree();
+
+            node = node.cloneNode(!partiallySelected);
+            if (partiallySelected) {
+                subIterator = iterator.getSubtreeIterator();
+                node.appendChild(cloneSubtree(subIterator));
+                subIterator.detach(true);
             }
 
-            return el;
+            if (node.nodeType == 10) { // DocumentType
+                throw new DOMException("HIERARCHY_REQUEST_ERR");
+            }
+            frag.appendChild(node);
         }
+        return frag;
+    }
 
-        function removeNode(node) {
-            return node.parentNode.removeChild(node);
-        }
-
-        function NodeIterator(root) {
-            this.root = root;
-            this._next = root;
-        }
-
-        NodeIterator.prototype = {
-            _current: null,
-
-            hasNext: function() {
-                return !!this._next;
-            },
-
-            next: function() {
-                var n = this._current = this._next;
-                var child, next;
-                if (this._current) {
-                    child = n.firstChild;
-                    if (child) {
-                        this._next = child;
-                    } else {
-                        next = null;
-                        while ((n !== this.root) && !(next = n.nextSibling)) {
-                            n = n.parentNode;
-                        }
-                        this._next = next;
+    function iterateSubtree(rangeIterator, func, iteratorState) {
+        var it, n;
+        iteratorState = iteratorState || { stop: false };
+        for (var node, subRangeIterator; node = rangeIterator.next(); ) {
+            //log.debug("iterateSubtree, partially selected: " + rangeIterator.isPartiallySelectedSubtree(), nodeToString(node));
+            if (rangeIterator.isPartiallySelectedSubtree()) {
+                // The node is partially selected by the Range, so we can use a new RangeIterator on the portion of the
+                // node selected by the Range.
+                if (func(node) === false) {
+                    iteratorState.stop = true;
+                    return;
+                } else {
+                    subRangeIterator = rangeIterator.getSubtreeIterator();
+                    iterateSubtree(subRangeIterator, func, iteratorState);
+                    subRangeIterator.detach(true);
+                    if (iteratorState.stop) {
+                        return;
                     }
                 }
-                return this._current;
-            },
-
-            detach: function() {
-                this._current = this._next = this.root = null;
+            } else {
+                // The whole node is selected, so we can use efficient DOM iteration to iterate over the node and its
+                // descendant
+                it = dom.createIterator(node);
+                while ( (n = it.next()) ) {
+                    if (func(n) === false) {
+                        iteratorState.stop = true;
+                        return;
+                    }
+                }
             }
-        };
-
-        function createIterator(root) {
-            return new NodeIterator(root);
         }
+    }
 
-        function DomPosition(node, offset) {
-            this.node = node;
-            this.offset = offset;
-        }
-
-        DomPosition.prototype = {
-            equals: function(pos) {
-                return !!pos && this.node === pos.node && this.offset == pos.offset;
-            },
-
-            inspect: function() {
-                return "[DomPosition(" + inspectNode(this.node) + ":" + this.offset + ")]";
-            },
-
-            toString: function() {
-                return this.inspect();
+    function deleteSubtree(iterator) {
+        var subIterator;
+        while (iterator.next()) {
+            if (iterator.isPartiallySelectedSubtree()) {
+                subIterator = iterator.getSubtreeIterator();
+                deleteSubtree(subIterator);
+                subIterator.detach(true);
+            } else {
+                iterator.remove();
             }
-        };
+        }
+    }
 
-        function DOMException(codeName) {
-            this.code = this[codeName];
-            this.codeName = codeName;
-            this.message = "DOMException: " + this.codeName;
+    function extractSubtree(iterator) {
+
+        for (var node, frag = getRangeDocument(iterator.range).createDocumentFragment(), subIterator; node = iterator.next(); ) {
+
+
+            if (iterator.isPartiallySelectedSubtree()) {
+                node = node.cloneNode(false);
+                subIterator = iterator.getSubtreeIterator();
+                node.appendChild(extractSubtree(subIterator));
+                subIterator.detach(true);
+            } else {
+                iterator.remove();
+            }
+            if (node.nodeType == 10) { // DocumentType
+                throw new DOMException("HIERARCHY_REQUEST_ERR");
+            }
+            frag.appendChild(node);
+        }
+        return frag;
+    }
+
+    function getNodesInRange(range, nodeTypes, filter) {
+        //log.info("getNodesInRange, " + nodeTypes.join(","));
+        var filterNodeTypes = !!(nodeTypes && nodeTypes.length), regex;
+        var filterExists = !!filter;
+        if (filterNodeTypes) {
+            regex = new RegExp("^(" + nodeTypes.join("|") + ")$");
         }
 
-        DOMException.prototype = {
-            INDEX_SIZE_ERR: 1,
-            HIERARCHY_REQUEST_ERR: 3,
-            WRONG_DOCUMENT_ERR: 4,
-            NO_MODIFICATION_ALLOWED_ERR: 7,
-            NOT_FOUND_ERR: 8,
-            NOT_SUPPORTED_ERR: 9,
-            INVALID_STATE_ERR: 11,
-            INVALID_NODE_TYPE_ERR: 24
-        };
+        var nodes = [];
+        iterateSubtree(new RangeIterator(range, false), function(node) {
+            if ((!filterNodeTypes || regex.test(node.nodeType)) && (!filterExists || filter(node))) {
+                nodes.push(node);
+            }
+        });
+        return nodes;
+    }
 
-        DOMException.prototype.toString = function() {
-            return this.message;
-        };
-
-        api.dom = {
-            arrayContains: arrayContains,
-            isHtmlNamespace: isHtmlNamespace,
-            parentElement: parentElement,
-            getNodeIndex: getNodeIndex,
-            getNodeLength: getNodeLength,
-            getCommonAncestor: getCommonAncestor,
-            isAncestorOf: isAncestorOf,
-            isOrIsAncestorOf: isOrIsAncestorOf,
-            getClosestAncestorIn: getClosestAncestorIn,
-            isCharacterDataNode: isCharacterDataNode,
-            isTextOrCommentNode: isTextOrCommentNode,
-            insertAfter: insertAfter,
-            splitDataNode: splitDataNode,
-            getDocument: getDocument,
-            getWindow: getWindow,
-            getIframeWindow: getIframeWindow,
-            getIframeDocument: getIframeDocument,
-            getBody: getBody,
-            isWindow: isWindow,
-            getContentDocument: getContentDocument,
-            getRootContainer: getRootContainer,
-            comparePoints: comparePoints,
-            isBrokenNode: isBrokenNode,
-            inspectNode: inspectNode,
-            getComputedStyleProperty: getComputedStyleProperty,
-            createTestElement: createTestElement,
-            removeNode: removeNode,
-            fragmentFromNodeChildren: fragmentFromNodeChildren,
-            createIterator: createIterator,
-            DomPosition: DomPosition
-        };
-
-        api.DOMException = DOMException;
-    });
+    function inspect(range) {
+        var name = (typeof range.getName == "undefined") ? "Range" : range.getName();
+        return "[" + name + "(" + dom.inspectNode(range.startContainer) + ":" + range.startOffset + ", " +
+                dom.inspectNode(range.endContainer) + ":" + range.endOffset + ")]";
+    }
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    // Pure JavaScript implementation of DOM Range
-    api.createCoreModule("DomRange", ["DomUtil"], function(api, module) {
-        var dom = api.dom;
-        var util = api.util;
-        var DomPosition = dom.DomPosition;
-        var DOMException = api.DOMException;
+    // RangeIterator code partially borrows from IERange by Tim Ryan (http://github.com/timcameronryan/IERange)
 
-        var isCharacterDataNode = dom.isCharacterDataNode;
-        var getNodeIndex = dom.getNodeIndex;
-        var isOrIsAncestorOf = dom.isOrIsAncestorOf;
-        var getDocument = dom.getDocument;
-        var comparePoints = dom.comparePoints;
-        var splitDataNode = dom.splitDataNode;
-        var getClosestAncestorIn = dom.getClosestAncestorIn;
-        var getNodeLength = dom.getNodeLength;
-        var arrayContains = dom.arrayContains;
-        var getRootContainer = dom.getRootContainer;
-        var crashyTextNodes = api.features.crashyTextNodes;
+    /**
+     * @constructor
+     */
+    function RangeIterator(range, clonePartiallySelectedTextNodes) {
+        this.range = range;
+        this.clonePartiallySelectedTextNodes = clonePartiallySelectedTextNodes;
 
-        var removeNode = dom.removeNode;
 
-        /*----------------------------------------------------------------------------------------------------------------*/
 
-        // Utility functions
+        if (!range.collapsed) {
+            this.sc = range.startContainer;
+            this.so = range.startOffset;
+            this.ec = range.endContainer;
+            this.eo = range.endOffset;
+            var root = range.commonAncestorContainer;
 
-        function isNonTextPartiallySelected(node, range) {
-            return (node.nodeType != 3) &&
-                   (isOrIsAncestorOf(node, range.startContainer) || isOrIsAncestorOf(node, range.endContainer));
-        }
-
-        function getRangeDocument(range) {
-            return range.document || getDocument(range.startContainer);
-        }
-
-        function getRangeRoot(range) {
-            return getRootContainer(range.startContainer);
-        }
-
-        function getBoundaryBeforeNode(node) {
-            return new DomPosition(node.parentNode, getNodeIndex(node));
-        }
-
-        function getBoundaryAfterNode(node) {
-            return new DomPosition(node.parentNode, getNodeIndex(node) + 1);
-        }
-
-        function insertNodeAtPosition(node, n, o) {
-            var firstNodeInserted = node.nodeType == 11 ? node.firstChild : node;
-            if (isCharacterDataNode(n)) {
-                if (o == n.length) {
-                    dom.insertAfter(node, n);
-                } else {
-                    n.parentNode.insertBefore(node, o == 0 ? n : splitDataNode(n, o));
-                }
-            } else if (o >= n.childNodes.length) {
-                n.appendChild(node);
+            if (this.sc === this.ec && dom.isCharacterDataNode(this.sc)) {
+                this.isSingleCharacterDataNode = true;
+                this._first = this._last = this._next = this.sc;
             } else {
-                n.insertBefore(node, n.childNodes[o]);
-            }
-            return firstNodeInserted;
-        }
-
-        function rangesIntersect(rangeA, rangeB, touchingIsIntersecting) {
-            assertRangeValid(rangeA);
-            assertRangeValid(rangeB);
-
-            if (getRangeDocument(rangeB) != getRangeDocument(rangeA)) {
-                throw new DOMException("WRONG_DOCUMENT_ERR");
+                this._first = this._next = (this.sc === root && !dom.isCharacterDataNode(this.sc)) ?
+                    this.sc.childNodes[this.so] : dom.getClosestAncestorIn(this.sc, root, true);
+                this._last = (this.ec === root && !dom.isCharacterDataNode(this.ec)) ?
+                    this.ec.childNodes[this.eo - 1] : dom.getClosestAncestorIn(this.ec, root, true);
             }
 
-            var startComparison = comparePoints(rangeA.startContainer, rangeA.startOffset, rangeB.endContainer, rangeB.endOffset),
-                endComparison = comparePoints(rangeA.endContainer, rangeA.endOffset, rangeB.startContainer, rangeB.startOffset);
-
-            return touchingIsIntersecting ? startComparison <= 0 && endComparison >= 0 : startComparison < 0 && endComparison > 0;
         }
+    }
 
-        function cloneSubtree(iterator) {
-            var partiallySelected;
-            for (var node, frag = getRangeDocument(iterator.range).createDocumentFragment(), subIterator; node = iterator.next(); ) {
-                partiallySelected = iterator.isPartiallySelectedSubtree();
-                node = node.cloneNode(!partiallySelected);
-                if (partiallySelected) {
-                    subIterator = iterator.getSubtreeIterator();
-                    node.appendChild(cloneSubtree(subIterator));
-                    subIterator.detach();
-                }
+    RangeIterator.prototype = {
+        _current: null,
+        _next: null,
+        _first: null,
+        _last: null,
+        isSingleCharacterDataNode: false,
 
-                if (node.nodeType == 10) { // DocumentType
-                    throw new DOMException("HIERARCHY_REQUEST_ERR");
-                }
-                frag.appendChild(node);
-            }
-            return frag;
-        }
+        reset: function() {
+            this._current = null;
+            this._next = this._first;
+        },
 
-        function iterateSubtree(rangeIterator, func, iteratorState) {
-            var it, n;
-            iteratorState = iteratorState || { stop: false };
-            for (var node, subRangeIterator; node = rangeIterator.next(); ) {
-                if (rangeIterator.isPartiallySelectedSubtree()) {
-                    if (func(node) === false) {
-                        iteratorState.stop = true;
-                        return;
-                    } else {
-                        // The node is partially selected by the Range, so we can use a new RangeIterator on the portion of
-                        // the node selected by the Range.
-                        subRangeIterator = rangeIterator.getSubtreeIterator();
-                        iterateSubtree(subRangeIterator, func, iteratorState);
-                        subRangeIterator.detach();
-                        if (iteratorState.stop) {
-                            return;
-                        }
+        hasNext: function() {
+            return !!this._next;
+        },
+
+        next: function() {
+            // Move to next node
+            var current = this._current = this._next;
+            if (current) {
+                this._next = (current !== this._last) ? current.nextSibling : null;
+
+                // Check for partially selected text nodes
+                if (dom.isCharacterDataNode(current) && this.clonePartiallySelectedTextNodes) {
+                    if (current === this.ec) {
+
+                        (current = current.cloneNode(true)).deleteData(this.eo, current.length - this.eo);
                     }
-                } else {
-                    // The whole node is selected, so we can use efficient DOM iteration to iterate over the node and its
-                    // descendants
-                    it = dom.createIterator(node);
-                    while ( (n = it.next()) ) {
-                        if (func(n) === false) {
-                            iteratorState.stop = true;
-                            return;
-                        }
+                    if (this._current === this.sc) {
+
+                        (current = current.cloneNode(true)).deleteData(0, this.so);
                     }
                 }
             }
-        }
 
-        function deleteSubtree(iterator) {
-            var subIterator;
-            while (iterator.next()) {
-                if (iterator.isPartiallySelectedSubtree()) {
-                    subIterator = iterator.getSubtreeIterator();
-                    deleteSubtree(subIterator);
-                    subIterator.detach();
+            return current;
+        },
+
+        remove: function() {
+            var current = this._current, start, end;
+
+            if (dom.isCharacterDataNode(current) && (current === this.sc || current === this.ec)) {
+                start = (current === this.sc) ? this.so : 0;
+                end = (current === this.ec) ? this.eo : current.length;
+                if (start != end) {
+                    current.deleteData(start, end - start);
+                }
+            } else {
+                if (current.parentNode) {
+                    current.parentNode.removeChild(current);
                 } else {
-                    iterator.remove();
+
                 }
             }
-        }
+        },
 
-        function extractSubtree(iterator) {
-            for (var node, frag = getRangeDocument(iterator.range).createDocumentFragment(), subIterator; node = iterator.next(); ) {
+        // Checks if the current node is partially selected
+        isPartiallySelectedSubtree: function() {
+            var current = this._current;
+            return isNonTextPartiallySelected(current, this.range);
+        },
 
-                if (iterator.isPartiallySelectedSubtree()) {
-                    node = node.cloneNode(false);
-                    subIterator = iterator.getSubtreeIterator();
-                    node.appendChild(extractSubtree(subIterator));
-                    subIterator.detach();
-                } else {
-                    iterator.remove();
-                }
-                if (node.nodeType == 10) { // DocumentType
-                    throw new DOMException("HIERARCHY_REQUEST_ERR");
-                }
-                frag.appendChild(node);
-            }
-            return frag;
-        }
-
-        function getNodesInRange(range, nodeTypes, filter) {
-            var filterNodeTypes = !!(nodeTypes && nodeTypes.length), regex;
-            var filterExists = !!filter;
-            if (filterNodeTypes) {
-                regex = new RegExp("^(" + nodeTypes.join("|") + ")$");
-            }
-
-            var nodes = [];
-            iterateSubtree(new RangeIterator(range, false), function(node) {
-                if (filterNodeTypes && !regex.test(node.nodeType)) {
-                    return;
-                }
-                if (filterExists && !filter(node)) {
-                    return;
-                }
-                // Don't include a boundary container if it is a character data node and the range does not contain any
-                // of its character data. See issue 190.
-                var sc = range.startContainer;
-                if (node == sc && isCharacterDataNode(sc) && range.startOffset == sc.length) {
-                    return;
-                }
-
-                var ec = range.endContainer;
-                if (node == ec && isCharacterDataNode(ec) && range.endOffset == 0) {
-                    return;
-                }
-
-                nodes.push(node);
-            });
-            return nodes;
-        }
-
-        function inspect(range) {
-            var name = (typeof range.getName == "undefined") ? "Range" : range.getName();
-            return "[" + name + "(" + dom.inspectNode(range.startContainer) + ":" + range.startOffset + ", " +
-                    dom.inspectNode(range.endContainer) + ":" + range.endOffset + ")]";
-        }
-
-        /*----------------------------------------------------------------------------------------------------------------*/
-
-        // RangeIterator code partially borrows from IERange by Tim Ryan (http://github.com/timcameronryan/IERange)
-
-        function RangeIterator(range, clonePartiallySelectedTextNodes) {
-            this.range = range;
-            this.clonePartiallySelectedTextNodes = clonePartiallySelectedTextNodes;
-
-
-            if (!range.collapsed) {
-                this.sc = range.startContainer;
-                this.so = range.startOffset;
-                this.ec = range.endContainer;
-                this.eo = range.endOffset;
-                var root = range.commonAncestorContainer;
-
-                if (this.sc === this.ec && isCharacterDataNode(this.sc)) {
-                    this.isSingleCharacterDataNode = true;
-                    this._first = this._last = this._next = this.sc;
-                } else {
-                    this._first = this._next = (this.sc === root && !isCharacterDataNode(this.sc)) ?
-                        this.sc.childNodes[this.so] : getClosestAncestorIn(this.sc, root, true);
-                    this._last = (this.ec === root && !isCharacterDataNode(this.ec)) ?
-                        this.ec.childNodes[this.eo - 1] : getClosestAncestorIn(this.ec, root, true);
-                }
-            }
-        }
-
-        RangeIterator.prototype = {
-            _current: null,
-            _next: null,
-            _first: null,
-            _last: null,
-            isSingleCharacterDataNode: false,
-
-            reset: function() {
-                this._current = null;
-                this._next = this._first;
-            },
-
-            hasNext: function() {
-                return !!this._next;
-            },
-
-            next: function() {
-                // Move to next node
-                var current = this._current = this._next;
-                if (current) {
-                    this._next = (current !== this._last) ? current.nextSibling : null;
-
-                    // Check for partially selected text nodes
-                    if (isCharacterDataNode(current) && this.clonePartiallySelectedTextNodes) {
-                        if (current === this.ec) {
-                            (current = current.cloneNode(true)).deleteData(this.eo, current.length - this.eo);
-                        }
-                        if (this._current === this.sc) {
-                            (current = current.cloneNode(true)).deleteData(0, this.so);
-                        }
-                    }
-                }
-
-                return current;
-            },
-
-            remove: function() {
-                var current = this._current, start, end;
-
-                if (isCharacterDataNode(current) && (current === this.sc || current === this.ec)) {
-                    start = (current === this.sc) ? this.so : 0;
-                    end = (current === this.ec) ? this.eo : current.length;
-                    if (start != end) {
-                        current.deleteData(start, end - start);
-                    }
-                } else {
-                    if (current.parentNode) {
-                        removeNode(current);
-                    } else {
-                    }
-                }
-            },
-
-            // Checks if the current node is partially selected
-            isPartiallySelectedSubtree: function() {
+        getSubtreeIterator: function() {
+            var subRange;
+            if (this.isSingleCharacterDataNode) {
+                subRange = this.range.cloneRange();
+                subRange.collapse();
+            } else {
+                subRange = new Range(getRangeDocument(this.range));
                 var current = this._current;
-                return isNonTextPartiallySelected(current, this.range);
-            },
+                var startContainer = current, startOffset = 0, endContainer = current, endOffset = dom.getNodeLength(current);
 
-            getSubtreeIterator: function() {
-                var subRange;
-                if (this.isSingleCharacterDataNode) {
-                    subRange = this.range.cloneRange();
-                    subRange.collapse(false);
-                } else {
-                    subRange = new Range(getRangeDocument(this.range));
-                    var current = this._current;
-                    var startContainer = current, startOffset = 0, endContainer = current, endOffset = getNodeLength(current);
-
-                    if (isOrIsAncestorOf(current, this.sc)) {
-                        startContainer = this.sc;
-                        startOffset = this.so;
-                    }
-                    if (isOrIsAncestorOf(current, this.ec)) {
-                        endContainer = this.ec;
-                        endOffset = this.eo;
-                    }
-
-                    updateBoundaries(subRange, startContainer, startOffset, endContainer, endOffset);
+                if (dom.isAncestorOf(current, this.sc, true)) {
+                    startContainer = this.sc;
+                    startOffset = this.so;
                 }
-                return new RangeIterator(subRange, this.clonePartiallySelectedTextNodes);
-            },
+                if (dom.isAncestorOf(current, this.ec, true)) {
+                    endContainer = this.ec;
+                    endOffset = this.eo;
+                }
 
-            detach: function() {
-                this.range = this._current = this._next = this._first = this._last = this.sc = this.so = this.ec = this.eo = null;
+                updateBoundaries(subRange, startContainer, startOffset, endContainer, endOffset);
             }
+            return new RangeIterator(subRange, this.clonePartiallySelectedTextNodes);
+        },
+
+        detach: function(detachRange) {
+            if (detachRange) {
+                this.range.detach();
+            }
+            this.range = this._current = this._next = this._first = this._last = this.sc = this.so = this.ec = this.eo = null;
+        }
+    };
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    // Exceptions
+
+    /**
+     * @constructor
+     */
+    function RangeException(codeName) {
+        this.code = this[codeName];
+        this.codeName = codeName;
+        this.message = "RangeException: " + this.codeName;
+    }
+
+    RangeException.prototype = {
+        BAD_BOUNDARYPOINTS_ERR: 1,
+        INVALID_NODE_TYPE_ERR: 2
+    };
+
+    RangeException.prototype.toString = function() {
+        return this.message;
+    };
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    /**
+     * Currently iterates through all nodes in the range on creation until I think of a decent way to do it
+     * TODO: Look into making this a proper iterator, not requiring preloading everything first
+     * @constructor
+     */
+    function RangeNodeIterator(range, nodeTypes, filter) {
+        this.nodes = getNodesInRange(range, nodeTypes, filter);
+        this._next = this.nodes[0];
+        this._position = 0;
+    }
+
+    RangeNodeIterator.prototype = {
+        _current: null,
+
+        hasNext: function() {
+            return !!this._next;
+        },
+
+        next: function() {
+            this._current = this._next;
+            this._next = this.nodes[ ++this._position ];
+            return this._current;
+        },
+
+        detach: function() {
+            this._current = this._next = this.nodes = null;
+        }
+    };
+
+    var beforeAfterNodeTypes = [1, 3, 4, 5, 7, 8, 10];
+    var rootContainerNodeTypes = [2, 9, 11];
+    var readonlyNodeTypes = [5, 6, 10, 12];
+    var insertableNodeTypes = [1, 3, 4, 5, 7, 8, 10, 11];
+    var surroundNodeTypes = [1, 3, 4, 5, 7, 8];
+
+    function createAncestorFinder(nodeTypes) {
+        return function(node, selfIsAncestor) {
+            var t, n = selfIsAncestor ? node : node.parentNode;
+            while (n) {
+                t = n.nodeType;
+                if (dom.arrayContains(nodeTypes, t)) {
+                    return n;
+                }
+                n = n.parentNode;
+            }
+            return null;
+        };
+    }
+
+    var getRootContainer = dom.getRootContainer;
+    var getDocumentOrFragmentContainer = createAncestorFinder( [9, 11] );
+    var getReadonlyAncestor = createAncestorFinder(readonlyNodeTypes);
+    var getDocTypeNotationEntityAncestor = createAncestorFinder( [6, 10, 12] );
+
+    function assertNoDocTypeNotationEntityAncestor(node, allowSelf) {
+        if (getDocTypeNotationEntityAncestor(node, allowSelf)) {
+            throw new RangeException("INVALID_NODE_TYPE_ERR");
+        }
+    }
+
+    function assertNotDetached(range) {
+        if (!range.startContainer) {
+            throw new DOMException("INVALID_STATE_ERR");
+        }
+    }
+
+    function assertValidNodeType(node, invalidTypes) {
+        if (!dom.arrayContains(invalidTypes, node.nodeType)) {
+            throw new RangeException("INVALID_NODE_TYPE_ERR");
+        }
+    }
+
+    function assertValidOffset(node, offset) {
+        if (offset < 0 || offset > (dom.isCharacterDataNode(node) ? node.length : node.childNodes.length)) {
+            throw new DOMException("INDEX_SIZE_ERR");
+        }
+    }
+
+    function assertSameDocumentOrFragment(node1, node2) {
+        if (getDocumentOrFragmentContainer(node1, true) !== getDocumentOrFragmentContainer(node2, true)) {
+            throw new DOMException("WRONG_DOCUMENT_ERR");
+        }
+    }
+
+    function assertNodeNotReadOnly(node) {
+        if (getReadonlyAncestor(node, true)) {
+            throw new DOMException("NO_MODIFICATION_ALLOWED_ERR");
+        }
+    }
+
+    function assertNode(node, codeName) {
+        if (!node) {
+            throw new DOMException(codeName);
+        }
+    }
+
+    function isOrphan(node) {
+        return !dom.arrayContains(rootContainerNodeTypes, node.nodeType) && !getDocumentOrFragmentContainer(node, true);
+    }
+
+    function isValidOffset(node, offset) {
+        return offset <= (dom.isCharacterDataNode(node) ? node.length : node.childNodes.length);
+    }
+
+    function isRangeValid(range) {
+        return (!!range.startContainer && !!range.endContainer
+                && !isOrphan(range.startContainer)
+                && !isOrphan(range.endContainer)
+                && isValidOffset(range.startContainer, range.startOffset)
+                && isValidOffset(range.endContainer, range.endOffset));
+    }
+
+    function assertRangeValid(range) {
+        assertNotDetached(range);
+        if (!isRangeValid(range)) {
+            throw new Error("Range error: Range is no longer valid after DOM mutation (" + range.inspect() + ")");
+        }
+    }
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    // Test the browser's innerHTML support to decide how to implement createContextualFragment
+    var styleEl = document.createElement("style");
+    var htmlParsingConforms = false;
+    try {
+        styleEl.innerHTML = "<b>x</b>";
+        htmlParsingConforms = (styleEl.firstChild.nodeType == 3); // Opera incorrectly creates an element node
+    } catch (e) {
+        // IE 6 and 7 throw
+    }
+
+    api.features.htmlParsingConforms = htmlParsingConforms;
+
+    var createContextualFragment = htmlParsingConforms ?
+
+        // Implementation as per HTML parsing spec, trusting in the browser's implementation of innerHTML. See
+        // discussion and base code for this implementation at issue 67.
+        // Spec: http://html5.org/specs/dom-parsing.html#extensions-to-the-range-interface
+        // Thanks to Aleks Williams.
+        function(fragmentStr) {
+            // "Let node the context object's start's node."
+            var node = this.startContainer;
+            var doc = dom.getDocument(node);
+
+            // "If the context object's start's node is null, raise an INVALID_STATE_ERR
+            // exception and abort these steps."
+            if (!node) {
+                throw new DOMException("INVALID_STATE_ERR");
+            }
+
+            // "Let element be as follows, depending on node's interface:"
+            // Document, Document Fragment: null
+            var el = null;
+
+            // "Element: node"
+            if (node.nodeType == 1) {
+                el = node;
+
+            // "Text, Comment: node's parentElement"
+            } else if (dom.isCharacterDataNode(node)) {
+                el = dom.parentElement(node);
+            }
+
+            // "If either element is null or element's ownerDocument is an HTML document
+            // and element's local name is "html" and element's namespace is the HTML
+            // namespace"
+            if (el === null || (
+                el.nodeName == "HTML"
+                && dom.isHtmlNamespace(dom.getDocument(el).documentElement)
+                && dom.isHtmlNamespace(el)
+            )) {
+
+            // "let element be a new Element with "body" as its local name and the HTML
+            // namespace as its namespace.""
+                el = doc.createElement("body");
+            } else {
+                el = el.cloneNode(false);
+            }
+
+            // "If the node's document is an HTML document: Invoke the HTML fragment parsing algorithm."
+            // "If the node's document is an XML document: Invoke the XML fragment parsing algorithm."
+            // "In either case, the algorithm must be invoked with fragment as the input
+            // and element as the context element."
+            el.innerHTML = fragmentStr;
+
+            // "If this raises an exception, then abort these steps. Otherwise, let new
+            // children be the nodes returned."
+
+            // "Let fragment be a new DocumentFragment."
+            // "Append all new children to fragment."
+            // "Return fragment."
+            return dom.fragmentFromNodeChildren(el);
+        } :
+
+        // In this case, innerHTML cannot be trusted, so fall back to a simpler, non-conformant implementation that
+        // previous versions of Rangy used (with the exception of using a body element rather than a div)
+        function(fragmentStr) {
+            assertNotDetached(this);
+            var doc = getRangeDocument(this);
+            var el = doc.createElement("body");
+            el.innerHTML = fragmentStr;
+
+            return dom.fragmentFromNodeChildren(el);
         };
 
-        /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
 
-        var beforeAfterNodeTypes = [1, 3, 4, 5, 7, 8, 10];
-        var rootContainerNodeTypes = [2, 9, 11];
-        var readonlyNodeTypes = [5, 6, 10, 12];
-        var insertableNodeTypes = [1, 3, 4, 5, 7, 8, 10, 11];
-        var surroundNodeTypes = [1, 3, 4, 5, 7, 8];
+    var rangeProperties = ["startContainer", "startOffset", "endContainer", "endOffset", "collapsed",
+        "commonAncestorContainer"];
 
-        function createAncestorFinder(nodeTypes) {
-            return function(node, selfIsAncestor) {
-                var t, n = selfIsAncestor ? node : node.parentNode;
-                while (n) {
-                    t = n.nodeType;
-                    if (arrayContains(nodeTypes, t)) {
-                        return n;
-                    }
-                    n = n.parentNode;
+    var s2s = 0, s2e = 1, e2e = 2, e2s = 3;
+    var n_b = 0, n_a = 1, n_b_a = 2, n_i = 3;
+
+    function RangePrototype() {}
+
+    RangePrototype.prototype = {
+        attachListener: function(type, listener) {
+            this._listeners[type].push(listener);
+        },
+
+        compareBoundaryPoints: function(how, range) {
+            assertRangeValid(this);
+            assertSameDocumentOrFragment(this.startContainer, range.startContainer);
+
+            var nodeA, offsetA, nodeB, offsetB;
+            var prefixA = (how == e2s || how == s2s) ? "start" : "end";
+            var prefixB = (how == s2e || how == s2s) ? "start" : "end";
+            nodeA = this[prefixA + "Container"];
+            offsetA = this[prefixA + "Offset"];
+            nodeB = range[prefixB + "Container"];
+            offsetB = range[prefixB + "Offset"];
+            return dom.comparePoints(nodeA, offsetA, nodeB, offsetB);
+        },
+
+        insertNode: function(node) {
+            assertRangeValid(this);
+            assertValidNodeType(node, insertableNodeTypes);
+            assertNodeNotReadOnly(this.startContainer);
+
+            if (dom.isAncestorOf(node, this.startContainer, true)) {
+                throw new DOMException("HIERARCHY_REQUEST_ERR");
+            }
+
+            // No check for whether the container of the start of the Range is of a type that does not allow
+            // children of the type of node: the browser's DOM implementation should do this for us when we attempt
+            // to add the node
+
+            var firstNodeInserted = insertNodeAtPosition(node, this.startContainer, this.startOffset);
+            this.setStartBefore(firstNodeInserted);
+        },
+
+        cloneContents: function() {
+            assertRangeValid(this);
+
+            var clone, frag;
+            if (this.collapsed) {
+                return getRangeDocument(this).createDocumentFragment();
+            } else {
+                if (this.startContainer === this.endContainer && dom.isCharacterDataNode(this.startContainer)) {
+                    clone = this.startContainer.cloneNode(true);
+                    clone.data = clone.data.slice(this.startOffset, this.endOffset);
+                    frag = getRangeDocument(this).createDocumentFragment();
+                    frag.appendChild(clone);
+                    return frag;
+                } else {
+                    var iterator = new RangeIterator(this, true);
+                    clone = cloneSubtree(iterator);
+                    iterator.detach();
                 }
-                return null;
-            };
-        }
-
-        var getDocumentOrFragmentContainer = createAncestorFinder( [9, 11] );
-        var getReadonlyAncestor = createAncestorFinder(readonlyNodeTypes);
-        var getDocTypeNotationEntityAncestor = createAncestorFinder( [6, 10, 12] );
-
-        function assertNoDocTypeNotationEntityAncestor(node, allowSelf) {
-            if (getDocTypeNotationEntityAncestor(node, allowSelf)) {
-                throw new DOMException("INVALID_NODE_TYPE_ERR");
+                return clone;
             }
-        }
+        },
 
-        function assertValidNodeType(node, invalidTypes) {
-            if (!arrayContains(invalidTypes, node.nodeType)) {
-                throw new DOMException("INVALID_NODE_TYPE_ERR");
+        canSurroundContents: function() {
+            assertRangeValid(this);
+            assertNodeNotReadOnly(this.startContainer);
+            assertNodeNotReadOnly(this.endContainer);
+
+            // Check if the contents can be surrounded. Specifically, this means whether the range partially selects
+            // no non-text nodes.
+            var iterator = new RangeIterator(this, true);
+            var boundariesInvalid = (iterator._first && (isNonTextPartiallySelected(iterator._first, this)) ||
+                    (iterator._last && isNonTextPartiallySelected(iterator._last, this)));
+            iterator.detach();
+            return !boundariesInvalid;
+        },
+
+        surroundContents: function(node) {
+            assertValidNodeType(node, surroundNodeTypes);
+
+            if (!this.canSurroundContents()) {
+                throw new RangeException("BAD_BOUNDARYPOINTS_ERR");
             }
-        }
 
-        function assertValidOffset(node, offset) {
-            if (offset < 0 || offset > (isCharacterDataNode(node) ? node.length : node.childNodes.length)) {
-                throw new DOMException("INDEX_SIZE_ERR");
+            // Extract the contents
+            var content = this.extractContents();
+
+            // Clear the children of the node
+            if (node.hasChildNodes()) {
+                while (node.lastChild) {
+                    node.removeChild(node.lastChild);
+                }
             }
-        }
 
-        function assertSameDocumentOrFragment(node1, node2) {
-            if (getDocumentOrFragmentContainer(node1, true) !== getDocumentOrFragmentContainer(node2, true)) {
+            // Insert the new node and add the extracted contents
+            insertNodeAtPosition(node, this.startContainer, this.startOffset);
+            node.appendChild(content);
+
+            this.selectNode(node);
+        },
+
+        cloneRange: function() {
+            assertRangeValid(this);
+            var range = new Range(getRangeDocument(this));
+            var i = rangeProperties.length, prop;
+            while (i--) {
+                prop = rangeProperties[i];
+                range[prop] = this[prop];
+            }
+            return range;
+        },
+
+        toString: function() {
+            assertRangeValid(this);
+            var sc = this.startContainer;
+            if (sc === this.endContainer && dom.isCharacterDataNode(sc)) {
+                return (sc.nodeType == 3 || sc.nodeType == 4) ? sc.data.slice(this.startOffset, this.endOffset) : "";
+            } else {
+                var textBits = [], iterator = new RangeIterator(this, true);
+
+                iterateSubtree(iterator, function(node) {
+                    // Accept only text or CDATA nodes, not comments
+
+                    if (node.nodeType == 3 || node.nodeType == 4) {
+                        textBits.push(node.data);
+                    }
+                });
+                iterator.detach();
+                return textBits.join("");
+            }
+        },
+
+        // The methods below are all non-standard. The following batch were introduced by Mozilla but have since
+        // been removed from Mozilla.
+
+        compareNode: function(node) {
+            assertRangeValid(this);
+
+            var parent = node.parentNode;
+            var nodeIndex = dom.getNodeIndex(node);
+
+            if (!parent) {
+                throw new DOMException("NOT_FOUND_ERR");
+            }
+
+            var startComparison = this.comparePoint(parent, nodeIndex),
+                endComparison = this.comparePoint(parent, nodeIndex + 1);
+
+            if (startComparison < 0) { // Node starts before
+                return (endComparison > 0) ? n_b_a : n_b;
+            } else {
+                return (endComparison > 0) ? n_a : n_i;
+            }
+        },
+
+        comparePoint: function(node, offset) {
+            assertRangeValid(this);
+            assertNode(node, "HIERARCHY_REQUEST_ERR");
+            assertSameDocumentOrFragment(node, this.startContainer);
+
+            if (dom.comparePoints(node, offset, this.startContainer, this.startOffset) < 0) {
+                return -1;
+            } else if (dom.comparePoints(node, offset, this.endContainer, this.endOffset) > 0) {
+                return 1;
+            }
+            return 0;
+        },
+
+        createContextualFragment: createContextualFragment,
+
+        toHtml: function() {
+            assertRangeValid(this);
+            var container = getRangeDocument(this).createElement("div");
+            container.appendChild(this.cloneContents());
+            return container.innerHTML;
+        },
+
+        // touchingIsIntersecting determines whether this method considers a node that borders a range intersects
+        // with it (as in WebKit) or not (as in Gecko pre-1.9, and the default)
+        intersectsNode: function(node, touchingIsIntersecting) {
+            assertRangeValid(this);
+            assertNode(node, "NOT_FOUND_ERR");
+            if (dom.getDocument(node) !== getRangeDocument(this)) {
+                return false;
+            }
+
+            var parent = node.parentNode, offset = dom.getNodeIndex(node);
+            assertNode(parent, "NOT_FOUND_ERR");
+
+            var startComparison = dom.comparePoints(parent, offset, this.endContainer, this.endOffset),
+                endComparison = dom.comparePoints(parent, offset + 1, this.startContainer, this.startOffset);
+
+            return touchingIsIntersecting ? startComparison <= 0 && endComparison >= 0 : startComparison < 0 && endComparison > 0;
+        },
+
+
+        isPointInRange: function(node, offset) {
+            assertRangeValid(this);
+            assertNode(node, "HIERARCHY_REQUEST_ERR");
+            assertSameDocumentOrFragment(node, this.startContainer);
+
+            return (dom.comparePoints(node, offset, this.startContainer, this.startOffset) >= 0) &&
+                   (dom.comparePoints(node, offset, this.endContainer, this.endOffset) <= 0);
+        },
+
+        // The methods below are non-standard and invented by me.
+
+        // Sharing a boundary start-to-end or end-to-start does not count as intersection.
+        intersectsRange: function(range, touchingIsIntersecting) {
+            assertRangeValid(this);
+
+            if (getRangeDocument(range) != getRangeDocument(this)) {
                 throw new DOMException("WRONG_DOCUMENT_ERR");
             }
-        }
 
-        function assertNodeNotReadOnly(node) {
-            if (getReadonlyAncestor(node, true)) {
-                throw new DOMException("NO_MODIFICATION_ALLOWED_ERR");
-            }
-        }
+            var startComparison = dom.comparePoints(this.startContainer, this.startOffset, range.endContainer, range.endOffset),
+                endComparison = dom.comparePoints(this.endContainer, this.endOffset, range.startContainer, range.startOffset);
 
-        function assertNode(node, codeName) {
-            if (!node) {
-                throw new DOMException(codeName);
-            }
-        }
+            return touchingIsIntersecting ? startComparison <= 0 && endComparison >= 0 : startComparison < 0 && endComparison > 0;
+        },
 
-        function isValidOffset(node, offset) {
-            return offset <= (isCharacterDataNode(node) ? node.length : node.childNodes.length);
-        }
+        intersection: function(range) {
+            if (this.intersectsRange(range)) {
+                var startComparison = dom.comparePoints(this.startContainer, this.startOffset, range.startContainer, range.startOffset),
+                    endComparison = dom.comparePoints(this.endContainer, this.endOffset, range.endContainer, range.endOffset);
 
-        function isRangeValid(range) {
-            return (!!range.startContainer && !!range.endContainer &&
-                    !(crashyTextNodes && (dom.isBrokenNode(range.startContainer) || dom.isBrokenNode(range.endContainer))) &&
-                    getRootContainer(range.startContainer) == getRootContainer(range.endContainer) &&
-                    isValidOffset(range.startContainer, range.startOffset) &&
-                    isValidOffset(range.endContainer, range.endOffset));
-        }
+                var intersectionRange = this.cloneRange();
 
-        function assertRangeValid(range) {
-            if (!isRangeValid(range)) {
-                throw new Error("Range error: Range is not valid. This usually happens after DOM mutation. Range: (" + range.inspect() + ")");
-            }
-        }
-
-        /*----------------------------------------------------------------------------------------------------------------*/
-
-        // Test the browser's innerHTML support to decide how to implement createContextualFragment
-        var styleEl = document.createElement("style");
-        var htmlParsingConforms = false;
-        try {
-            styleEl.innerHTML = "<b>x</b>";
-            htmlParsingConforms = (styleEl.firstChild.nodeType == 3); // Opera incorrectly creates an element node
-        } catch (e) {
-            // IE 6 and 7 throw
-        }
-
-        api.features.htmlParsingConforms = htmlParsingConforms;
-
-        var createContextualFragment = htmlParsingConforms ?
-
-            // Implementation as per HTML parsing spec, trusting in the browser's implementation of innerHTML. See
-            // discussion and base code for this implementation at issue 67.
-            // Spec: http://html5.org/specs/dom-parsing.html#extensions-to-the-range-interface
-            // Thanks to Aleks Williams.
-            function(fragmentStr) {
-                // "Let node the context object's start's node."
-                var node = this.startContainer;
-                var doc = getDocument(node);
-
-                // "If the context object's start's node is null, raise an INVALID_STATE_ERR
-                // exception and abort these steps."
-                if (!node) {
-                    throw new DOMException("INVALID_STATE_ERR");
+                if (startComparison == -1) {
+                    intersectionRange.setStart(range.startContainer, range.startOffset);
                 }
-
-                // "Let element be as follows, depending on node's interface:"
-                // Document, Document Fragment: null
-                var el = null;
-
-                // "Element: node"
-                if (node.nodeType == 1) {
-                    el = node;
-
-                // "Text, Comment: node's parentElement"
-                } else if (isCharacterDataNode(node)) {
-                    el = dom.parentElement(node);
+                if (endComparison == 1) {
+                    intersectionRange.setEnd(range.endContainer, range.endOffset);
                 }
+                return intersectionRange;
+            }
+            return null;
+        },
 
-                // "If either element is null or element's ownerDocument is an HTML document
-                // and element's local name is "html" and element's namespace is the HTML
-                // namespace"
-                if (el === null || (
-                    el.nodeName == "HTML" &&
-                    dom.isHtmlNamespace(getDocument(el).documentElement) &&
-                    dom.isHtmlNamespace(el)
-                )) {
-
-                // "let element be a new Element with "body" as its local name and the HTML
-                // namespace as its namespace.""
-                    el = doc.createElement("body");
-                } else {
-                    el = el.cloneNode(false);
+        union: function(range) {
+            if (this.intersectsRange(range, true)) {
+                var unionRange = this.cloneRange();
+                if (dom.comparePoints(range.startContainer, range.startOffset, this.startContainer, this.startOffset) == -1) {
+                    unionRange.setStart(range.startContainer, range.startOffset);
                 }
+                if (dom.comparePoints(range.endContainer, range.endOffset, this.endContainer, this.endOffset) == 1) {
+                    unionRange.setEnd(range.endContainer, range.endOffset);
+                }
+                return unionRange;
+            } else {
+                throw new RangeException("Ranges do not intersect");
+            }
+        },
 
-                // "If the node's document is an HTML document: Invoke the HTML fragment parsing algorithm."
-                // "If the node's document is an XML document: Invoke the XML fragment parsing algorithm."
-                // "In either case, the algorithm must be invoked with fragment as the input
-                // and element as the context element."
-                el.innerHTML = fragmentStr;
+        containsNode: function(node, allowPartial) {
+            if (allowPartial) {
+                return this.intersectsNode(node, false);
+            } else {
+                return this.compareNode(node) == n_i;
+            }
+        },
 
-                // "If this raises an exception, then abort these steps. Otherwise, let new
-                // children be the nodes returned."
+        containsNodeContents: function(node) {
+            return this.comparePoint(node, 0) >= 0 && this.comparePoint(node, dom.getNodeLength(node)) <= 0;
+        },
 
-                // "Let fragment be a new DocumentFragment."
-                // "Append all new children to fragment."
-                // "Return fragment."
-                return dom.fragmentFromNodeChildren(el);
-            } :
+        containsRange: function(range) {
+            return this.intersection(range).equals(range);
+        },
 
-            // In this case, innerHTML cannot be trusted, so fall back to a simpler, non-conformant implementation that
-            // previous versions of Rangy used (with the exception of using a body element rather than a div)
-            function(fragmentStr) {
-                var doc = getRangeDocument(this);
-                var el = doc.createElement("body");
-                el.innerHTML = fragmentStr;
+        containsNodeText: function(node) {
+            var nodeRange = this.cloneRange();
+            nodeRange.selectNode(node);
+            var textNodes = nodeRange.getNodes([3]);
+            if (textNodes.length > 0) {
+                nodeRange.setStart(textNodes[0], 0);
+                var lastTextNode = textNodes.pop();
+                nodeRange.setEnd(lastTextNode, lastTextNode.length);
+                var contains = this.containsRange(nodeRange);
+                nodeRange.detach();
+                return contains;
+            } else {
+                return this.containsNodeContents(node);
+            }
+        },
 
-                return dom.fragmentFromNodeChildren(el);
+        createNodeIterator: function(nodeTypes, filter) {
+            assertRangeValid(this);
+            return new RangeNodeIterator(this, nodeTypes, filter);
+        },
+
+        getNodes: function(nodeTypes, filter) {
+            assertRangeValid(this);
+            return getNodesInRange(this, nodeTypes, filter);
+        },
+
+        getDocument: function() {
+            return getRangeDocument(this);
+        },
+
+        collapseBefore: function(node) {
+            assertNotDetached(this);
+
+            this.setEndBefore(node);
+            this.collapse(false);
+        },
+
+        collapseAfter: function(node) {
+            assertNotDetached(this);
+
+            this.setStartAfter(node);
+            this.collapse(true);
+        },
+
+        getName: function() {
+            return "DomRange";
+        },
+
+        equals: function(range) {
+            return Range.rangesEqual(this, range);
+        },
+
+        isValid: function() {
+            return isRangeValid(this);
+        },
+
+        inspect: function() {
+            return inspect(this);
+        }
+    };
+
+    function copyComparisonConstantsToObject(obj) {
+        obj.START_TO_START = s2s;
+        obj.START_TO_END = s2e;
+        obj.END_TO_END = e2e;
+        obj.END_TO_START = e2s;
+
+        obj.NODE_BEFORE = n_b;
+        obj.NODE_AFTER = n_a;
+        obj.NODE_BEFORE_AND_AFTER = n_b_a;
+        obj.NODE_INSIDE = n_i;
+    }
+
+    function copyComparisonConstants(constructor) {
+        copyComparisonConstantsToObject(constructor);
+        copyComparisonConstantsToObject(constructor.prototype);
+    }
+
+    function createRangeContentRemover(remover, boundaryUpdater) {
+        return function() {
+            assertRangeValid(this);
+
+            var sc = this.startContainer, so = this.startOffset, root = this.commonAncestorContainer;
+
+            var iterator = new RangeIterator(this, true);
+
+            // Work out where to position the range after content removal
+            var node, boundary;
+            if (sc !== root) {
+                node = dom.getClosestAncestorIn(sc, root, true);
+                boundary = getBoundaryAfterNode(node);
+                sc = boundary.node;
+                so = boundary.offset;
+            }
+
+            // Check none of the range is read-only
+            iterateSubtree(iterator, assertNodeNotReadOnly);
+
+            iterator.reset();
+
+            // Remove the content
+            var returnValue = remover(iterator);
+            iterator.detach();
+
+            // Move to the new position
+            boundaryUpdater(this, sc, so, sc, so);
+
+            return returnValue;
+        };
+    }
+
+    function createPrototypeRange(constructor, boundaryUpdater, detacher) {
+        function createBeforeAfterNodeSetter(isBefore, isStart) {
+            return function(node) {
+                assertNotDetached(this);
+                assertValidNodeType(node, beforeAfterNodeTypes);
+                assertValidNodeType(getRootContainer(node), rootContainerNodeTypes);
+
+                var boundary = (isBefore ? getBoundaryBeforeNode : getBoundaryAfterNode)(node);
+                (isStart ? setRangeStart : setRangeEnd)(this, boundary.node, boundary.offset);
             };
-
-        function splitRangeBoundaries(range, positionsToPreserve) {
-            assertRangeValid(range);
-
-            var sc = range.startContainer, so = range.startOffset, ec = range.endContainer, eo = range.endOffset;
-            var startEndSame = (sc === ec);
-
-            if (isCharacterDataNode(ec) && eo > 0 && eo < ec.length) {
-                splitDataNode(ec, eo, positionsToPreserve);
-            }
-
-            if (isCharacterDataNode(sc) && so > 0 && so < sc.length) {
-                sc = splitDataNode(sc, so, positionsToPreserve);
-                if (startEndSame) {
-                    eo -= so;
-                    ec = sc;
-                } else if (ec == sc.parentNode && eo >= getNodeIndex(sc)) {
-                    eo++;
-                }
-                so = 0;
-            }
-            range.setStartAndEnd(sc, so, ec, eo);
         }
 
-        function rangeToHtml(range) {
-            assertRangeValid(range);
-            var container = range.commonAncestorContainer.parentNode.cloneNode(false);
-            container.appendChild( range.cloneContents() );
-            return container.innerHTML;
+        function setRangeStart(range, node, offset) {
+            var ec = range.endContainer, eo = range.endOffset;
+            if (node !== range.startContainer || offset !== range.startOffset) {
+                // Check the root containers of the range and the new boundary, and also check whether the new boundary
+                // is after the current end. In either case, collapse the range to the new position
+                if (getRootContainer(node) != getRootContainer(ec) || dom.comparePoints(node, offset, ec, eo) == 1) {
+                    ec = node;
+                    eo = offset;
+                }
+                boundaryUpdater(range, node, offset, ec, eo);
+            }
         }
 
-        /*----------------------------------------------------------------------------------------------------------------*/
-
-        var rangeProperties = ["startContainer", "startOffset", "endContainer", "endOffset", "collapsed",
-            "commonAncestorContainer"];
-
-        var s2s = 0, s2e = 1, e2e = 2, e2s = 3;
-        var n_b = 0, n_a = 1, n_b_a = 2, n_i = 3;
-
-        util.extend(api.rangePrototype, {
-            compareBoundaryPoints: function(how, range) {
-                assertRangeValid(this);
-                assertSameDocumentOrFragment(this.startContainer, range.startContainer);
-
-                var nodeA, offsetA, nodeB, offsetB;
-                var prefixA = (how == e2s || how == s2s) ? "start" : "end";
-                var prefixB = (how == s2e || how == s2s) ? "start" : "end";
-                nodeA = this[prefixA + "Container"];
-                offsetA = this[prefixA + "Offset"];
-                nodeB = range[prefixB + "Container"];
-                offsetB = range[prefixB + "Offset"];
-                return comparePoints(nodeA, offsetA, nodeB, offsetB);
-            },
-
-            insertNode: function(node) {
-                assertRangeValid(this);
-                assertValidNodeType(node, insertableNodeTypes);
-                assertNodeNotReadOnly(this.startContainer);
-
-                if (isOrIsAncestorOf(node, this.startContainer)) {
-                    throw new DOMException("HIERARCHY_REQUEST_ERR");
+        function setRangeEnd(range, node, offset) {
+            var sc = range.startContainer, so = range.startOffset;
+            if (node !== range.endContainer || offset !== range.endOffset) {
+                // Check the root containers of the range and the new boundary, and also check whether the new boundary
+                // is after the current end. In either case, collapse the range to the new position
+                if (getRootContainer(node) != getRootContainer(sc) || dom.comparePoints(node, offset, sc, so) == -1) {
+                    sc = node;
+                    so = offset;
                 }
+                boundaryUpdater(range, sc, so, node, offset);
+            }
+        }
 
-                // No check for whether the container of the start of the Range is of a type that does not allow
-                // children of the type of node: the browser's DOM implementation should do this for us when we attempt
-                // to add the node
+        function setRangeStartAndEnd(range, node, offset) {
+            if (node !== range.startContainer || offset !== range.startOffset || node !== range.endContainer || offset !== range.endOffset) {
+                boundaryUpdater(range, node, offset, node, offset);
+            }
+        }
 
-                var firstNodeInserted = insertNodeAtPosition(node, this.startContainer, this.startOffset);
-                this.setStartBefore(firstNodeInserted);
+        constructor.prototype = new RangePrototype();
+
+        api.util.extend(constructor.prototype, {
+            setStart: function(node, offset) {
+                assertNotDetached(this);
+                assertNoDocTypeNotationEntityAncestor(node, true);
+                assertValidOffset(node, offset);
+
+                setRangeStart(this, node, offset);
             },
 
-            cloneContents: function() {
-                assertRangeValid(this);
+            setEnd: function(node, offset) {
+                assertNotDetached(this);
+                assertNoDocTypeNotationEntityAncestor(node, true);
+                assertValidOffset(node, offset);
 
-                var clone, frag;
-                if (this.collapsed) {
-                    return getRangeDocument(this).createDocumentFragment();
+                setRangeEnd(this, node, offset);
+            },
+
+            setStartBefore: createBeforeAfterNodeSetter(true, true),
+            setStartAfter: createBeforeAfterNodeSetter(false, true),
+            setEndBefore: createBeforeAfterNodeSetter(true, false),
+            setEndAfter: createBeforeAfterNodeSetter(false, false),
+
+            collapse: function(isStart) {
+                assertRangeValid(this);
+                if (isStart) {
+                    boundaryUpdater(this, this.startContainer, this.startOffset, this.startContainer, this.startOffset);
                 } else {
-                    if (this.startContainer === this.endContainer && isCharacterDataNode(this.startContainer)) {
-                        clone = this.startContainer.cloneNode(true);
-                        clone.data = clone.data.slice(this.startOffset, this.endOffset);
-                        frag = getRangeDocument(this).createDocumentFragment();
-                        frag.appendChild(clone);
-                        return frag;
-                    } else {
-                        var iterator = new RangeIterator(this, true);
-                        clone = cloneSubtree(iterator);
-                        iterator.detach();
-                    }
-                    return clone;
+                    boundaryUpdater(this, this.endContainer, this.endOffset, this.endContainer, this.endOffset);
                 }
             },
+
+            selectNodeContents: function(node) {
+                // This doesn't seem well specified: the spec talks only about selecting the node's contents, which
+                // could be taken to mean only its children. However, browsers implement this the same as selectNode for
+                // text nodes, so I shall do likewise
+                assertNotDetached(this);
+                assertNoDocTypeNotationEntityAncestor(node, true);
+
+                boundaryUpdater(this, node, 0, node, dom.getNodeLength(node));
+            },
+
+            selectNode: function(node) {
+                assertNotDetached(this);
+                assertNoDocTypeNotationEntityAncestor(node, false);
+                assertValidNodeType(node, beforeAfterNodeTypes);
+
+                var start = getBoundaryBeforeNode(node), end = getBoundaryAfterNode(node);
+                boundaryUpdater(this, start.node, start.offset, end.node, end.offset);
+            },
+
+            extractContents: createRangeContentRemover(extractSubtree, boundaryUpdater),
+
+            deleteContents: createRangeContentRemover(deleteSubtree, boundaryUpdater),
 
             canSurroundContents: function() {
                 assertRangeValid(this);
@@ -56856,2552 +56968,1745 @@ ngFileUpload.service('UploadBase', ['$http', '$q', '$timeout', function ($http, 
                 return !boundariesInvalid;
             },
 
-            surroundContents: function(node) {
-                assertValidNodeType(node, surroundNodeTypes);
-
-                if (!this.canSurroundContents()) {
-                    throw new DOMException("INVALID_STATE_ERR");
-                }
-
-                // Extract the contents
-                var content = this.extractContents();
-
-                // Clear the children of the node
-                if (node.hasChildNodes()) {
-                    while (node.lastChild) {
-                        node.removeChild(node.lastChild);
-                    }
-                }
-
-                // Insert the new node and add the extracted contents
-                insertNodeAtPosition(node, this.startContainer, this.startOffset);
-                node.appendChild(content);
-
-                this.selectNode(node);
+            detach: function() {
+                detacher(this);
             },
 
-            cloneRange: function() {
+            splitBoundaries: function() {
                 assertRangeValid(this);
-                var range = new Range(getRangeDocument(this));
+
+
+                var sc = this.startContainer, so = this.startOffset, ec = this.endContainer, eo = this.endOffset;
+                var startEndSame = (sc === ec);
+
+                if (dom.isCharacterDataNode(ec) && eo > 0 && eo < ec.length) {
+                    dom.splitDataNode(ec, eo);
+
+                }
+
+                if (dom.isCharacterDataNode(sc) && so > 0 && so < sc.length) {
+
+                    sc = dom.splitDataNode(sc, so);
+                    if (startEndSame) {
+                        eo -= so;
+                        ec = sc;
+                    } else if (ec == sc.parentNode && eo >= dom.getNodeIndex(sc)) {
+                        eo++;
+                    }
+                    so = 0;
+
+                }
+                boundaryUpdater(this, sc, so, ec, eo);
+            },
+
+            normalizeBoundaries: function() {
+                assertRangeValid(this);
+
+                var sc = this.startContainer, so = this.startOffset, ec = this.endContainer, eo = this.endOffset;
+
+                var mergeForward = function(node) {
+                    var sibling = node.nextSibling;
+                    if (sibling && sibling.nodeType == node.nodeType) {
+                        ec = node;
+                        eo = node.length;
+                        node.appendData(sibling.data);
+                        sibling.parentNode.removeChild(sibling);
+                    }
+                };
+
+                var mergeBackward = function(node) {
+                    var sibling = node.previousSibling;
+                    if (sibling && sibling.nodeType == node.nodeType) {
+                        sc = node;
+                        var nodeLength = node.length;
+                        so = sibling.length;
+                        node.insertData(0, sibling.data);
+                        sibling.parentNode.removeChild(sibling);
+                        if (sc == ec) {
+                            eo += so;
+                            ec = sc;
+                        } else if (ec == node.parentNode) {
+                            var nodeIndex = dom.getNodeIndex(node);
+                            if (eo == nodeIndex) {
+                                ec = node;
+                                eo = nodeLength;
+                            } else if (eo > nodeIndex) {
+                                eo--;
+                            }
+                        }
+                    }
+                };
+
+                var normalizeStart = true;
+
+                if (dom.isCharacterDataNode(ec)) {
+                    if (ec.length == eo) {
+                        mergeForward(ec);
+                    }
+                } else {
+                    if (eo > 0) {
+                        var endNode = ec.childNodes[eo - 1];
+                        if (endNode && dom.isCharacterDataNode(endNode)) {
+                            mergeForward(endNode);
+                        }
+                    }
+                    normalizeStart = !this.collapsed;
+                }
+
+                if (normalizeStart) {
+                    if (dom.isCharacterDataNode(sc)) {
+                        if (so == 0) {
+                            mergeBackward(sc);
+                        }
+                    } else {
+                        if (so < sc.childNodes.length) {
+                            var startNode = sc.childNodes[so];
+                            if (startNode && dom.isCharacterDataNode(startNode)) {
+                                mergeBackward(startNode);
+                            }
+                        }
+                    }
+                } else {
+                    sc = ec;
+                    so = eo;
+                }
+
+                boundaryUpdater(this, sc, so, ec, eo);
+            },
+
+            collapseToPoint: function(node, offset) {
+                assertNotDetached(this);
+
+                assertNoDocTypeNotationEntityAncestor(node, true);
+                assertValidOffset(node, offset);
+
+                setRangeStartAndEnd(this, node, offset);
+            }
+        });
+
+        copyComparisonConstants(constructor);
+    }
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    // Updates commonAncestorContainer and collapsed after boundary change
+    function updateCollapsedAndCommonAncestor(range) {
+        range.collapsed = (range.startContainer === range.endContainer && range.startOffset === range.endOffset);
+        range.commonAncestorContainer = range.collapsed ?
+            range.startContainer : dom.getCommonAncestor(range.startContainer, range.endContainer);
+    }
+
+    function updateBoundaries(range, startContainer, startOffset, endContainer, endOffset) {
+        var startMoved = (range.startContainer !== startContainer || range.startOffset !== startOffset);
+        var endMoved = (range.endContainer !== endContainer || range.endOffset !== endOffset);
+
+        range.startContainer = startContainer;
+        range.startOffset = startOffset;
+        range.endContainer = endContainer;
+        range.endOffset = endOffset;
+
+        updateCollapsedAndCommonAncestor(range);
+        dispatchEvent(range, "boundarychange", {startMoved: startMoved, endMoved: endMoved});
+    }
+
+    function detach(range) {
+        assertNotDetached(range);
+        range.startContainer = range.startOffset = range.endContainer = range.endOffset = null;
+        range.collapsed = range.commonAncestorContainer = null;
+        dispatchEvent(range, "detach", null);
+        range._listeners = null;
+    }
+
+    /**
+     * @constructor
+     */
+    function Range(doc) {
+        this.startContainer = doc;
+        this.startOffset = 0;
+        this.endContainer = doc;
+        this.endOffset = 0;
+        this._listeners = {
+            boundarychange: [],
+            detach: []
+        };
+        updateCollapsedAndCommonAncestor(this);
+    }
+
+    createPrototypeRange(Range, updateBoundaries, detach);
+
+    api.rangePrototype = RangePrototype.prototype;
+
+    Range.rangeProperties = rangeProperties;
+    Range.RangeIterator = RangeIterator;
+    Range.copyComparisonConstants = copyComparisonConstants;
+    Range.createPrototypeRange = createPrototypeRange;
+    Range.inspect = inspect;
+    Range.getRangeDocument = getRangeDocument;
+    Range.rangesEqual = function(r1, r2) {
+        return r1.startContainer === r2.startContainer &&
+               r1.startOffset === r2.startOffset &&
+               r1.endContainer === r2.endContainer &&
+               r1.endOffset === r2.endOffset;
+    };
+
+    api.DomRange = Range;
+    api.RangeException = RangeException;
+});rangy.createModule("WrappedRange", function(api, module) {
+    api.requireModules( ["DomUtil", "DomRange"] );
+
+    /**
+     * @constructor
+     */
+    var WrappedRange;
+    var dom = api.dom;
+    var DomPosition = dom.DomPosition;
+    var DomRange = api.DomRange;
+
+
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    /*
+    This is a workaround for a bug where IE returns the wrong container element from the TextRange's parentElement()
+    method. For example, in the following (where pipes denote the selection boundaries):
+
+    <ul id="ul"><li id="a">| a </li><li id="b"> b |</li></ul>
+
+    var range = document.selection.createRange();
+    alert(range.parentElement().id); // Should alert "ul" but alerts "b"
+
+    This method returns the common ancestor node of the following:
+    - the parentElement() of the textRange
+    - the parentElement() of the textRange after calling collapse(true)
+    - the parentElement() of the textRange after calling collapse(false)
+     */
+    function getTextRangeContainerElement(textRange) {
+        var parentEl = textRange.parentElement();
+
+        var range = textRange.duplicate();
+        range.collapse(true);
+        var startEl = range.parentElement();
+        range = textRange.duplicate();
+        range.collapse(false);
+        var endEl = range.parentElement();
+        var startEndContainer = (startEl == endEl) ? startEl : dom.getCommonAncestor(startEl, endEl);
+
+        return startEndContainer == parentEl ? startEndContainer : dom.getCommonAncestor(parentEl, startEndContainer);
+    }
+
+    function textRangeIsCollapsed(textRange) {
+        return textRange.compareEndPoints("StartToEnd", textRange) == 0;
+    }
+
+    // Gets the boundary of a TextRange expressed as a node and an offset within that node. This function started out as
+    // an improved version of code found in Tim Cameron Ryan's IERange (http://code.google.com/p/ierange/) but has
+    // grown, fixing problems with line breaks in preformatted text, adding workaround for IE TextRange bugs, handling
+    // for inputs and images, plus optimizations.
+    function getTextRangeBoundaryPosition(textRange, wholeRangeContainerElement, isStart, isCollapsed) {
+        var workingRange = textRange.duplicate();
+
+        workingRange.collapse(isStart);
+        var containerElement = workingRange.parentElement();
+
+        // Sometimes collapsing a TextRange that's at the start of a text node can move it into the previous node, so
+        // check for that
+        // TODO: Find out when. Workaround for wholeRangeContainerElement may break this
+        if (!dom.isAncestorOf(wholeRangeContainerElement, containerElement, true)) {
+            containerElement = wholeRangeContainerElement;
+
+        }
+
+
+
+        // Deal with nodes that cannot "contain rich HTML markup". In practice, this means form inputs, images and
+        // similar. See http://msdn.microsoft.com/en-us/library/aa703950%28VS.85%29.aspx
+        if (!containerElement.canHaveHTML) {
+            return new DomPosition(containerElement.parentNode, dom.getNodeIndex(containerElement));
+        }
+
+        var workingNode = dom.getDocument(containerElement).createElement("span");
+        var comparison, workingComparisonType = isStart ? "StartToStart" : "StartToEnd";
+        var previousNode, nextNode, boundaryPosition, boundaryNode;
+
+        // Move the working range through the container's children, starting at the end and working backwards, until the
+        // working range reaches or goes past the boundary we're interested in
+        do {
+            containerElement.insertBefore(workingNode, workingNode.previousSibling);
+            workingRange.moveToElementText(workingNode);
+        } while ( (comparison = workingRange.compareEndPoints(workingComparisonType, textRange)) > 0 &&
+                workingNode.previousSibling);
+
+        // We've now reached or gone past the boundary of the text range we're interested in
+        // so have identified the node we want
+        boundaryNode = workingNode.nextSibling;
+
+        if (comparison == -1 && boundaryNode && dom.isCharacterDataNode(boundaryNode)) {
+            // This is a character data node (text, comment, cdata). The working range is collapsed at the start of the
+            // node containing the text range's boundary, so we move the end of the working range to the boundary point
+            // and measure the length of its text to get the boundary's offset within the node.
+            workingRange.setEndPoint(isStart ? "EndToStart" : "EndToEnd", textRange);
+
+
+            var offset;
+
+            if (/[\r\n]/.test(boundaryNode.data)) {
+                /*
+                For the particular case of a boundary within a text node containing line breaks (within a <pre> element,
+                for example), we need a slightly complicated approach to get the boundary's offset in IE. The facts:
+
+                - Each line break is represented as \r in the text node's data/nodeValue properties
+                - Each line break is represented as \r\n in the TextRange's 'text' property
+                - The 'text' property of the TextRange does not contain trailing line breaks
+
+                To get round the problem presented by the final fact above, we can use the fact that TextRange's
+                moveStart() and moveEnd() methods return the actual number of characters moved, which is not necessarily
+                the same as the number of characters it was instructed to move. The simplest approach is to use this to
+                store the characters moved when moving both the start and end of the range to the start of the document
+                body and subtracting the start offset from the end offset (the "move-negative-gazillion" method).
+                However, this is extremely slow when the document is large and the range is near the end of it. Clearly
+                doing the mirror image (i.e. moving the range boundaries to the end of the document) has the same
+                problem.
+
+                Another approach that works is to use moveStart() to move the start boundary of the range up to the end
+                boundary one character at a time and incrementing a counter with the value returned by the moveStart()
+                call. However, the check for whether the start boundary has reached the end boundary is expensive, so
+                this method is slow (although unlike "move-negative-gazillion" is largely unaffected by the location of
+                the range within the document).
+
+                The method below is a hybrid of the two methods above. It uses the fact that a string containing the
+                TextRange's 'text' property with each \r\n converted to a single \r character cannot be longer than the
+                text of the TextRange, so the start of the range is moved that length initially and then a character at
+                a time to make up for any trailing line breaks not contained in the 'text' property. This has good
+                performance in most situations compared to the previous two methods.
+                */
+                var tempRange = workingRange.duplicate();
+                var rangeLength = tempRange.text.replace(/\r\n/g, "\r").length;
+
+                offset = tempRange.moveStart("character", rangeLength);
+                while ( (comparison = tempRange.compareEndPoints("StartToEnd", tempRange)) == -1) {
+                    offset++;
+                    tempRange.moveStart("character", 1);
+                }
+            } else {
+                offset = workingRange.text.length;
+            }
+            boundaryPosition = new DomPosition(boundaryNode, offset);
+        } else {
+
+
+            // If the boundary immediately follows a character data node and this is the end boundary, we should favour
+            // a position within that, and likewise for a start boundary preceding a character data node
+            previousNode = (isCollapsed || !isStart) && workingNode.previousSibling;
+            nextNode = (isCollapsed || isStart) && workingNode.nextSibling;
+
+
+
+            if (nextNode && dom.isCharacterDataNode(nextNode)) {
+                boundaryPosition = new DomPosition(nextNode, 0);
+            } else if (previousNode && dom.isCharacterDataNode(previousNode)) {
+                boundaryPosition = new DomPosition(previousNode, previousNode.length);
+            } else {
+                boundaryPosition = new DomPosition(containerElement, dom.getNodeIndex(workingNode));
+            }
+        }
+
+        // Clean up
+        workingNode.parentNode.removeChild(workingNode);
+
+        return boundaryPosition;
+    }
+
+    // Returns a TextRange representing the boundary of a TextRange expressed as a node and an offset within that node.
+    // This function started out as an optimized version of code found in Tim Cameron Ryan's IERange
+    // (http://code.google.com/p/ierange/)
+    function createBoundaryTextRange(boundaryPosition, isStart) {
+        var boundaryNode, boundaryParent, boundaryOffset = boundaryPosition.offset;
+        var doc = dom.getDocument(boundaryPosition.node);
+        var workingNode, childNodes, workingRange = doc.body.createTextRange();
+        var nodeIsDataNode = dom.isCharacterDataNode(boundaryPosition.node);
+
+        if (nodeIsDataNode) {
+            boundaryNode = boundaryPosition.node;
+            boundaryParent = boundaryNode.parentNode;
+        } else {
+            childNodes = boundaryPosition.node.childNodes;
+            boundaryNode = (boundaryOffset < childNodes.length) ? childNodes[boundaryOffset] : null;
+            boundaryParent = boundaryPosition.node;
+        }
+
+        // Position the range immediately before the node containing the boundary
+        workingNode = doc.createElement("span");
+
+        // Making the working element non-empty element persuades IE to consider the TextRange boundary to be within the
+        // element rather than immediately before or after it, which is what we want
+        workingNode.innerHTML = "&#feff;";
+
+        // insertBefore is supposed to work like appendChild if the second parameter is null. However, a bug report
+        // for IERange suggests that it can crash the browser: http://code.google.com/p/ierange/issues/detail?id=12
+        if (boundaryNode) {
+            boundaryParent.insertBefore(workingNode, boundaryNode);
+        } else {
+            boundaryParent.appendChild(workingNode);
+        }
+
+        workingRange.moveToElementText(workingNode);
+        workingRange.collapse(!isStart);
+
+        // Clean up
+        boundaryParent.removeChild(workingNode);
+
+        // Move the working range to the text offset, if required
+        if (nodeIsDataNode) {
+            workingRange[isStart ? "moveStart" : "moveEnd"]("character", boundaryOffset);
+        }
+
+        return workingRange;
+    }
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    if (api.features.implementsDomRange && (!api.features.implementsTextRange || !api.config.preferTextRange)) {
+        // This is a wrapper around the browser's native DOM Range. It has two aims:
+        // - Provide workarounds for specific browser bugs
+        // - provide convenient extensions, which are inherited from Rangy's DomRange
+
+        (function() {
+            var rangeProto;
+            var rangeProperties = DomRange.rangeProperties;
+            var canSetRangeStartAfterEnd;
+
+            function updateRangeProperties(range) {
                 var i = rangeProperties.length, prop;
                 while (i--) {
                     prop = rangeProperties[i];
-                    range[prop] = this[prop];
+                    range[prop] = range.nativeRange[prop];
                 }
-                return range;
-            },
-
-            toString: function() {
-                assertRangeValid(this);
-                var sc = this.startContainer;
-                if (sc === this.endContainer && isCharacterDataNode(sc)) {
-                    return (sc.nodeType == 3 || sc.nodeType == 4) ? sc.data.slice(this.startOffset, this.endOffset) : "";
-                } else {
-                    var textParts = [], iterator = new RangeIterator(this, true);
-                    iterateSubtree(iterator, function(node) {
-                        // Accept only text or CDATA nodes, not comments
-                        if (node.nodeType == 3 || node.nodeType == 4) {
-                            textParts.push(node.data);
-                        }
-                    });
-                    iterator.detach();
-                    return textParts.join("");
-                }
-            },
-
-            // The methods below are all non-standard. The following batch were introduced by Mozilla but have since
-            // been removed from Mozilla.
-
-            compareNode: function(node) {
-                assertRangeValid(this);
-
-                var parent = node.parentNode;
-                var nodeIndex = getNodeIndex(node);
-
-                if (!parent) {
-                    throw new DOMException("NOT_FOUND_ERR");
-                }
-
-                var startComparison = this.comparePoint(parent, nodeIndex),
-                    endComparison = this.comparePoint(parent, nodeIndex + 1);
-
-                if (startComparison < 0) { // Node starts before
-                    return (endComparison > 0) ? n_b_a : n_b;
-                } else {
-                    return (endComparison > 0) ? n_a : n_i;
-                }
-            },
-
-            comparePoint: function(node, offset) {
-                assertRangeValid(this);
-                assertNode(node, "HIERARCHY_REQUEST_ERR");
-                assertSameDocumentOrFragment(node, this.startContainer);
-
-                if (comparePoints(node, offset, this.startContainer, this.startOffset) < 0) {
-                    return -1;
-                } else if (comparePoints(node, offset, this.endContainer, this.endOffset) > 0) {
-                    return 1;
-                }
-                return 0;
-            },
-
-            createContextualFragment: createContextualFragment,
-
-            toHtml: function() {
-                return rangeToHtml(this);
-            },
-
-            // touchingIsIntersecting determines whether this method considers a node that borders a range intersects
-            // with it (as in WebKit) or not (as in Gecko pre-1.9, and the default)
-            intersectsNode: function(node, touchingIsIntersecting) {
-                assertRangeValid(this);
-                if (getRootContainer(node) != getRangeRoot(this)) {
-                    return false;
-                }
-
-                var parent = node.parentNode, offset = getNodeIndex(node);
-                if (!parent) {
-                    return true;
-                }
-
-                var startComparison = comparePoints(parent, offset, this.endContainer, this.endOffset),
-                    endComparison = comparePoints(parent, offset + 1, this.startContainer, this.startOffset);
-
-                return touchingIsIntersecting ? startComparison <= 0 && endComparison >= 0 : startComparison < 0 && endComparison > 0;
-            },
-
-            isPointInRange: function(node, offset) {
-                assertRangeValid(this);
-                assertNode(node, "HIERARCHY_REQUEST_ERR");
-                assertSameDocumentOrFragment(node, this.startContainer);
-
-                return (comparePoints(node, offset, this.startContainer, this.startOffset) >= 0) &&
-                       (comparePoints(node, offset, this.endContainer, this.endOffset) <= 0);
-            },
-
-            // The methods below are non-standard and invented by me.
-
-            // Sharing a boundary start-to-end or end-to-start does not count as intersection.
-            intersectsRange: function(range) {
-                return rangesIntersect(this, range, false);
-            },
-
-            // Sharing a boundary start-to-end or end-to-start does count as intersection.
-            intersectsOrTouchesRange: function(range) {
-                return rangesIntersect(this, range, true);
-            },
-
-            intersection: function(range) {
-                if (this.intersectsRange(range)) {
-                    var startComparison = comparePoints(this.startContainer, this.startOffset, range.startContainer, range.startOffset),
-                        endComparison = comparePoints(this.endContainer, this.endOffset, range.endContainer, range.endOffset);
-
-                    var intersectionRange = this.cloneRange();
-                    if (startComparison == -1) {
-                        intersectionRange.setStart(range.startContainer, range.startOffset);
-                    }
-                    if (endComparison == 1) {
-                        intersectionRange.setEnd(range.endContainer, range.endOffset);
-                    }
-                    return intersectionRange;
-                }
-                return null;
-            },
-
-            union: function(range) {
-                if (this.intersectsOrTouchesRange(range)) {
-                    var unionRange = this.cloneRange();
-                    if (comparePoints(range.startContainer, range.startOffset, this.startContainer, this.startOffset) == -1) {
-                        unionRange.setStart(range.startContainer, range.startOffset);
-                    }
-                    if (comparePoints(range.endContainer, range.endOffset, this.endContainer, this.endOffset) == 1) {
-                        unionRange.setEnd(range.endContainer, range.endOffset);
-                    }
-                    return unionRange;
-                } else {
-                    throw new DOMException("Ranges do not intersect");
-                }
-            },
-
-            containsNode: function(node, allowPartial) {
-                if (allowPartial) {
-                    return this.intersectsNode(node, false);
-                } else {
-                    return this.compareNode(node) == n_i;
-                }
-            },
-
-            containsNodeContents: function(node) {
-                return this.comparePoint(node, 0) >= 0 && this.comparePoint(node, getNodeLength(node)) <= 0;
-            },
-
-            containsRange: function(range) {
-                var intersection = this.intersection(range);
-                return intersection !== null && range.equals(intersection);
-            },
-
-            containsNodeText: function(node) {
-                var nodeRange = this.cloneRange();
-                nodeRange.selectNode(node);
-                var textNodes = nodeRange.getNodes([3]);
-                if (textNodes.length > 0) {
-                    nodeRange.setStart(textNodes[0], 0);
-                    var lastTextNode = textNodes.pop();
-                    nodeRange.setEnd(lastTextNode, lastTextNode.length);
-                    return this.containsRange(nodeRange);
-                } else {
-                    return this.containsNodeContents(node);
-                }
-            },
-
-            getNodes: function(nodeTypes, filter) {
-                assertRangeValid(this);
-                return getNodesInRange(this, nodeTypes, filter);
-            },
-
-            getDocument: function() {
-                return getRangeDocument(this);
-            },
-
-            collapseBefore: function(node) {
-                this.setEndBefore(node);
-                this.collapse(false);
-            },
-
-            collapseAfter: function(node) {
-                this.setStartAfter(node);
-                this.collapse(true);
-            },
-
-            getBookmark: function(containerNode) {
-                var doc = getRangeDocument(this);
-                var preSelectionRange = api.createRange(doc);
-                containerNode = containerNode || dom.getBody(doc);
-                preSelectionRange.selectNodeContents(containerNode);
-                var range = this.intersection(preSelectionRange);
-                var start = 0, end = 0;
-                if (range) {
-                    preSelectionRange.setEnd(range.startContainer, range.startOffset);
-                    start = preSelectionRange.toString().length;
-                    end = start + range.toString().length;
-                }
-
-                return {
-                    start: start,
-                    end: end,
-                    containerNode: containerNode
-                };
-            },
-
-            moveToBookmark: function(bookmark) {
-                var containerNode = bookmark.containerNode;
-                var charIndex = 0;
-                this.setStart(containerNode, 0);
-                this.collapse(true);
-                var nodeStack = [containerNode], node, foundStart = false, stop = false;
-                var nextCharIndex, i, childNodes;
-
-                while (!stop && (node = nodeStack.pop())) {
-                    if (node.nodeType == 3) {
-                        nextCharIndex = charIndex + node.length;
-                        if (!foundStart && bookmark.start >= charIndex && bookmark.start <= nextCharIndex) {
-                            this.setStart(node, bookmark.start - charIndex);
-                            foundStart = true;
-                        }
-                        if (foundStart && bookmark.end >= charIndex && bookmark.end <= nextCharIndex) {
-                            this.setEnd(node, bookmark.end - charIndex);
-                            stop = true;
-                        }
-                        charIndex = nextCharIndex;
-                    } else {
-                        childNodes = node.childNodes;
-                        i = childNodes.length;
-                        while (i--) {
-                            nodeStack.push(childNodes[i]);
-                        }
-                    }
-                }
-            },
-
-            getName: function() {
-                return "DomRange";
-            },
-
-            equals: function(range) {
-                return Range.rangesEqual(this, range);
-            },
-
-            isValid: function() {
-                return isRangeValid(this);
-            },
-
-            inspect: function() {
-                return inspect(this);
-            },
-
-            detach: function() {
-                // In DOM4, detach() is now a no-op.
             }
-        });
 
-        function copyComparisonConstantsToObject(obj) {
-            obj.START_TO_START = s2s;
-            obj.START_TO_END = s2e;
-            obj.END_TO_END = e2e;
-            obj.END_TO_START = e2s;
+            function updateNativeRange(range, startContainer, startOffset, endContainer,endOffset) {
+                var startMoved = (range.startContainer !== startContainer || range.startOffset != startOffset);
+                var endMoved = (range.endContainer !== endContainer || range.endOffset != endOffset);
 
-            obj.NODE_BEFORE = n_b;
-            obj.NODE_AFTER = n_a;
-            obj.NODE_BEFORE_AND_AFTER = n_b_a;
-            obj.NODE_INSIDE = n_i;
-        }
-
-        function copyComparisonConstants(constructor) {
-            copyComparisonConstantsToObject(constructor);
-            copyComparisonConstantsToObject(constructor.prototype);
-        }
-
-        function createRangeContentRemover(remover, boundaryUpdater) {
-            return function() {
-                assertRangeValid(this);
-
-                var sc = this.startContainer, so = this.startOffset, root = this.commonAncestorContainer;
-
-                var iterator = new RangeIterator(this, true);
-
-                // Work out where to position the range after content removal
-                var node, boundary;
-                if (sc !== root) {
-                    node = getClosestAncestorIn(sc, root, true);
-                    boundary = getBoundaryAfterNode(node);
-                    sc = boundary.node;
-                    so = boundary.offset;
+                // Always set both boundaries for the benefit of IE9 (see issue 35)
+                if (startMoved || endMoved) {
+                    range.setEnd(endContainer, endOffset);
+                    range.setStart(startContainer, startOffset);
                 }
+            }
 
-                // Check none of the range is read-only
-                iterateSubtree(iterator, assertNodeNotReadOnly);
+            function detach(range) {
+                range.nativeRange.detach();
+                range.detached = true;
+                var i = rangeProperties.length, prop;
+                while (i--) {
+                    prop = rangeProperties[i];
+                    range[prop] = null;
+                }
+            }
 
-                iterator.reset();
+            var createBeforeAfterNodeSetter;
 
-                // Remove the content
-                var returnValue = remover(iterator);
-                iterator.detach();
-
-                // Move to the new position
-                boundaryUpdater(this, sc, so, sc, so);
-
-                return returnValue;
+            WrappedRange = function(range) {
+                if (!range) {
+                    throw new Error("Range must be specified");
+                }
+                this.nativeRange = range;
+                updateRangeProperties(this);
             };
-        }
 
-        function createPrototypeRange(constructor, boundaryUpdater) {
-            function createBeforeAfterNodeSetter(isBefore, isStart) {
-                return function(node) {
-                    assertValidNodeType(node, beforeAfterNodeTypes);
-                    assertValidNodeType(getRootContainer(node), rootContainerNodeTypes);
+            DomRange.createPrototypeRange(WrappedRange, updateNativeRange, detach);
 
-                    var boundary = (isBefore ? getBoundaryBeforeNode : getBoundaryAfterNode)(node);
-                    (isStart ? setRangeStart : setRangeEnd)(this, boundary.node, boundary.offset);
+            rangeProto = WrappedRange.prototype;
+
+            rangeProto.selectNode = function(node) {
+                this.nativeRange.selectNode(node);
+                updateRangeProperties(this);
+            };
+
+            rangeProto.deleteContents = function() {
+                this.nativeRange.deleteContents();
+                updateRangeProperties(this);
+            };
+
+            rangeProto.extractContents = function() {
+                var frag = this.nativeRange.extractContents();
+                updateRangeProperties(this);
+                return frag;
+            };
+
+            rangeProto.cloneContents = function() {
+                return this.nativeRange.cloneContents();
+            };
+
+            // TODO: Until I can find a way to programmatically trigger the Firefox bug (apparently long-standing, still
+            // present in 3.6.8) that throws "Index or size is negative or greater than the allowed amount" for
+            // insertNode in some circumstances, all browsers will have to use the Rangy's own implementation of
+            // insertNode, which works but is almost certainly slower than the native implementation.
+/*
+            rangeProto.insertNode = function(node) {
+                this.nativeRange.insertNode(node);
+                updateRangeProperties(this);
+            };
+*/
+
+            rangeProto.surroundContents = function(node) {
+                this.nativeRange.surroundContents(node);
+                updateRangeProperties(this);
+            };
+
+            rangeProto.collapse = function(isStart) {
+                this.nativeRange.collapse(isStart);
+                updateRangeProperties(this);
+            };
+
+            rangeProto.cloneRange = function() {
+                return new WrappedRange(this.nativeRange.cloneRange());
+            };
+
+            rangeProto.refresh = function() {
+                updateRangeProperties(this);
+            };
+
+            rangeProto.toString = function() {
+                return this.nativeRange.toString();
+            };
+
+            // Create test range and node for feature detection
+
+            var testTextNode = document.createTextNode("test");
+            dom.getBody(document).appendChild(testTextNode);
+            var range = document.createRange();
+
+            /*--------------------------------------------------------------------------------------------------------*/
+
+            // Test for Firefox 2 bug that prevents moving the start of a Range to a point after its current end and
+            // correct for it
+
+            range.setStart(testTextNode, 0);
+            range.setEnd(testTextNode, 0);
+
+            try {
+                range.setStart(testTextNode, 1);
+                canSetRangeStartAfterEnd = true;
+
+                rangeProto.setStart = function(node, offset) {
+                    this.nativeRange.setStart(node, offset);
+                    updateRangeProperties(this);
                 };
-            }
 
-            function setRangeStart(range, node, offset) {
-                var ec = range.endContainer, eo = range.endOffset;
-                if (node !== range.startContainer || offset !== range.startOffset) {
-                    // Check the root containers of the range and the new boundary, and also check whether the new boundary
-                    // is after the current end. In either case, collapse the range to the new position
-                    if (getRootContainer(node) != getRootContainer(ec) || comparePoints(node, offset, ec, eo) == 1) {
-                        ec = node;
-                        eo = offset;
-                    }
-                    boundaryUpdater(range, node, offset, ec, eo);
-                }
-            }
+                rangeProto.setEnd = function(node, offset) {
+                    this.nativeRange.setEnd(node, offset);
+                    updateRangeProperties(this);
+                };
 
-            function setRangeEnd(range, node, offset) {
-                var sc = range.startContainer, so = range.startOffset;
-                if (node !== range.endContainer || offset !== range.endOffset) {
-                    // Check the root containers of the range and the new boundary, and also check whether the new boundary
-                    // is after the current end. In either case, collapse the range to the new position
-                    if (getRootContainer(node) != getRootContainer(sc) || comparePoints(node, offset, sc, so) == -1) {
-                        sc = node;
-                        so = offset;
-                    }
-                    boundaryUpdater(range, sc, so, node, offset);
-                }
-            }
-
-            // Set up inheritance
-            var F = function() {};
-            F.prototype = api.rangePrototype;
-            constructor.prototype = new F();
-
-            util.extend(constructor.prototype, {
-                setStart: function(node, offset) {
-                    assertNoDocTypeNotationEntityAncestor(node, true);
-                    assertValidOffset(node, offset);
-
-                    setRangeStart(this, node, offset);
-                },
-
-                setEnd: function(node, offset) {
-                    assertNoDocTypeNotationEntityAncestor(node, true);
-                    assertValidOffset(node, offset);
-
-                    setRangeEnd(this, node, offset);
-                },
-
-                /**
-                 * Convenience method to set a range's start and end boundaries. Overloaded as follows:
-                 * - Two parameters (node, offset) creates a collapsed range at that position
-                 * - Three parameters (node, startOffset, endOffset) creates a range contained with node starting at
-                 *   startOffset and ending at endOffset
-                 * - Four parameters (startNode, startOffset, endNode, endOffset) creates a range starting at startOffset in
-                 *   startNode and ending at endOffset in endNode
-                 */
-                setStartAndEnd: function() {
-                    var args = arguments;
-                    var sc = args[0], so = args[1], ec = sc, eo = so;
-
-                    switch (args.length) {
-                        case 3:
-                            eo = args[2];
-                            break;
-                        case 4:
-                            ec = args[2];
-                            eo = args[3];
-                            break;
-                    }
-
-                    boundaryUpdater(this, sc, so, ec, eo);
-                },
-
-                setBoundary: function(node, offset, isStart) {
-                    this["set" + (isStart ? "Start" : "End")](node, offset);
-                },
-
-                setStartBefore: createBeforeAfterNodeSetter(true, true),
-                setStartAfter: createBeforeAfterNodeSetter(false, true),
-                setEndBefore: createBeforeAfterNodeSetter(true, false),
-                setEndAfter: createBeforeAfterNodeSetter(false, false),
-
-                collapse: function(isStart) {
-                    assertRangeValid(this);
-                    if (isStart) {
-                        boundaryUpdater(this, this.startContainer, this.startOffset, this.startContainer, this.startOffset);
-                    } else {
-                        boundaryUpdater(this, this.endContainer, this.endOffset, this.endContainer, this.endOffset);
-                    }
-                },
-
-                selectNodeContents: function(node) {
-                    assertNoDocTypeNotationEntityAncestor(node, true);
-
-                    boundaryUpdater(this, node, 0, node, getNodeLength(node));
-                },
-
-                selectNode: function(node) {
-                    assertNoDocTypeNotationEntityAncestor(node, false);
-                    assertValidNodeType(node, beforeAfterNodeTypes);
-
-                    var start = getBoundaryBeforeNode(node), end = getBoundaryAfterNode(node);
-                    boundaryUpdater(this, start.node, start.offset, end.node, end.offset);
-                },
-
-                extractContents: createRangeContentRemover(extractSubtree, boundaryUpdater),
-
-                deleteContents: createRangeContentRemover(deleteSubtree, boundaryUpdater),
-
-                canSurroundContents: function() {
-                    assertRangeValid(this);
-                    assertNodeNotReadOnly(this.startContainer);
-                    assertNodeNotReadOnly(this.endContainer);
-
-                    // Check if the contents can be surrounded. Specifically, this means whether the range partially selects
-                    // no non-text nodes.
-                    var iterator = new RangeIterator(this, true);
-                    var boundariesInvalid = (iterator._first && isNonTextPartiallySelected(iterator._first, this) ||
-                            (iterator._last && isNonTextPartiallySelected(iterator._last, this)));
-                    iterator.detach();
-                    return !boundariesInvalid;
-                },
-
-                splitBoundaries: function() {
-                    splitRangeBoundaries(this);
-                },
-
-                splitBoundariesPreservingPositions: function(positionsToPreserve) {
-                    splitRangeBoundaries(this, positionsToPreserve);
-                },
-
-                normalizeBoundaries: function() {
-                    assertRangeValid(this);
-
-                    var sc = this.startContainer, so = this.startOffset, ec = this.endContainer, eo = this.endOffset;
-
-                    var mergeForward = function(node) {
-                        var sibling = node.nextSibling;
-                        if (sibling && sibling.nodeType == node.nodeType) {
-                            ec = node;
-                            eo = node.length;
-                            node.appendData(sibling.data);
-                            removeNode(sibling);
-                        }
+                createBeforeAfterNodeSetter = function(name) {
+                    return function(node) {
+                        this.nativeRange[name](node);
+                        updateRangeProperties(this);
                     };
-
-                    var mergeBackward = function(node) {
-                        var sibling = node.previousSibling;
-                        if (sibling && sibling.nodeType == node.nodeType) {
-                            sc = node;
-                            var nodeLength = node.length;
-                            so = sibling.length;
-                            node.insertData(0, sibling.data);
-                            removeNode(sibling);
-                            if (sc == ec) {
-                                eo += so;
-                                ec = sc;
-                            } else if (ec == node.parentNode) {
-                                var nodeIndex = getNodeIndex(node);
-                                if (eo == nodeIndex) {
-                                    ec = node;
-                                    eo = nodeLength;
-                                } else if (eo > nodeIndex) {
-                                    eo--;
-                                }
-                            }
-                        }
-                    };
-
-                    var normalizeStart = true;
-                    var sibling;
-
-                    if (isCharacterDataNode(ec)) {
-                        if (eo == ec.length) {
-                            mergeForward(ec);
-                        } else if (eo == 0) {
-                            sibling = ec.previousSibling;
-                            if (sibling && sibling.nodeType == ec.nodeType) {
-                                eo = sibling.length;
-                                if (sc == ec) {
-                                    normalizeStart = false;
-                                }
-                                sibling.appendData(ec.data);
-                                removeNode(ec);
-                                ec = sibling;
-                            }
-                        }
-                    } else {
-                        if (eo > 0) {
-                            var endNode = ec.childNodes[eo - 1];
-                            if (endNode && isCharacterDataNode(endNode)) {
-                                mergeForward(endNode);
-                            }
-                        }
-                        normalizeStart = !this.collapsed;
-                    }
-
-                    if (normalizeStart) {
-                        if (isCharacterDataNode(sc)) {
-                            if (so == 0) {
-                                mergeBackward(sc);
-                            } else if (so == sc.length) {
-                                sibling = sc.nextSibling;
-                                if (sibling && sibling.nodeType == sc.nodeType) {
-                                    if (ec == sibling) {
-                                        ec = sc;
-                                        eo += sc.length;
-                                    }
-                                    sc.appendData(sibling.data);
-                                    removeNode(sibling);
-                                }
-                            }
-                        } else {
-                            if (so < sc.childNodes.length) {
-                                var startNode = sc.childNodes[so];
-                                if (startNode && isCharacterDataNode(startNode)) {
-                                    mergeBackward(startNode);
-                                }
-                            }
-                        }
-                    } else {
-                        sc = ec;
-                        so = eo;
-                    }
-
-                    boundaryUpdater(this, sc, so, ec, eo);
-                },
-
-                collapseToPoint: function(node, offset) {
-                    assertNoDocTypeNotationEntityAncestor(node, true);
-                    assertValidOffset(node, offset);
-                    this.setStartAndEnd(node, offset);
-                }
-            });
-
-            copyComparisonConstants(constructor);
-        }
-
-        /*----------------------------------------------------------------------------------------------------------------*/
-
-        // Updates commonAncestorContainer and collapsed after boundary change
-        function updateCollapsedAndCommonAncestor(range) {
-            range.collapsed = (range.startContainer === range.endContainer && range.startOffset === range.endOffset);
-            range.commonAncestorContainer = range.collapsed ?
-                range.startContainer : dom.getCommonAncestor(range.startContainer, range.endContainer);
-        }
-
-        function updateBoundaries(range, startContainer, startOffset, endContainer, endOffset) {
-            range.startContainer = startContainer;
-            range.startOffset = startOffset;
-            range.endContainer = endContainer;
-            range.endOffset = endOffset;
-            range.document = dom.getDocument(startContainer);
-
-            updateCollapsedAndCommonAncestor(range);
-        }
-
-        function Range(doc) {
-            this.startContainer = doc;
-            this.startOffset = 0;
-            this.endContainer = doc;
-            this.endOffset = 0;
-            this.document = doc;
-            updateCollapsedAndCommonAncestor(this);
-        }
-
-        createPrototypeRange(Range, updateBoundaries);
-
-        util.extend(Range, {
-            rangeProperties: rangeProperties,
-            RangeIterator: RangeIterator,
-            copyComparisonConstants: copyComparisonConstants,
-            createPrototypeRange: createPrototypeRange,
-            inspect: inspect,
-            toHtml: rangeToHtml,
-            getRangeDocument: getRangeDocument,
-            rangesEqual: function(r1, r2) {
-                return r1.startContainer === r2.startContainer &&
-                    r1.startOffset === r2.startOffset &&
-                    r1.endContainer === r2.endContainer &&
-                    r1.endOffset === r2.endOffset;
-            }
-        });
-
-        api.DomRange = Range;
-    });
-
-    /*----------------------------------------------------------------------------------------------------------------*/
-
-    // Wrappers for the browser's native DOM Range and/or TextRange implementation
-    api.createCoreModule("WrappedRange", ["DomRange"], function(api, module) {
-        var WrappedRange, WrappedTextRange;
-        var dom = api.dom;
-        var util = api.util;
-        var DomPosition = dom.DomPosition;
-        var DomRange = api.DomRange;
-        var getBody = dom.getBody;
-        var getContentDocument = dom.getContentDocument;
-        var isCharacterDataNode = dom.isCharacterDataNode;
-
-
-        /*----------------------------------------------------------------------------------------------------------------*/
-
-        if (api.features.implementsDomRange) {
-            // This is a wrapper around the browser's native DOM Range. It has two aims:
-            // - Provide workarounds for specific browser bugs
-            // - provide convenient extensions, which are inherited from Rangy's DomRange
-
-            (function() {
-                var rangeProto;
-                var rangeProperties = DomRange.rangeProperties;
-
-                function updateRangeProperties(range) {
-                    var i = rangeProperties.length, prop;
-                    while (i--) {
-                        prop = rangeProperties[i];
-                        range[prop] = range.nativeRange[prop];
-                    }
-                    // Fix for broken collapsed property in IE 9.
-                    range.collapsed = (range.startContainer === range.endContainer && range.startOffset === range.endOffset);
-                }
-
-                function updateNativeRange(range, startContainer, startOffset, endContainer, endOffset) {
-                    var startMoved = (range.startContainer !== startContainer || range.startOffset != startOffset);
-                    var endMoved = (range.endContainer !== endContainer || range.endOffset != endOffset);
-                    var nativeRangeDifferent = !range.equals(range.nativeRange);
-
-                    // Always set both boundaries for the benefit of IE9 (see issue 35)
-                    if (startMoved || endMoved || nativeRangeDifferent) {
-                        range.setEnd(endContainer, endOffset);
-                        range.setStart(startContainer, startOffset);
-                    }
-                }
-
-                var createBeforeAfterNodeSetter;
-
-                WrappedRange = function(range) {
-                    if (!range) {
-                        throw module.createError("WrappedRange: Range must be specified");
-                    }
-                    this.nativeRange = range;
-                    updateRangeProperties(this);
                 };
 
-                DomRange.createPrototypeRange(WrappedRange, updateNativeRange);
+            } catch(ex) {
 
-                rangeProto = WrappedRange.prototype;
 
-                rangeProto.selectNode = function(node) {
-                    this.nativeRange.selectNode(node);
-                    updateRangeProperties(this);
-                };
+                canSetRangeStartAfterEnd = false;
 
-                rangeProto.cloneContents = function() {
-                    return this.nativeRange.cloneContents();
-                };
-
-                // Due to a long-standing Firefox bug that I have not been able to find a reliable way to detect,
-                // insertNode() is never delegated to the native range.
-
-                rangeProto.surroundContents = function(node) {
-                    this.nativeRange.surroundContents(node);
-                    updateRangeProperties(this);
-                };
-
-                rangeProto.collapse = function(isStart) {
-                    this.nativeRange.collapse(isStart);
-                    updateRangeProperties(this);
-                };
-
-                rangeProto.cloneRange = function() {
-                    return new WrappedRange(this.nativeRange.cloneRange());
-                };
-
-                rangeProto.refresh = function() {
-                    updateRangeProperties(this);
-                };
-
-                rangeProto.toString = function() {
-                    return this.nativeRange.toString();
-                };
-
-                // Create test range and node for feature detection
-
-                var testTextNode = document.createTextNode("test");
-                getBody(document).appendChild(testTextNode);
-                var range = document.createRange();
-
-                /*--------------------------------------------------------------------------------------------------------*/
-
-                // Test for Firefox 2 bug that prevents moving the start of a Range to a point after its current end and
-                // correct for it
-
-                range.setStart(testTextNode, 0);
-                range.setEnd(testTextNode, 0);
-
-                try {
-                    range.setStart(testTextNode, 1);
-
-                    rangeProto.setStart = function(node, offset) {
+                rangeProto.setStart = function(node, offset) {
+                    try {
                         this.nativeRange.setStart(node, offset);
-                        updateRangeProperties(this);
-                    };
-
-                    rangeProto.setEnd = function(node, offset) {
+                    } catch (ex) {
                         this.nativeRange.setEnd(node, offset);
-                        updateRangeProperties(this);
-                    };
+                        this.nativeRange.setStart(node, offset);
+                    }
+                    updateRangeProperties(this);
+                };
 
-                    createBeforeAfterNodeSetter = function(name) {
-                        return function(node) {
+                rangeProto.setEnd = function(node, offset) {
+                    try {
+                        this.nativeRange.setEnd(node, offset);
+                    } catch (ex) {
+                        this.nativeRange.setStart(node, offset);
+                        this.nativeRange.setEnd(node, offset);
+                    }
+                    updateRangeProperties(this);
+                };
+
+                createBeforeAfterNodeSetter = function(name, oppositeName) {
+                    return function(node) {
+                        try {
                             this.nativeRange[name](node);
-                            updateRangeProperties(this);
-                        };
-                    };
-
-                } catch(ex) {
-
-                    rangeProto.setStart = function(node, offset) {
-                        try {
-                            this.nativeRange.setStart(node, offset);
                         } catch (ex) {
-                            this.nativeRange.setEnd(node, offset);
-                            this.nativeRange.setStart(node, offset);
+                            this.nativeRange[oppositeName](node);
+                            this.nativeRange[name](node);
                         }
                         updateRangeProperties(this);
                     };
+                };
+            }
 
-                    rangeProto.setEnd = function(node, offset) {
-                        try {
-                            this.nativeRange.setEnd(node, offset);
-                        } catch (ex) {
-                            this.nativeRange.setStart(node, offset);
-                            this.nativeRange.setEnd(node, offset);
-                        }
-                        updateRangeProperties(this);
-                    };
+            rangeProto.setStartBefore = createBeforeAfterNodeSetter("setStartBefore", "setEndBefore");
+            rangeProto.setStartAfter = createBeforeAfterNodeSetter("setStartAfter", "setEndAfter");
+            rangeProto.setEndBefore = createBeforeAfterNodeSetter("setEndBefore", "setStartBefore");
+            rangeProto.setEndAfter = createBeforeAfterNodeSetter("setEndAfter", "setStartAfter");
 
-                    createBeforeAfterNodeSetter = function(name, oppositeName) {
-                        return function(node) {
-                            try {
-                                this.nativeRange[name](node);
-                            } catch (ex) {
-                                this.nativeRange[oppositeName](node);
-                                this.nativeRange[name](node);
-                            }
-                            updateRangeProperties(this);
-                        };
-                    };
-                }
+            /*--------------------------------------------------------------------------------------------------------*/
 
-                rangeProto.setStartBefore = createBeforeAfterNodeSetter("setStartBefore", "setEndBefore");
-                rangeProto.setStartAfter = createBeforeAfterNodeSetter("setStartAfter", "setEndAfter");
-                rangeProto.setEndBefore = createBeforeAfterNodeSetter("setEndBefore", "setStartBefore");
-                rangeProto.setEndAfter = createBeforeAfterNodeSetter("setEndAfter", "setStartAfter");
-
-                /*--------------------------------------------------------------------------------------------------------*/
-
-                // Always use DOM4-compliant selectNodeContents implementation: it's simpler and less code than testing
-                // whether the native implementation can be trusted
+            // Test for and correct Firefox 2 behaviour with selectNodeContents on text nodes: it collapses the range to
+            // the 0th character of the text node
+            range.selectNodeContents(testTextNode);
+            if (range.startContainer == testTextNode && range.endContainer == testTextNode &&
+                    range.startOffset == 0 && range.endOffset == testTextNode.length) {
                 rangeProto.selectNodeContents = function(node) {
-                    this.setStartAndEnd(node, 0, dom.getNodeLength(node));
+                    this.nativeRange.selectNodeContents(node);
+                    updateRangeProperties(this);
                 };
-
-                /*--------------------------------------------------------------------------------------------------------*/
-
-                // Test for and correct WebKit bug that has the behaviour of compareBoundaryPoints round the wrong way for
-                // constants START_TO_END and END_TO_START: https://bugs.webkit.org/show_bug.cgi?id=20738
-
-                range.selectNodeContents(testTextNode);
-                range.setEnd(testTextNode, 3);
-
-                var range2 = document.createRange();
-                range2.selectNodeContents(testTextNode);
-                range2.setEnd(testTextNode, 4);
-                range2.setStart(testTextNode, 2);
-
-                if (range.compareBoundaryPoints(range.START_TO_END, range2) == -1 &&
-                        range.compareBoundaryPoints(range.END_TO_START, range2) == 1) {
-                    // This is the wrong way round, so correct for it
-
-                    rangeProto.compareBoundaryPoints = function(type, range) {
-                        range = range.nativeRange || range;
-                        if (type == range.START_TO_END) {
-                            type = range.END_TO_START;
-                        } else if (type == range.END_TO_START) {
-                            type = range.START_TO_END;
-                        }
-                        return this.nativeRange.compareBoundaryPoints(type, range);
-                    };
-                } else {
-                    rangeProto.compareBoundaryPoints = function(type, range) {
-                        return this.nativeRange.compareBoundaryPoints(type, range.nativeRange || range);
-                    };
-                }
-
-                /*--------------------------------------------------------------------------------------------------------*/
-
-                // Test for IE deleteContents() and extractContents() bug and correct it. See issue 107.
-
-                var el = document.createElement("div");
-                el.innerHTML = "123";
-                var textNode = el.firstChild;
-                var body = getBody(document);
-                body.appendChild(el);
-
-                range.setStart(textNode, 1);
-                range.setEnd(textNode, 2);
-                range.deleteContents();
-
-                if (textNode.data == "13") {
-                    // Behaviour is correct per DOM4 Range so wrap the browser's implementation of deleteContents() and
-                    // extractContents()
-                    rangeProto.deleteContents = function() {
-                        this.nativeRange.deleteContents();
-                        updateRangeProperties(this);
-                    };
-
-                    rangeProto.extractContents = function() {
-                        var frag = this.nativeRange.extractContents();
-                        updateRangeProperties(this);
-                        return frag;
-                    };
-                } else {
-                }
-
-                body.removeChild(el);
-                body = null;
-
-                /*--------------------------------------------------------------------------------------------------------*/
-
-                // Test for existence of createContextualFragment and delegate to it if it exists
-                if (util.isHostMethod(range, "createContextualFragment")) {
-                    rangeProto.createContextualFragment = function(fragmentStr) {
-                        return this.nativeRange.createContextualFragment(fragmentStr);
-                    };
-                }
-
-                /*--------------------------------------------------------------------------------------------------------*/
-
-                // Clean up
-                getBody(document).removeChild(testTextNode);
-
-                rangeProto.getName = function() {
-                    return "WrappedRange";
-                };
-
-                api.WrappedRange = WrappedRange;
-
-                api.createNativeRange = function(doc) {
-                    doc = getContentDocument(doc, module, "createNativeRange");
-                    return doc.createRange();
-                };
-            })();
-        }
-
-        if (api.features.implementsTextRange) {
-            /*
-            This is a workaround for a bug where IE returns the wrong container element from the TextRange's parentElement()
-            method. For example, in the following (where pipes denote the selection boundaries):
-
-            <ul id="ul"><li id="a">| a </li><li id="b"> b |</li></ul>
-
-            var range = document.selection.createRange();
-            alert(range.parentElement().id); // Should alert "ul" but alerts "b"
-
-            This method returns the common ancestor node of the following:
-            - the parentElement() of the textRange
-            - the parentElement() of the textRange after calling collapse(true)
-            - the parentElement() of the textRange after calling collapse(false)
-            */
-            var getTextRangeContainerElement = function(textRange) {
-                var parentEl = textRange.parentElement();
-                var range = textRange.duplicate();
-                range.collapse(true);
-                var startEl = range.parentElement();
-                range = textRange.duplicate();
-                range.collapse(false);
-                var endEl = range.parentElement();
-                var startEndContainer = (startEl == endEl) ? startEl : dom.getCommonAncestor(startEl, endEl);
-
-                return startEndContainer == parentEl ? startEndContainer : dom.getCommonAncestor(parentEl, startEndContainer);
-            };
-
-            var textRangeIsCollapsed = function(textRange) {
-                return textRange.compareEndPoints("StartToEnd", textRange) == 0;
-            };
-
-            // Gets the boundary of a TextRange expressed as a node and an offset within that node. This function started
-            // out as an improved version of code found in Tim Cameron Ryan's IERange (http://code.google.com/p/ierange/)
-            // but has grown, fixing problems with line breaks in preformatted text, adding workaround for IE TextRange
-            // bugs, handling for inputs and images, plus optimizations.
-            var getTextRangeBoundaryPosition = function(textRange, wholeRangeContainerElement, isStart, isCollapsed, startInfo) {
-                var workingRange = textRange.duplicate();
-                workingRange.collapse(isStart);
-                var containerElement = workingRange.parentElement();
-
-                // Sometimes collapsing a TextRange that's at the start of a text node can move it into the previous node, so
-                // check for that
-                if (!dom.isOrIsAncestorOf(wholeRangeContainerElement, containerElement)) {
-                    containerElement = wholeRangeContainerElement;
-                }
-
-
-                // Deal with nodes that cannot "contain rich HTML markup". In practice, this means form inputs, images and
-                // similar. See http://msdn.microsoft.com/en-us/library/aa703950%28VS.85%29.aspx
-                if (!containerElement.canHaveHTML) {
-                    var pos = new DomPosition(containerElement.parentNode, dom.getNodeIndex(containerElement));
-                    return {
-                        boundaryPosition: pos,
-                        nodeInfo: {
-                            nodeIndex: pos.offset,
-                            containerElement: pos.node
-                        }
-                    };
-                }
-
-                var workingNode = dom.getDocument(containerElement).createElement("span");
-
-                // Workaround for HTML5 Shiv's insane violation of document.createElement(). See Rangy issue 104 and HTML5
-                // Shiv issue 64: https://github.com/aFarkas/html5shiv/issues/64
-                if (workingNode.parentNode) {
-                    dom.removeNode(workingNode);
-                }
-
-                var comparison, workingComparisonType = isStart ? "StartToStart" : "StartToEnd";
-                var previousNode, nextNode, boundaryPosition, boundaryNode;
-                var start = (startInfo && startInfo.containerElement == containerElement) ? startInfo.nodeIndex : 0;
-                var childNodeCount = containerElement.childNodes.length;
-                var end = childNodeCount;
-
-                // Check end first. Code within the loop assumes that the endth child node of the container is definitely
-                // after the range boundary.
-                var nodeIndex = end;
-
-                while (true) {
-                    if (nodeIndex == childNodeCount) {
-                        containerElement.appendChild(workingNode);
-                    } else {
-                        containerElement.insertBefore(workingNode, containerElement.childNodes[nodeIndex]);
-                    }
-                    workingRange.moveToElementText(workingNode);
-                    comparison = workingRange.compareEndPoints(workingComparisonType, textRange);
-                    if (comparison == 0 || start == end) {
-                        break;
-                    } else if (comparison == -1) {
-                        if (end == start + 1) {
-                            // We know the endth child node is after the range boundary, so we must be done.
-                            break;
-                        } else {
-                            start = nodeIndex;
-                        }
-                    } else {
-                        end = (end == start + 1) ? start : nodeIndex;
-                    }
-                    nodeIndex = Math.floor((start + end) / 2);
-                    containerElement.removeChild(workingNode);
-                }
-
-
-                // We've now reached or gone past the boundary of the text range we're interested in
-                // so have identified the node we want
-                boundaryNode = workingNode.nextSibling;
-
-                if (comparison == -1 && boundaryNode && isCharacterDataNode(boundaryNode)) {
-                    // This is a character data node (text, comment, cdata). The working range is collapsed at the start of
-                    // the node containing the text range's boundary, so we move the end of the working range to the
-                    // boundary point and measure the length of its text to get the boundary's offset within the node.
-                    workingRange.setEndPoint(isStart ? "EndToStart" : "EndToEnd", textRange);
-
-                    var offset;
-
-                    if (/[\r\n]/.test(boundaryNode.data)) {
-                        /*
-                        For the particular case of a boundary within a text node containing rendered line breaks (within a
-                        <pre> element, for example), we need a slightly complicated approach to get the boundary's offset in
-                        IE. The facts:
-
-                        - Each line break is represented as \r in the text node's data/nodeValue properties
-                        - Each line break is represented as \r\n in the TextRange's 'text' property
-                        - The 'text' property of the TextRange does not contain trailing line breaks
-
-                        To get round the problem presented by the final fact above, we can use the fact that TextRange's
-                        moveStart() and moveEnd() methods return the actual number of characters moved, which is not
-                        necessarily the same as the number of characters it was instructed to move. The simplest approach is
-                        to use this to store the characters moved when moving both the start and end of the range to the
-                        start of the document body and subtracting the start offset from the end offset (the
-                        "move-negative-gazillion" method). However, this is extremely slow when the document is large and
-                        the range is near the end of it. Clearly doing the mirror image (i.e. moving the range boundaries to
-                        the end of the document) has the same problem.
-
-                        Another approach that works is to use moveStart() to move the start boundary of the range up to the
-                        end boundary one character at a time and incrementing a counter with the value returned by the
-                        moveStart() call. However, the check for whether the start boundary has reached the end boundary is
-                        expensive, so this method is slow (although unlike "move-negative-gazillion" is largely unaffected
-                        by the location of the range within the document).
-
-                        The approach used below is a hybrid of the two methods above. It uses the fact that a string
-                        containing the TextRange's 'text' property with each \r\n converted to a single \r character cannot
-                        be longer than the text of the TextRange, so the start of the range is moved that length initially
-                        and then a character at a time to make up for any trailing line breaks not contained in the 'text'
-                        property. This has good performance in most situations compared to the previous two methods.
-                        */
-                        var tempRange = workingRange.duplicate();
-                        var rangeLength = tempRange.text.replace(/\r\n/g, "\r").length;
-
-                        offset = tempRange.moveStart("character", rangeLength);
-                        while ( (comparison = tempRange.compareEndPoints("StartToEnd", tempRange)) == -1) {
-                            offset++;
-                            tempRange.moveStart("character", 1);
-                        }
-                    } else {
-                        offset = workingRange.text.length;
-                    }
-                    boundaryPosition = new DomPosition(boundaryNode, offset);
-                } else {
-
-                    // If the boundary immediately follows a character data node and this is the end boundary, we should favour
-                    // a position within that, and likewise for a start boundary preceding a character data node
-                    previousNode = (isCollapsed || !isStart) && workingNode.previousSibling;
-                    nextNode = (isCollapsed || isStart) && workingNode.nextSibling;
-                    if (nextNode && isCharacterDataNode(nextNode)) {
-                        boundaryPosition = new DomPosition(nextNode, 0);
-                    } else if (previousNode && isCharacterDataNode(previousNode)) {
-                        boundaryPosition = new DomPosition(previousNode, previousNode.data.length);
-                    } else {
-                        boundaryPosition = new DomPosition(containerElement, dom.getNodeIndex(workingNode));
-                    }
-                }
-
-                // Clean up
-                dom.removeNode(workingNode);
-
-                return {
-                    boundaryPosition: boundaryPosition,
-                    nodeInfo: {
-                        nodeIndex: nodeIndex,
-                        containerElement: containerElement
-                    }
-                };
-            };
-
-            // Returns a TextRange representing the boundary of a TextRange expressed as a node and an offset within that
-            // node. This function started out as an optimized version of code found in Tim Cameron Ryan's IERange
-            // (http://code.google.com/p/ierange/)
-            var createBoundaryTextRange = function(boundaryPosition, isStart) {
-                var boundaryNode, boundaryParent, boundaryOffset = boundaryPosition.offset;
-                var doc = dom.getDocument(boundaryPosition.node);
-                var workingNode, childNodes, workingRange = getBody(doc).createTextRange();
-                var nodeIsDataNode = isCharacterDataNode(boundaryPosition.node);
-
-                if (nodeIsDataNode) {
-                    boundaryNode = boundaryPosition.node;
-                    boundaryParent = boundaryNode.parentNode;
-                } else {
-                    childNodes = boundaryPosition.node.childNodes;
-                    boundaryNode = (boundaryOffset < childNodes.length) ? childNodes[boundaryOffset] : null;
-                    boundaryParent = boundaryPosition.node;
-                }
-
-                // Position the range immediately before the node containing the boundary
-                workingNode = doc.createElement("span");
-
-                // Making the working element non-empty element persuades IE to consider the TextRange boundary to be within
-                // the element rather than immediately before or after it
-                workingNode.innerHTML = "&#feff;";
-
-                // insertBefore is supposed to work like appendChild if the second parameter is null. However, a bug report
-                // for IERange suggests that it can crash the browser: http://code.google.com/p/ierange/issues/detail?id=12
-                if (boundaryNode) {
-                    boundaryParent.insertBefore(workingNode, boundaryNode);
-                } else {
-                    boundaryParent.appendChild(workingNode);
-                }
-
-                workingRange.moveToElementText(workingNode);
-                workingRange.collapse(!isStart);
-
-                // Clean up
-                boundaryParent.removeChild(workingNode);
-
-                // Move the working range to the text offset, if required
-                if (nodeIsDataNode) {
-                    workingRange[isStart ? "moveStart" : "moveEnd"]("character", boundaryOffset);
-                }
-
-                return workingRange;
-            };
-
-            /*------------------------------------------------------------------------------------------------------------*/
-
-            // This is a wrapper around a TextRange, providing full DOM Range functionality using rangy's DomRange as a
-            // prototype
-
-            WrappedTextRange = function(textRange) {
-                this.textRange = textRange;
-                this.refresh();
-            };
-
-            WrappedTextRange.prototype = new DomRange(document);
-
-            WrappedTextRange.prototype.refresh = function() {
-                var start, end, startBoundary;
-
-                // TextRange's parentElement() method cannot be trusted. getTextRangeContainerElement() works around that.
-                var rangeContainerElement = getTextRangeContainerElement(this.textRange);
-
-                if (textRangeIsCollapsed(this.textRange)) {
-                    end = start = getTextRangeBoundaryPosition(this.textRange, rangeContainerElement, true,
-                        true).boundaryPosition;
-                } else {
-                    startBoundary = getTextRangeBoundaryPosition(this.textRange, rangeContainerElement, true, false);
-                    start = startBoundary.boundaryPosition;
-
-                    // An optimization used here is that if the start and end boundaries have the same parent element, the
-                    // search scope for the end boundary can be limited to exclude the portion of the element that precedes
-                    // the start boundary
-                    end = getTextRangeBoundaryPosition(this.textRange, rangeContainerElement, false, false,
-                        startBoundary.nodeInfo).boundaryPosition;
-                }
-
-                this.setStart(start.node, start.offset);
-                this.setEnd(end.node, end.offset);
-            };
-
-            WrappedTextRange.prototype.getName = function() {
-                return "WrappedTextRange";
-            };
-
-            DomRange.copyComparisonConstants(WrappedTextRange);
-
-            var rangeToTextRange = function(range) {
-                if (range.collapsed) {
-                    return createBoundaryTextRange(new DomPosition(range.startContainer, range.startOffset), true);
-                } else {
-                    var startRange = createBoundaryTextRange(new DomPosition(range.startContainer, range.startOffset), true);
-                    var endRange = createBoundaryTextRange(new DomPosition(range.endContainer, range.endOffset), false);
-                    var textRange = getBody( DomRange.getRangeDocument(range) ).createTextRange();
-                    textRange.setEndPoint("StartToStart", startRange);
-                    textRange.setEndPoint("EndToEnd", endRange);
-                    return textRange;
-                }
-            };
-
-            WrappedTextRange.rangeToTextRange = rangeToTextRange;
-
-            WrappedTextRange.prototype.toTextRange = function() {
-                return rangeToTextRange(this);
-            };
-
-            api.WrappedTextRange = WrappedTextRange;
-
-            // IE 9 and above have both implementations and Rangy makes both available. The next few lines sets which
-            // implementation to use by default.
-            if (!api.features.implementsDomRange || api.config.preferTextRange) {
-                // Add WrappedTextRange as the Range property of the global object to allow expression like Range.END_TO_END to work
-                var globalObj = (function(f) { return f("return this;")(); })(Function);
-                if (typeof globalObj.Range == "undefined") {
-                    globalObj.Range = WrappedTextRange;
-                }
-
-                api.createNativeRange = function(doc) {
-                    doc = getContentDocument(doc, module, "createNativeRange");
-                    return getBody(doc).createTextRange();
-                };
-
-                api.WrappedRange = WrappedTextRange;
-            }
-        }
-
-        api.createRange = function(doc) {
-            doc = getContentDocument(doc, module, "createRange");
-            return new api.WrappedRange(api.createNativeRange(doc));
-        };
-
-        api.createRangyRange = function(doc) {
-            doc = getContentDocument(doc, module, "createRangyRange");
-            return new DomRange(doc);
-        };
-
-        util.createAliasForDeprecatedMethod(api, "createIframeRange", "createRange");
-        util.createAliasForDeprecatedMethod(api, "createIframeRangyRange", "createRangyRange");
-
-        api.addShimListener(function(win) {
-            var doc = win.document;
-            if (typeof doc.createRange == "undefined") {
-                doc.createRange = function() {
-                    return api.createRange(doc);
-                };
-            }
-            doc = win = null;
-        });
-    });
-
-    /*----------------------------------------------------------------------------------------------------------------*/
-
-    // This module creates a selection object wrapper that conforms as closely as possible to the Selection specification
-    // in the HTML Editing spec (http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#selections)
-    api.createCoreModule("WrappedSelection", ["DomRange", "WrappedRange"], function(api, module) {
-        api.config.checkSelectionRanges = true;
-
-        var BOOLEAN = "boolean";
-        var NUMBER = "number";
-        var dom = api.dom;
-        var util = api.util;
-        var isHostMethod = util.isHostMethod;
-        var DomRange = api.DomRange;
-        var WrappedRange = api.WrappedRange;
-        var DOMException = api.DOMException;
-        var DomPosition = dom.DomPosition;
-        var getNativeSelection;
-        var selectionIsCollapsed;
-        var features = api.features;
-        var CONTROL = "Control";
-        var getDocument = dom.getDocument;
-        var getBody = dom.getBody;
-        var rangesEqual = DomRange.rangesEqual;
-
-
-        // Utility function to support direction parameters in the API that may be a string ("backward", "backwards",
-        // "forward" or "forwards") or a Boolean (true for backwards).
-        function isDirectionBackward(dir) {
-            return (typeof dir == "string") ? /^backward(s)?$/i.test(dir) : !!dir;
-        }
-
-        function getWindow(win, methodName) {
-            if (!win) {
-                return window;
-            } else if (dom.isWindow(win)) {
-                return win;
-            } else if (win instanceof WrappedSelection) {
-                return win.win;
             } else {
-                var doc = dom.getContentDocument(win, module, methodName);
-                return dom.getWindow(doc);
+                rangeProto.selectNodeContents = function(node) {
+                    this.setStart(node, 0);
+                    this.setEnd(node, DomRange.getEndOffset(node));
+                };
             }
-        }
 
-        function getWinSelection(winParam) {
-            return getWindow(winParam, "getWinSelection").getSelection();
-        }
+            /*--------------------------------------------------------------------------------------------------------*/
 
-        function getDocSelection(winParam) {
-            return getWindow(winParam, "getDocSelection").document.selection;
-        }
+            // Test for WebKit bug that has the beahviour of compareBoundaryPoints round the wrong way for constants
+            // START_TO_END and END_TO_START: https://bugs.webkit.org/show_bug.cgi?id=20738
 
-        function winSelectionIsBackward(sel) {
-            var backward = false;
-            if (sel.anchorNode) {
-                backward = (dom.comparePoints(sel.anchorNode, sel.anchorOffset, sel.focusNode, sel.focusOffset) == 1);
+            range.selectNodeContents(testTextNode);
+            range.setEnd(testTextNode, 3);
+
+            var range2 = document.createRange();
+            range2.selectNodeContents(testTextNode);
+            range2.setEnd(testTextNode, 4);
+            range2.setStart(testTextNode, 2);
+
+            if (range.compareBoundaryPoints(range.START_TO_END, range2) == -1 &
+                    range.compareBoundaryPoints(range.END_TO_START, range2) == 1) {
+                // This is the wrong way round, so correct for it
+
+
+                rangeProto.compareBoundaryPoints = function(type, range) {
+                    range = range.nativeRange || range;
+                    if (type == range.START_TO_END) {
+                        type = range.END_TO_START;
+                    } else if (type == range.END_TO_START) {
+                        type = range.START_TO_END;
+                    }
+                    return this.nativeRange.compareBoundaryPoints(type, range);
+                };
+            } else {
+                rangeProto.compareBoundaryPoints = function(type, range) {
+                    return this.nativeRange.compareBoundaryPoints(type, range.nativeRange || range);
+                };
             }
-            return backward;
-        }
 
-        // Test for the Range/TextRange and Selection features required
-        // Test for ability to retrieve selection
-        var implementsWinGetSelection = isHostMethod(window, "getSelection"),
-            implementsDocSelection = util.isHostObject(document, "selection");
+            /*--------------------------------------------------------------------------------------------------------*/
 
-        features.implementsWinGetSelection = implementsWinGetSelection;
-        features.implementsDocSelection = implementsDocSelection;
-
-        var useDocumentSelection = implementsDocSelection && (!implementsWinGetSelection || api.config.preferTextRange);
-
-        if (useDocumentSelection) {
-            getNativeSelection = getDocSelection;
-            api.isSelectionValid = function(winParam) {
-                var doc = getWindow(winParam, "isSelectionValid").document, nativeSel = doc.selection;
-
-                // Check whether the selection TextRange is actually contained within the correct document
-                return (nativeSel.type != "None" || getDocument(nativeSel.createRange().parentElement()) == doc);
-            };
-        } else if (implementsWinGetSelection) {
-            getNativeSelection = getWinSelection;
-            api.isSelectionValid = function() {
-                return true;
-            };
-        } else {
-            module.fail("Neither document.selection or window.getSelection() detected.");
-            return false;
-        }
-
-        api.getNativeSelection = getNativeSelection;
-
-        var testSelection = getNativeSelection();
-
-        // In Firefox, the selection is null in an iframe with display: none. See issue #138.
-        if (!testSelection) {
-            module.fail("Native selection was null (possibly issue 138?)");
-            return false;
-        }
-
-        var testRange = api.createNativeRange(document);
-        var body = getBody(document);
-
-        // Obtaining a range from a selection
-        var selectionHasAnchorAndFocus = util.areHostProperties(testSelection,
-            ["anchorNode", "focusNode", "anchorOffset", "focusOffset"]);
-
-        features.selectionHasAnchorAndFocus = selectionHasAnchorAndFocus;
-
-        // Test for existence of native selection extend() method
-        var selectionHasExtend = isHostMethod(testSelection, "extend");
-        features.selectionHasExtend = selectionHasExtend;
-
-        // Test if rangeCount exists
-        var selectionHasRangeCount = (typeof testSelection.rangeCount == NUMBER);
-        features.selectionHasRangeCount = selectionHasRangeCount;
-
-        var selectionSupportsMultipleRanges = false;
-        var collapsedNonEditableSelectionsSupported = true;
-
-        var addRangeBackwardToNative = selectionHasExtend ?
-            function(nativeSelection, range) {
-                var doc = DomRange.getRangeDocument(range);
-                var endRange = api.createRange(doc);
-                endRange.collapseToPoint(range.endContainer, range.endOffset);
-                nativeSelection.addRange(getNativeRange(endRange));
-                nativeSelection.extend(range.startContainer, range.startOffset);
-            } : null;
-
-        if (util.areHostMethods(testSelection, ["addRange", "getRangeAt", "removeAllRanges"]) &&
-                typeof testSelection.rangeCount == NUMBER && features.implementsDomRange) {
-
-            (function() {
-                // Previously an iframe was used but this caused problems in some circumstances in IE, so tests are
-                // performed on the current document's selection. See issue 109.
-
-                // Note also that if a selection previously existed, it is wiped and later restored by these tests. This
-                // will result in the selection direction begin reversed if the original selection was backwards and the
-                // browser does not support setting backwards selections (Internet Explorer, I'm looking at you).
-                var sel = window.getSelection();
-                if (sel) {
-                    // Store the current selection
-                    var originalSelectionRangeCount = sel.rangeCount;
-                    var selectionHasMultipleRanges = (originalSelectionRangeCount > 1);
-                    var originalSelectionRanges = [];
-                    var originalSelectionBackward = winSelectionIsBackward(sel);
-                    for (var i = 0; i < originalSelectionRangeCount; ++i) {
-                        originalSelectionRanges[i] = sel.getRangeAt(i);
-                    }
-
-                    // Create some test elements
-                    var testEl = dom.createTestElement(document, "", false);
-                    var textNode = testEl.appendChild( document.createTextNode("\u00a0\u00a0\u00a0") );
-
-                    // Test whether the native selection will allow a collapsed selection within a non-editable element
-                    var r1 = document.createRange();
-
-                    r1.setStart(textNode, 1);
-                    r1.collapse(true);
-                    sel.removeAllRanges();
-                    sel.addRange(r1);
-                    collapsedNonEditableSelectionsSupported = (sel.rangeCount == 1);
-                    sel.removeAllRanges();
-
-                    // Test whether the native selection is capable of supporting multiple ranges.
-                    if (!selectionHasMultipleRanges) {
-                        // Doing the original feature test here in Chrome 36 (and presumably later versions) prints a
-                        // console error of "Discontiguous selection is not supported." that cannot be suppressed. There's
-                        // nothing we can do about this while retaining the feature test so we have to resort to a browser
-                        // sniff. I'm not happy about it. See
-                        // https://code.google.com/p/chromium/issues/detail?id=399791
-                        var chromeMatch = window.navigator.appVersion.match(/Chrome\/(.*?) /);
-                        if (chromeMatch && parseInt(chromeMatch[1]) >= 36) {
-                            selectionSupportsMultipleRanges = false;
-                        } else {
-                            var r2 = r1.cloneRange();
-                            r1.setStart(textNode, 0);
-                            r2.setEnd(textNode, 3);
-                            r2.setStart(textNode, 2);
-                            sel.addRange(r1);
-                            sel.addRange(r2);
-                            selectionSupportsMultipleRanges = (sel.rangeCount == 2);
-                        }
-                    }
-
-                    // Clean up
-                    dom.removeNode(testEl);
-                    sel.removeAllRanges();
-
-                    for (i = 0; i < originalSelectionRangeCount; ++i) {
-                        if (i == 0 && originalSelectionBackward) {
-                            if (addRangeBackwardToNative) {
-                                addRangeBackwardToNative(sel, originalSelectionRanges[i]);
-                            } else {
-                                api.warn("Rangy initialization: original selection was backwards but selection has been restored forwards because the browser does not support Selection.extend");
-                                sel.addRange(originalSelectionRanges[i]);
-                            }
-                        } else {
-                            sel.addRange(originalSelectionRanges[i]);
-                        }
-                    }
-                }
-            })();
-        }
-
-        features.selectionSupportsMultipleRanges = selectionSupportsMultipleRanges;
-        features.collapsedNonEditableSelectionsSupported = collapsedNonEditableSelectionsSupported;
-
-        // ControlRanges
-        var implementsControlRange = false, testControlRange;
-
-        if (body && isHostMethod(body, "createControlRange")) {
-            testControlRange = body.createControlRange();
-            if (util.areHostProperties(testControlRange, ["item", "add"])) {
-                implementsControlRange = true;
+            // Test for existence of createContextualFragment and delegate to it if it exists
+            if (api.util.isHostMethod(range, "createContextualFragment")) {
+                rangeProto.createContextualFragment = function(fragmentStr) {
+                    return this.nativeRange.createContextualFragment(fragmentStr);
+                };
             }
-        }
-        features.implementsControlRange = implementsControlRange;
 
-        // Selection collapsedness
-        if (selectionHasAnchorAndFocus) {
-            selectionIsCollapsed = function(sel) {
-                return sel.anchorNode === sel.focusNode && sel.anchorOffset === sel.focusOffset;
+            /*--------------------------------------------------------------------------------------------------------*/
+
+            // Clean up
+            dom.getBody(document).removeChild(testTextNode);
+            range.detach();
+            range2.detach();
+        })();
+
+        api.createNativeRange = function(doc) {
+            doc = doc || document;
+            return doc.createRange();
+        };
+    } else if (api.features.implementsTextRange) {
+        // This is a wrapper around a TextRange, providing full DOM Range functionality using rangy's DomRange as a
+        // prototype
+
+        WrappedRange = function(textRange) {
+            this.textRange = textRange;
+            this.refresh();
+        };
+
+        WrappedRange.prototype = new DomRange(document);
+
+        WrappedRange.prototype.refresh = function() {
+            var start, end;
+
+            // TextRange's parentElement() method cannot be trusted. getTextRangeContainerElement() works around that.
+            var rangeContainerElement = getTextRangeContainerElement(this.textRange);
+
+            if (textRangeIsCollapsed(this.textRange)) {
+                end = start = getTextRangeBoundaryPosition(this.textRange, rangeContainerElement, true, true);
+            } else {
+
+                start = getTextRangeBoundaryPosition(this.textRange, rangeContainerElement, true, false);
+                end = getTextRangeBoundaryPosition(this.textRange, rangeContainerElement, false, false);
+            }
+
+            this.setStart(start.node, start.offset);
+            this.setEnd(end.node, end.offset);
+        };
+
+        DomRange.copyComparisonConstants(WrappedRange);
+
+        // Add WrappedRange as the Range property of the global object to allow expression like Range.END_TO_END to work
+        var globalObj = (function() { return this; })();
+        if (typeof globalObj.Range == "undefined") {
+            globalObj.Range = WrappedRange;
+        }
+
+        api.createNativeRange = function(doc) {
+            doc = doc || document;
+            return doc.body.createTextRange();
+        };
+    }
+
+    if (api.features.implementsTextRange) {
+        WrappedRange.rangeToTextRange = function(range) {
+            if (range.collapsed) {
+                var tr = createBoundaryTextRange(new DomPosition(range.startContainer, range.startOffset), true);
+
+
+
+                return tr;
+
+                //return createBoundaryTextRange(new DomPosition(range.startContainer, range.startOffset), true);
+            } else {
+                var startRange = createBoundaryTextRange(new DomPosition(range.startContainer, range.startOffset), true);
+                var endRange = createBoundaryTextRange(new DomPosition(range.endContainer, range.endOffset), false);
+                var textRange = dom.getDocument(range.startContainer).body.createTextRange();
+                textRange.setEndPoint("StartToStart", startRange);
+                textRange.setEndPoint("EndToEnd", endRange);
+                return textRange;
+            }
+        };
+    }
+
+    WrappedRange.prototype.getName = function() {
+        return "WrappedRange";
+    };
+
+    api.WrappedRange = WrappedRange;
+
+    api.createRange = function(doc) {
+        doc = doc || document;
+        return new WrappedRange(api.createNativeRange(doc));
+    };
+
+    api.createRangyRange = function(doc) {
+        doc = doc || document;
+        return new DomRange(doc);
+    };
+
+    api.createIframeRange = function(iframeEl) {
+        return api.createRange(dom.getIframeDocument(iframeEl));
+    };
+
+    api.createIframeRangyRange = function(iframeEl) {
+        return api.createRangyRange(dom.getIframeDocument(iframeEl));
+    };
+
+    api.addCreateMissingNativeApiListener(function(win) {
+        var doc = win.document;
+        if (typeof doc.createRange == "undefined") {
+            doc.createRange = function() {
+                return api.createRange(this);
             };
-        } else {
-            selectionIsCollapsed = function(sel) {
-                return sel.rangeCount ? sel.getRangeAt(sel.rangeCount - 1).collapsed : false;
-            };
         }
+        doc = win = null;
+    });
+});rangy.createModule("WrappedSelection", function(api, module) {
+    // This will create a selection object wrapper that follows the Selection object found in the WHATWG draft DOM Range
+    // spec (http://html5.org/specs/dom-range.html)
 
-        function updateAnchorAndFocusFromRange(sel, range, backward) {
-            var anchorPrefix = backward ? "end" : "start", focusPrefix = backward ? "start" : "end";
-            sel.anchorNode = range[anchorPrefix + "Container"];
-            sel.anchorOffset = range[anchorPrefix + "Offset"];
-            sel.focusNode = range[focusPrefix + "Container"];
-            sel.focusOffset = range[focusPrefix + "Offset"];
+    api.requireModules( ["DomUtil", "DomRange", "WrappedRange"] );
+
+    api.config.checkSelectionRanges = true;
+
+    var BOOLEAN = "boolean",
+        windowPropertyName = "_rangySelection",
+        dom = api.dom,
+        util = api.util,
+        DomRange = api.DomRange,
+        WrappedRange = api.WrappedRange,
+        DOMException = api.DOMException,
+        DomPosition = dom.DomPosition,
+        getSelection,
+        selectionIsCollapsed,
+        CONTROL = "Control";
+
+
+
+    function getWinSelection(winParam) {
+        return (winParam || window).getSelection();
+    }
+
+    function getDocSelection(winParam) {
+        return (winParam || window).document.selection;
+    }
+
+    // Test for the Range/TextRange and Selection features required
+    // Test for ability to retrieve selection
+    var implementsWinGetSelection = api.util.isHostMethod(window, "getSelection"),
+        implementsDocSelection = api.util.isHostObject(document, "selection");
+
+    var useDocumentSelection = implementsDocSelection && (!implementsWinGetSelection || api.config.preferTextRange);
+
+    if (useDocumentSelection) {
+        getSelection = getDocSelection;
+        api.isSelectionValid = function(winParam) {
+            var doc = (winParam || window).document, nativeSel = doc.selection;
+
+            // Check whether the selection TextRange is actually contained within the correct document
+            return (nativeSel.type != "None" || dom.getDocument(nativeSel.createRange().parentElement()) == doc);
+        };
+    } else if (implementsWinGetSelection) {
+        getSelection = getWinSelection;
+        api.isSelectionValid = function() {
+            return true;
+        };
+    } else {
+        module.fail("Neither document.selection or window.getSelection() detected.");
+    }
+
+    api.getNativeSelection = getSelection;
+
+    var testSelection = getSelection();
+    var testRange = api.createNativeRange(document);
+    var body = dom.getBody(document);
+
+    // Obtaining a range from a selection
+    var selectionHasAnchorAndFocus = util.areHostObjects(testSelection, ["anchorNode", "focusNode"] &&
+                                     util.areHostProperties(testSelection, ["anchorOffset", "focusOffset"]));
+    api.features.selectionHasAnchorAndFocus = selectionHasAnchorAndFocus;
+
+    // Test for existence of native selection extend() method
+    var selectionHasExtend = util.isHostMethod(testSelection, "extend");
+    api.features.selectionHasExtend = selectionHasExtend;
+
+    // Test if rangeCount exists
+    var selectionHasRangeCount = (typeof testSelection.rangeCount == "number");
+    api.features.selectionHasRangeCount = selectionHasRangeCount;
+
+    var selectionSupportsMultipleRanges = false;
+    var collapsedNonEditableSelectionsSupported = true;
+
+    if (util.areHostMethods(testSelection, ["addRange", "getRangeAt", "removeAllRanges"]) &&
+            typeof testSelection.rangeCount == "number" && api.features.implementsDomRange) {
+
+        (function() {
+            var iframe = document.createElement("iframe");
+            iframe.frameBorder = 0;
+            iframe.style.position = "absolute";
+            iframe.style.left = "-10000px";
+            body.appendChild(iframe);
+
+            var iframeDoc = dom.getIframeDocument(iframe);
+            iframeDoc.open();
+            iframeDoc.write("<html><head></head><body>12</body></html>");
+            iframeDoc.close();
+
+            var sel = dom.getIframeWindow(iframe).getSelection();
+            var docEl = iframeDoc.documentElement;
+            var iframeBody = docEl.lastChild, textNode = iframeBody.firstChild;
+
+            // Test whether the native selection will allow a collapsed selection within a non-editable element
+            var r1 = iframeDoc.createRange();
+            r1.setStart(textNode, 1);
+            r1.collapse(true);
+            sel.addRange(r1);
+            collapsedNonEditableSelectionsSupported = (sel.rangeCount == 1);
+            sel.removeAllRanges();
+
+            // Test whether the native selection is capable of supporting multiple ranges
+            var r2 = r1.cloneRange();
+            r1.setStart(textNode, 0);
+            r2.setEnd(textNode, 2);
+            sel.addRange(r1);
+            sel.addRange(r2);
+
+            selectionSupportsMultipleRanges = (sel.rangeCount == 2);
+
+            // Clean up
+            r1.detach();
+            r2.detach();
+
+            body.removeChild(iframe);
+        })();
+    }
+
+    api.features.selectionSupportsMultipleRanges = selectionSupportsMultipleRanges;
+    api.features.collapsedNonEditableSelectionsSupported = collapsedNonEditableSelectionsSupported;
+
+    // ControlRanges
+    var implementsControlRange = false, testControlRange;
+
+    if (body && util.isHostMethod(body, "createControlRange")) {
+        testControlRange = body.createControlRange();
+        if (util.areHostProperties(testControlRange, ["item", "add"])) {
+            implementsControlRange = true;
         }
+    }
+    api.features.implementsControlRange = implementsControlRange;
 
-        function updateAnchorAndFocusFromNativeSelection(sel) {
-            var nativeSel = sel.nativeSelection;
-            sel.anchorNode = nativeSel.anchorNode;
-            sel.anchorOffset = nativeSel.anchorOffset;
-            sel.focusNode = nativeSel.focusNode;
-            sel.focusOffset = nativeSel.focusOffset;
-        }
+    // Selection collapsedness
+    if (selectionHasAnchorAndFocus) {
+        selectionIsCollapsed = function(sel) {
+            return sel.anchorNode === sel.focusNode && sel.anchorOffset === sel.focusOffset;
+        };
+    } else {
+        selectionIsCollapsed = function(sel) {
+            return sel.rangeCount ? sel.getRangeAt(sel.rangeCount - 1).collapsed : false;
+        };
+    }
 
-        function updateEmptySelection(sel) {
-            sel.anchorNode = sel.focusNode = null;
-            sel.anchorOffset = sel.focusOffset = 0;
-            sel.rangeCount = 0;
-            sel.isCollapsed = true;
-            sel._ranges.length = 0;
-        }
+    function updateAnchorAndFocusFromRange(sel, range, backwards) {
+        var anchorPrefix = backwards ? "end" : "start", focusPrefix = backwards ? "start" : "end";
+        sel.anchorNode = range[anchorPrefix + "Container"];
+        sel.anchorOffset = range[anchorPrefix + "Offset"];
+        sel.focusNode = range[focusPrefix + "Container"];
+        sel.focusOffset = range[focusPrefix + "Offset"];
+    }
 
-        function getNativeRange(range) {
-            var nativeRange;
-            if (range instanceof DomRange) {
-                nativeRange = api.createNativeRange(range.getDocument());
+    function updateAnchorAndFocusFromNativeSelection(sel) {
+        var nativeSel = sel.nativeSelection;
+        sel.anchorNode = nativeSel.anchorNode;
+        sel.anchorOffset = nativeSel.anchorOffset;
+        sel.focusNode = nativeSel.focusNode;
+        sel.focusOffset = nativeSel.focusOffset;
+    }
+
+    function updateEmptySelection(sel) {
+        sel.anchorNode = sel.focusNode = null;
+        sel.anchorOffset = sel.focusOffset = 0;
+        sel.rangeCount = 0;
+        sel.isCollapsed = true;
+        sel._ranges.length = 0;
+    }
+
+    function getNativeRange(range) {
+        var nativeRange;
+        if (range instanceof DomRange) {
+            nativeRange = range._selectionNativeRange;
+            if (!nativeRange) {
+                nativeRange = api.createNativeRange(dom.getDocument(range.startContainer));
                 nativeRange.setEnd(range.endContainer, range.endOffset);
                 nativeRange.setStart(range.startContainer, range.startOffset);
-            } else if (range instanceof WrappedRange) {
-                nativeRange = range.nativeRange;
-            } else if (features.implementsDomRange && (range instanceof dom.getWindow(range.startContainer).Range)) {
-                nativeRange = range;
-            }
-            return nativeRange;
-        }
+                range._selectionNativeRange = nativeRange;
+                range.attachListener("detach", function() {
 
-        function rangeContainsSingleElement(rangeNodes) {
-            if (!rangeNodes.length || rangeNodes[0].nodeType != 1) {
+                    this._selectionNativeRange = null;
+                });
+            }
+        } else if (range instanceof WrappedRange) {
+            nativeRange = range.nativeRange;
+        } else if (api.features.implementsDomRange && (range instanceof dom.getWindow(range.startContainer).Range)) {
+            nativeRange = range;
+        }
+        return nativeRange;
+    }
+
+    function rangeContainsSingleElement(rangeNodes) {
+        if (!rangeNodes.length || rangeNodes[0].nodeType != 1) {
+            return false;
+        }
+        for (var i = 1, len = rangeNodes.length; i < len; ++i) {
+            if (!dom.isAncestorOf(rangeNodes[0], rangeNodes[i])) {
                 return false;
             }
-            for (var i = 1, len = rangeNodes.length; i < len; ++i) {
-                if (!dom.isAncestorOf(rangeNodes[0], rangeNodes[i])) {
+        }
+        return true;
+    }
+
+    function getSingleElementFromRange(range) {
+        var nodes = range.getNodes();
+        if (!rangeContainsSingleElement(nodes)) {
+            throw new Error("getSingleElementFromRange: range " + range.inspect() + " did not consist of a single element");
+        }
+        return nodes[0];
+    }
+
+    function isTextRange(range) {
+        return !!range && typeof range.text != "undefined";
+    }
+
+    function updateFromTextRange(sel, range) {
+        // Create a Range from the selected TextRange
+        var wrappedRange = new WrappedRange(range);
+        sel._ranges = [wrappedRange];
+
+        updateAnchorAndFocusFromRange(sel, wrappedRange, false);
+        sel.rangeCount = 1;
+        sel.isCollapsed = wrappedRange.collapsed;
+    }
+
+    function updateControlSelection(sel) {
+        // Update the wrapped selection based on what's now in the native selection
+        sel._ranges.length = 0;
+        if (sel.docSelection.type == "None") {
+            updateEmptySelection(sel);
+        } else {
+            var controlRange = sel.docSelection.createRange();
+            if (isTextRange(controlRange)) {
+                // This case (where the selection type is "Control" and calling createRange() on the selection returns
+                // a TextRange) can happen in IE 9. It happens, for example, when all elements in the selected
+                // ControlRange have been removed from the ControlRange and removed from the document.
+                updateFromTextRange(sel, controlRange);
+            } else {
+                sel.rangeCount = controlRange.length;
+                var range, doc = dom.getDocument(controlRange.item(0));
+                for (var i = 0; i < sel.rangeCount; ++i) {
+                    range = api.createRange(doc);
+                    range.selectNode(controlRange.item(i));
+                    sel._ranges.push(range);
+                }
+                sel.isCollapsed = sel.rangeCount == 1 && sel._ranges[0].collapsed;
+                updateAnchorAndFocusFromRange(sel, sel._ranges[sel.rangeCount - 1], false);
+            }
+        }
+    }
+
+    function addRangeToControlSelection(sel, range) {
+        var controlRange = sel.docSelection.createRange();
+        var rangeElement = getSingleElementFromRange(range);
+
+        // Create a new ControlRange containing all the elements in the selected ControlRange plus the element
+        // contained by the supplied range
+        var doc = dom.getDocument(controlRange.item(0));
+        var newControlRange = dom.getBody(doc).createControlRange();
+        for (var i = 0, len = controlRange.length; i < len; ++i) {
+            newControlRange.add(controlRange.item(i));
+        }
+        try {
+            newControlRange.add(rangeElement);
+        } catch (ex) {
+            throw new Error("addRange(): Element within the specified Range could not be added to control selection (does it have layout?)");
+        }
+        newControlRange.select();
+
+        // Update the wrapped selection based on what's now in the native selection
+        updateControlSelection(sel);
+    }
+
+    var getSelectionRangeAt;
+
+    if (util.isHostMethod(testSelection,  "getRangeAt")) {
+        getSelectionRangeAt = function(sel, index) {
+            try {
+                return sel.getRangeAt(index);
+            } catch(ex) {
+                return null;
+            }
+        };
+    } else if (selectionHasAnchorAndFocus) {
+        getSelectionRangeAt = function(sel) {
+            var doc = dom.getDocument(sel.anchorNode);
+            var range = api.createRange(doc);
+            range.setStart(sel.anchorNode, sel.anchorOffset);
+            range.setEnd(sel.focusNode, sel.focusOffset);
+
+            // Handle the case when the selection was selected backwards (from the end to the start in the
+            // document)
+            if (range.collapsed !== this.isCollapsed) {
+                range.setStart(sel.focusNode, sel.focusOffset);
+                range.setEnd(sel.anchorNode, sel.anchorOffset);
+            }
+
+            return range;
+        };
+    }
+
+    /**
+     * @constructor
+     */
+    function WrappedSelection(selection, docSelection, win) {
+        this.nativeSelection = selection;
+        this.docSelection = docSelection;
+        this._ranges = [];
+        this.win = win;
+        this.refresh();
+    }
+
+    api.getSelection = function(win) {
+        win = win || window;
+        var sel = win[windowPropertyName];
+        var nativeSel = getSelection(win), docSel = implementsDocSelection ? getDocSelection(win) : null;
+        if (sel) {
+            sel.nativeSelection = nativeSel;
+            sel.docSelection = docSel;
+            sel.refresh(win);
+        } else {
+            sel = new WrappedSelection(nativeSel, docSel, win);
+            win[windowPropertyName] = sel;
+        }
+        return sel;
+    };
+
+    api.getIframeSelection = function(iframeEl) {
+        return api.getSelection(dom.getIframeWindow(iframeEl));
+    };
+
+    var selProto = WrappedSelection.prototype;
+
+    function createControlSelection(sel, ranges) {
+        // Ensure that the selection becomes of type "Control"
+        var doc = dom.getDocument(ranges[0].startContainer);
+        var controlRange = dom.getBody(doc).createControlRange();
+        for (var i = 0, el; i < rangeCount; ++i) {
+            el = getSingleElementFromRange(ranges[i]);
+            try {
+                controlRange.add(el);
+            } catch (ex) {
+                throw new Error("setRanges(): Element within the one of the specified Ranges could not be added to control selection (does it have layout?)");
+            }
+        }
+        controlRange.select();
+
+        // Update the wrapped selection based on what's now in the native selection
+        updateControlSelection(sel);
+    }
+
+    // Selecting a range
+    if (!useDocumentSelection && selectionHasAnchorAndFocus && util.areHostMethods(testSelection, ["removeAllRanges", "addRange"])) {
+        selProto.removeAllRanges = function() {
+            this.nativeSelection.removeAllRanges();
+            updateEmptySelection(this);
+        };
+
+        var addRangeBackwards = function(sel, range) {
+            var doc = DomRange.getRangeDocument(range);
+            var endRange = api.createRange(doc);
+            endRange.collapseToPoint(range.endContainer, range.endOffset);
+            sel.nativeSelection.addRange(getNativeRange(endRange));
+            sel.nativeSelection.extend(range.startContainer, range.startOffset);
+            sel.refresh();
+        };
+
+        if (selectionHasRangeCount) {
+            selProto.addRange = function(range, backwards) {
+                if (implementsControlRange && implementsDocSelection && this.docSelection.type == CONTROL) {
+                    addRangeToControlSelection(this, range);
+                } else {
+                    if (backwards && selectionHasExtend) {
+                        addRangeBackwards(this, range);
+                    } else {
+                        var previousRangeCount;
+                        if (selectionSupportsMultipleRanges) {
+                            previousRangeCount = this.rangeCount;
+                        } else {
+                            this.removeAllRanges();
+                            previousRangeCount = 0;
+                        }
+                        this.nativeSelection.addRange(getNativeRange(range));
+
+                        // Check whether adding the range was successful
+                        this.rangeCount = this.nativeSelection.rangeCount;
+
+                        if (this.rangeCount == previousRangeCount + 1) {
+                            // The range was added successfully
+
+                            // Check whether the range that we added to the selection is reflected in the last range extracted from
+                            // the selection
+                            if (api.config.checkSelectionRanges) {
+                                var nativeRange = getSelectionRangeAt(this.nativeSelection, this.rangeCount - 1);
+                                if (nativeRange && !DomRange.rangesEqual(nativeRange, range)) {
+                                    // Happens in WebKit with, for example, a selection placed at the start of a text node
+                                    range = new WrappedRange(nativeRange);
+                                }
+                            }
+                            this._ranges[this.rangeCount - 1] = range;
+                            updateAnchorAndFocusFromRange(this, range, selectionIsBackwards(this.nativeSelection));
+                            this.isCollapsed = selectionIsCollapsed(this);
+                        } else {
+                            // The range was not added successfully. The simplest thing is to refresh
+                            this.refresh();
+                        }
+                    }
+                }
+            };
+        } else {
+            selProto.addRange = function(range, backwards) {
+                if (backwards && selectionHasExtend) {
+                    addRangeBackwards(this, range);
+                } else {
+                    this.nativeSelection.addRange(getNativeRange(range));
+                    this.refresh();
+                }
+            };
+        }
+
+        selProto.setRanges = function(ranges) {
+            if (implementsControlRange && ranges.length > 1) {
+                createControlSelection(this, ranges);
+            } else {
+                this.removeAllRanges();
+                for (var i = 0, len = ranges.length; i < len; ++i) {
+                    this.addRange(ranges[i]);
+                }
+            }
+        };
+    } else if (util.isHostMethod(testSelection, "empty") && util.isHostMethod(testRange, "select") &&
+               implementsControlRange && useDocumentSelection) {
+
+        selProto.removeAllRanges = function() {
+            // Added try/catch as fix for issue #21
+            try {
+                this.docSelection.empty();
+
+                // Check for empty() not working (issue #24)
+                if (this.docSelection.type != "None") {
+                    // Work around failure to empty a control selection by instead selecting a TextRange and then
+                    // calling empty()
+                    var doc;
+                    if (this.anchorNode) {
+                        doc = dom.getDocument(this.anchorNode);
+                    } else if (this.docSelection.type == CONTROL) {
+                        var controlRange = this.docSelection.createRange();
+                        if (controlRange.length) {
+                            doc = dom.getDocument(controlRange.item(0)).body.createTextRange();
+                        }
+                    }
+                    if (doc) {
+                        var textRange = doc.body.createTextRange();
+                        textRange.select();
+                        this.docSelection.empty();
+                    }
+                }
+            } catch(ex) {}
+            updateEmptySelection(this);
+        };
+
+        selProto.addRange = function(range) {
+            if (this.docSelection.type == CONTROL) {
+                addRangeToControlSelection(this, range);
+            } else {
+                WrappedRange.rangeToTextRange(range).select();
+                this._ranges[0] = range;
+                this.rangeCount = 1;
+                this.isCollapsed = this._ranges[0].collapsed;
+                updateAnchorAndFocusFromRange(this, range, false);
+            }
+        };
+
+        selProto.setRanges = function(ranges) {
+            this.removeAllRanges();
+            var rangeCount = ranges.length;
+            if (rangeCount > 1) {
+                createControlSelection(this, ranges);
+            } else if (rangeCount) {
+                this.addRange(ranges[0]);
+            }
+        };
+    } else {
+        module.fail("No means of selecting a Range or TextRange was found");
+        return false;
+    }
+
+    selProto.getRangeAt = function(index) {
+        if (index < 0 || index >= this.rangeCount) {
+            throw new DOMException("INDEX_SIZE_ERR");
+        } else {
+            return this._ranges[index];
+        }
+    };
+
+    var refreshSelection;
+
+    if (useDocumentSelection) {
+        refreshSelection = function(sel) {
+            var range;
+            if (api.isSelectionValid(sel.win)) {
+                range = sel.docSelection.createRange();
+            } else {
+                range = dom.getBody(sel.win.document).createTextRange();
+                range.collapse(true);
+            }
+
+
+            if (sel.docSelection.type == CONTROL) {
+                updateControlSelection(sel);
+            } else if (isTextRange(range)) {
+                updateFromTextRange(sel, range);
+            } else {
+                updateEmptySelection(sel);
+            }
+        };
+    } else if (util.isHostMethod(testSelection, "getRangeAt") && typeof testSelection.rangeCount == "number") {
+        refreshSelection = function(sel) {
+            if (implementsControlRange && implementsDocSelection && sel.docSelection.type == CONTROL) {
+                updateControlSelection(sel);
+            } else {
+                sel._ranges.length = sel.rangeCount = sel.nativeSelection.rangeCount;
+                if (sel.rangeCount) {
+                    for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                        sel._ranges[i] = new api.WrappedRange(sel.nativeSelection.getRangeAt(i));
+                    }
+                    updateAnchorAndFocusFromRange(sel, sel._ranges[sel.rangeCount - 1], selectionIsBackwards(sel.nativeSelection));
+                    sel.isCollapsed = selectionIsCollapsed(sel);
+                } else {
+                    updateEmptySelection(sel);
+                }
+            }
+        };
+    } else if (selectionHasAnchorAndFocus && typeof testSelection.isCollapsed == BOOLEAN && typeof testRange.collapsed == BOOLEAN && api.features.implementsDomRange) {
+        refreshSelection = function(sel) {
+            var range, nativeSel = sel.nativeSelection;
+            if (nativeSel.anchorNode) {
+                range = getSelectionRangeAt(nativeSel, 0);
+                sel._ranges = [range];
+                sel.rangeCount = 1;
+                updateAnchorAndFocusFromNativeSelection(sel);
+                sel.isCollapsed = selectionIsCollapsed(sel);
+            } else {
+                updateEmptySelection(sel);
+            }
+        };
+    } else {
+        module.fail("No means of obtaining a Range or TextRange from the user's selection was found");
+        return false;
+    }
+
+    selProto.refresh = function(checkForChanges) {
+        var oldRanges = checkForChanges ? this._ranges.slice(0) : null;
+        refreshSelection(this);
+        if (checkForChanges) {
+            var i = oldRanges.length;
+            if (i != this._ranges.length) {
+                return false;
+            }
+            while (i--) {
+                if (!DomRange.rangesEqual(oldRanges[i], this._ranges[i])) {
                     return false;
                 }
             }
             return true;
         }
+    };
 
-        function getSingleElementFromRange(range) {
-            var nodes = range.getNodes();
-            if (!rangeContainsSingleElement(nodes)) {
-                throw module.createError("getSingleElementFromRange: range " + range.inspect() + " did not consist of a single element");
-            }
-            return nodes[0];
-        }
-
-        // Simple, quick test which only needs to distinguish between a TextRange and a ControlRange
-        function isTextRange(range) {
-            return !!range && typeof range.text != "undefined";
-        }
-
-        function updateFromTextRange(sel, range) {
-            // Create a Range from the selected TextRange
-            var wrappedRange = new WrappedRange(range);
-            sel._ranges = [wrappedRange];
-
-            updateAnchorAndFocusFromRange(sel, wrappedRange, false);
-            sel.rangeCount = 1;
-            sel.isCollapsed = wrappedRange.collapsed;
-        }
-
-        function updateControlSelection(sel) {
-            // Update the wrapped selection based on what's now in the native selection
-            sel._ranges.length = 0;
-            if (sel.docSelection.type == "None") {
-                updateEmptySelection(sel);
+    // Removal of a single range
+    var removeRangeManually = function(sel, range) {
+        var ranges = sel.getAllRanges(), removed = false;
+        sel.removeAllRanges();
+        for (var i = 0, len = ranges.length; i < len; ++i) {
+            if (removed || range !== ranges[i]) {
+                sel.addRange(ranges[i]);
             } else {
-                var controlRange = sel.docSelection.createRange();
-                if (isTextRange(controlRange)) {
-                    // This case (where the selection type is "Control" and calling createRange() on the selection returns
-                    // a TextRange) can happen in IE 9. It happens, for example, when all elements in the selected
-                    // ControlRange have been removed from the ControlRange and removed from the document.
-                    updateFromTextRange(sel, controlRange);
-                } else {
-                    sel.rangeCount = controlRange.length;
-                    var range, doc = getDocument(controlRange.item(0));
-                    for (var i = 0; i < sel.rangeCount; ++i) {
-                        range = api.createRange(doc);
-                        range.selectNode(controlRange.item(i));
-                        sel._ranges.push(range);
-                    }
-                    sel.isCollapsed = sel.rangeCount == 1 && sel._ranges[0].collapsed;
-                    updateAnchorAndFocusFromRange(sel, sel._ranges[sel.rangeCount - 1], false);
-                }
+                // According to the draft WHATWG Range spec, the same range may be added to the selection multiple
+                // times. removeRange should only remove the first instance, so the following ensures only the first
+                // instance is removed
+                removed = true;
             }
         }
-
-        function addRangeToControlSelection(sel, range) {
-            var controlRange = sel.docSelection.createRange();
-            var rangeElement = getSingleElementFromRange(range);
-
-            // Create a new ControlRange containing all the elements in the selected ControlRange plus the element
-            // contained by the supplied range
-            var doc = getDocument(controlRange.item(0));
-            var newControlRange = getBody(doc).createControlRange();
-            for (var i = 0, len = controlRange.length; i < len; ++i) {
-                newControlRange.add(controlRange.item(i));
-            }
-            try {
-                newControlRange.add(rangeElement);
-            } catch (ex) {
-                throw module.createError("addRange(): Element within the specified Range could not be added to control selection (does it have layout?)");
-            }
-            newControlRange.select();
-
-            // Update the wrapped selection based on what's now in the native selection
-            updateControlSelection(sel);
-        }
-
-        var getSelectionRangeAt;
-
-        if (isHostMethod(testSelection, "getRangeAt")) {
-            // try/catch is present because getRangeAt() must have thrown an error in some browser and some situation.
-            // Unfortunately, I didn't write a comment about the specifics and am now scared to take it out. Let that be a
-            // lesson to us all, especially me.
-            getSelectionRangeAt = function(sel, index) {
-                try {
-                    return sel.getRangeAt(index);
-                } catch (ex) {
-                    return null;
-                }
-            };
-        } else if (selectionHasAnchorAndFocus) {
-            getSelectionRangeAt = function(sel) {
-                var doc = getDocument(sel.anchorNode);
-                var range = api.createRange(doc);
-                range.setStartAndEnd(sel.anchorNode, sel.anchorOffset, sel.focusNode, sel.focusOffset);
-
-                // Handle the case when the selection was selected backwards (from the end to the start in the
-                // document)
-                if (range.collapsed !== this.isCollapsed) {
-                    range.setStartAndEnd(sel.focusNode, sel.focusOffset, sel.anchorNode, sel.anchorOffset);
-                }
-
-                return range;
-            };
-        }
-
-        function WrappedSelection(selection, docSelection, win) {
-            this.nativeSelection = selection;
-            this.docSelection = docSelection;
-            this._ranges = [];
-            this.win = win;
-            this.refresh();
-        }
-
-        WrappedSelection.prototype = api.selectionPrototype;
-
-        function deleteProperties(sel) {
-            sel.win = sel.anchorNode = sel.focusNode = sel._ranges = null;
-            sel.rangeCount = sel.anchorOffset = sel.focusOffset = 0;
-            sel.detached = true;
-        }
-
-        var cachedRangySelections = [];
-
-        function actOnCachedSelection(win, action) {
-            var i = cachedRangySelections.length, cached, sel;
-            while (i--) {
-                cached = cachedRangySelections[i];
-                sel = cached.selection;
-                if (action == "deleteAll") {
-                    deleteProperties(sel);
-                } else if (cached.win == win) {
-                    if (action == "delete") {
-                        cachedRangySelections.splice(i, 1);
-                        return true;
-                    } else {
-                        return sel;
-                    }
-                }
-            }
-            if (action == "deleteAll") {
-                cachedRangySelections.length = 0;
-            }
-            return null;
-        }
-
-        var getSelection = function(win) {
-            // Check if the parameter is a Rangy Selection object
-            if (win && win instanceof WrappedSelection) {
-                win.refresh();
-                return win;
-            }
-
-            win = getWindow(win, "getNativeSelection");
-
-            var sel = actOnCachedSelection(win);
-            var nativeSel = getNativeSelection(win), docSel = implementsDocSelection ? getDocSelection(win) : null;
-            if (sel) {
-                sel.nativeSelection = nativeSel;
-                sel.docSelection = docSel;
-                sel.refresh();
-            } else {
-                sel = new WrappedSelection(nativeSel, docSel, win);
-                cachedRangySelections.push( { win: win, selection: sel } );
-            }
-            return sel;
-        };
-
-        api.getSelection = getSelection;
-
-        util.createAliasForDeprecatedMethod(api, "getIframeSelection", "getSelection");
-
-        var selProto = WrappedSelection.prototype;
-
-        function createControlSelection(sel, ranges) {
-            // Ensure that the selection becomes of type "Control"
-            var doc = getDocument(ranges[0].startContainer);
-            var controlRange = getBody(doc).createControlRange();
-            for (var i = 0, el, len = ranges.length; i < len; ++i) {
-                el = getSingleElementFromRange(ranges[i]);
-                try {
-                    controlRange.add(el);
-                } catch (ex) {
-                    throw module.createError("setRanges(): Element within one of the specified Ranges could not be added to control selection (does it have layout?)");
-                }
-            }
-            controlRange.select();
-
-            // Update the wrapped selection based on what's now in the native selection
-            updateControlSelection(sel);
-        }
-
-        // Selecting a range
-        if (!useDocumentSelection && selectionHasAnchorAndFocus && util.areHostMethods(testSelection, ["removeAllRanges", "addRange"])) {
-            selProto.removeAllRanges = function() {
-                this.nativeSelection.removeAllRanges();
-                updateEmptySelection(this);
-            };
-
-            var addRangeBackward = function(sel, range) {
-                addRangeBackwardToNative(sel.nativeSelection, range);
-                sel.refresh();
-            };
-
-            if (selectionHasRangeCount) {
-                selProto.addRange = function(range, direction) {
-                    if (implementsControlRange && implementsDocSelection && this.docSelection.type == CONTROL) {
-                        addRangeToControlSelection(this, range);
-                    } else {
-                        if (isDirectionBackward(direction) && selectionHasExtend) {
-                            addRangeBackward(this, range);
-                        } else {
-                            var previousRangeCount;
-                            if (selectionSupportsMultipleRanges) {
-                                previousRangeCount = this.rangeCount;
-                            } else {
-                                this.removeAllRanges();
-                                previousRangeCount = 0;
-                            }
-                            // Clone the native range so that changing the selected range does not affect the selection.
-                            // This is contrary to the spec but is the only way to achieve consistency between browsers. See
-                            // issue 80.
-                            var clonedNativeRange = getNativeRange(range).cloneRange();
-                            try {
-                                this.nativeSelection.addRange(clonedNativeRange);
-                            } catch (ex) {
-                            }
-
-                            // Check whether adding the range was successful
-                            this.rangeCount = this.nativeSelection.rangeCount;
-
-                            if (this.rangeCount == previousRangeCount + 1) {
-                                // The range was added successfully
-
-                                // Check whether the range that we added to the selection is reflected in the last range extracted from
-                                // the selection
-                                if (api.config.checkSelectionRanges) {
-                                    var nativeRange = getSelectionRangeAt(this.nativeSelection, this.rangeCount - 1);
-                                    if (nativeRange && !rangesEqual(nativeRange, range)) {
-                                        // Happens in WebKit with, for example, a selection placed at the start of a text node
-                                        range = new WrappedRange(nativeRange);
-                                    }
-                                }
-                                this._ranges[this.rangeCount - 1] = range;
-                                updateAnchorAndFocusFromRange(this, range, selectionIsBackward(this.nativeSelection));
-                                this.isCollapsed = selectionIsCollapsed(this);
-                            } else {
-                                // The range was not added successfully. The simplest thing is to refresh
-                                this.refresh();
-                            }
-                        }
-                    }
-                };
-            } else {
-                selProto.addRange = function(range, direction) {
-                    if (isDirectionBackward(direction) && selectionHasExtend) {
-                        addRangeBackward(this, range);
-                    } else {
-                        this.nativeSelection.addRange(getNativeRange(range));
-                        this.refresh();
-                    }
-                };
-            }
-
-            selProto.setRanges = function(ranges) {
-                if (implementsControlRange && implementsDocSelection && ranges.length > 1) {
-                    createControlSelection(this, ranges);
-                } else {
-                    this.removeAllRanges();
-                    for (var i = 0, len = ranges.length; i < len; ++i) {
-                        this.addRange(ranges[i]);
-                    }
-                }
-            };
-        } else if (isHostMethod(testSelection, "empty") && isHostMethod(testRange, "select") &&
-                   implementsControlRange && useDocumentSelection) {
-
-            selProto.removeAllRanges = function() {
-                // Added try/catch as fix for issue #21
-                try {
-                    this.docSelection.empty();
-
-                    // Check for empty() not working (issue #24)
-                    if (this.docSelection.type != "None") {
-                        // Work around failure to empty a control selection by instead selecting a TextRange and then
-                        // calling empty()
-                        var doc;
-                        if (this.anchorNode) {
-                            doc = getDocument(this.anchorNode);
-                        } else if (this.docSelection.type == CONTROL) {
-                            var controlRange = this.docSelection.createRange();
-                            if (controlRange.length) {
-                                doc = getDocument( controlRange.item(0) );
-                            }
-                        }
-                        if (doc) {
-                            var textRange = getBody(doc).createTextRange();
-                            textRange.select();
-                            this.docSelection.empty();
-                        }
-                    }
-                } catch(ex) {}
-                updateEmptySelection(this);
-            };
-
-            selProto.addRange = function(range) {
-                if (this.docSelection.type == CONTROL) {
-                    addRangeToControlSelection(this, range);
-                } else {
-                    api.WrappedTextRange.rangeToTextRange(range).select();
-                    this._ranges[0] = range;
-                    this.rangeCount = 1;
-                    this.isCollapsed = this._ranges[0].collapsed;
-                    updateAnchorAndFocusFromRange(this, range, false);
-                }
-            };
-
-            selProto.setRanges = function(ranges) {
-                this.removeAllRanges();
-                var rangeCount = ranges.length;
-                if (rangeCount > 1) {
-                    createControlSelection(this, ranges);
-                } else if (rangeCount) {
-                    this.addRange(ranges[0]);
-                }
-            };
-        } else {
-            module.fail("No means of selecting a Range or TextRange was found");
-            return false;
-        }
-
-        selProto.getRangeAt = function(index) {
-            if (index < 0 || index >= this.rangeCount) {
-                throw new DOMException("INDEX_SIZE_ERR");
-            } else {
-                // Clone the range to preserve selection-range independence. See issue 80.
-                return this._ranges[index].cloneRange();
-            }
-        };
-
-        var refreshSelection;
-
-        if (useDocumentSelection) {
-            refreshSelection = function(sel) {
-                var range;
-                if (api.isSelectionValid(sel.win)) {
-                    range = sel.docSelection.createRange();
-                } else {
-                    range = getBody(sel.win.document).createTextRange();
-                    range.collapse(true);
-                }
-
-                if (sel.docSelection.type == CONTROL) {
-                    updateControlSelection(sel);
-                } else if (isTextRange(range)) {
-                    updateFromTextRange(sel, range);
-                } else {
-                    updateEmptySelection(sel);
-                }
-            };
-        } else if (isHostMethod(testSelection, "getRangeAt") && typeof testSelection.rangeCount == NUMBER) {
-            refreshSelection = function(sel) {
-                if (implementsControlRange && implementsDocSelection && sel.docSelection.type == CONTROL) {
-                    updateControlSelection(sel);
-                } else {
-                    sel._ranges.length = sel.rangeCount = sel.nativeSelection.rangeCount;
-                    if (sel.rangeCount) {
-                        for (var i = 0, len = sel.rangeCount; i < len; ++i) {
-                            sel._ranges[i] = new api.WrappedRange(sel.nativeSelection.getRangeAt(i));
-                        }
-                        updateAnchorAndFocusFromRange(sel, sel._ranges[sel.rangeCount - 1], selectionIsBackward(sel.nativeSelection));
-                        sel.isCollapsed = selectionIsCollapsed(sel);
-                    } else {
-                        updateEmptySelection(sel);
-                    }
-                }
-            };
-        } else if (selectionHasAnchorAndFocus && typeof testSelection.isCollapsed == BOOLEAN && typeof testRange.collapsed == BOOLEAN && features.implementsDomRange) {
-            refreshSelection = function(sel) {
-                var range, nativeSel = sel.nativeSelection;
-                if (nativeSel.anchorNode) {
-                    range = getSelectionRangeAt(nativeSel, 0);
-                    sel._ranges = [range];
-                    sel.rangeCount = 1;
-                    updateAnchorAndFocusFromNativeSelection(sel);
-                    sel.isCollapsed = selectionIsCollapsed(sel);
-                } else {
-                    updateEmptySelection(sel);
-                }
-            };
-        } else {
-            module.fail("No means of obtaining a Range or TextRange from the user's selection was found");
-            return false;
-        }
-
-        selProto.refresh = function(checkForChanges) {
-            var oldRanges = checkForChanges ? this._ranges.slice(0) : null;
-            var oldAnchorNode = this.anchorNode, oldAnchorOffset = this.anchorOffset;
-
-            refreshSelection(this);
-            if (checkForChanges) {
-                // Check the range count first
-                var i = oldRanges.length;
-                if (i != this._ranges.length) {
-                    return true;
-                }
-
-                // Now check the direction. Checking the anchor position is the same is enough since we're checking all the
-                // ranges after this
-                if (this.anchorNode != oldAnchorNode || this.anchorOffset != oldAnchorOffset) {
-                    return true;
-                }
-
-                // Finally, compare each range in turn
-                while (i--) {
-                    if (!rangesEqual(oldRanges[i], this._ranges[i])) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        };
-
-        // Removal of a single range
-        var removeRangeManually = function(sel, range) {
-            var ranges = sel.getAllRanges();
-            sel.removeAllRanges();
-            for (var i = 0, len = ranges.length; i < len; ++i) {
-                if (!rangesEqual(range, ranges[i])) {
-                    sel.addRange(ranges[i]);
-                }
-            }
-            if (!sel.rangeCount) {
-                updateEmptySelection(sel);
-            }
-        };
-
-        if (implementsControlRange && implementsDocSelection) {
-            selProto.removeRange = function(range) {
-                if (this.docSelection.type == CONTROL) {
-                    var controlRange = this.docSelection.createRange();
-                    var rangeElement = getSingleElementFromRange(range);
-
-                    // Create a new ControlRange containing all the elements in the selected ControlRange minus the
-                    // element contained by the supplied range
-                    var doc = getDocument(controlRange.item(0));
-                    var newControlRange = getBody(doc).createControlRange();
-                    var el, removed = false;
-                    for (var i = 0, len = controlRange.length; i < len; ++i) {
-                        el = controlRange.item(i);
-                        if (el !== rangeElement || removed) {
-                            newControlRange.add(controlRange.item(i));
-                        } else {
-                            removed = true;
-                        }
-                    }
-                    newControlRange.select();
-
-                    // Update the wrapped selection based on what's now in the native selection
-                    updateControlSelection(this);
-                } else {
-                    removeRangeManually(this, range);
-                }
-            };
-        } else {
-            selProto.removeRange = function(range) {
-                removeRangeManually(this, range);
-            };
-        }
-
-        // Detecting if a selection is backward
-        var selectionIsBackward;
-        if (!useDocumentSelection && selectionHasAnchorAndFocus && features.implementsDomRange) {
-            selectionIsBackward = winSelectionIsBackward;
-
-            selProto.isBackward = function() {
-                return selectionIsBackward(this);
-            };
-        } else {
-            selectionIsBackward = selProto.isBackward = function() {
-                return false;
-            };
-        }
-
-        // Create an alias for backwards compatibility. From 1.3, everything is "backward" rather than "backwards"
-        selProto.isBackwards = selProto.isBackward;
-
-        // Selection stringifier
-        // This is conformant to the old HTML5 selections draft spec but differs from WebKit and Mozilla's implementation.
-        // The current spec does not yet define this method.
-        selProto.toString = function() {
-            var rangeTexts = [];
-            for (var i = 0, len = this.rangeCount; i < len; ++i) {
-                rangeTexts[i] = "" + this._ranges[i];
-            }
-            return rangeTexts.join("");
-        };
-
-        function assertNodeInSameDocument(sel, node) {
-            if (sel.win.document != getDocument(node)) {
-                throw new DOMException("WRONG_DOCUMENT_ERR");
-            }
-        }
-
-        // No current browser conforms fully to the spec for this method, so Rangy's own method is always used
-        selProto.collapse = function(node, offset) {
-            assertNodeInSameDocument(this, node);
-            var range = api.createRange(node);
-            range.collapseToPoint(node, offset);
-            this.setSingleRange(range);
-            this.isCollapsed = true;
-        };
-
-        selProto.collapseToStart = function() {
-            if (this.rangeCount) {
-                var range = this._ranges[0];
-                this.collapse(range.startContainer, range.startOffset);
-            } else {
-                throw new DOMException("INVALID_STATE_ERR");
-            }
-        };
-
-        selProto.collapseToEnd = function() {
-            if (this.rangeCount) {
-                var range = this._ranges[this.rangeCount - 1];
-                this.collapse(range.endContainer, range.endOffset);
-            } else {
-                throw new DOMException("INVALID_STATE_ERR");
-            }
-        };
-
-        // The spec is very specific on how selectAllChildren should be implemented and not all browsers implement it as
-        // specified so the native implementation is never used by Rangy.
-        selProto.selectAllChildren = function(node) {
-            assertNodeInSameDocument(this, node);
-            var range = api.createRange(node);
-            range.selectNodeContents(node);
-            this.setSingleRange(range);
-        };
-
-        selProto.deleteFromDocument = function() {
-            // Sepcial behaviour required for IE's control selections
-            if (implementsControlRange && implementsDocSelection && this.docSelection.type == CONTROL) {
-                var controlRange = this.docSelection.createRange();
-                var element;
-                while (controlRange.length) {
-                    element = controlRange.item(0);
-                    controlRange.remove(element);
-                    dom.removeNode(element);
-                }
-                this.refresh();
-            } else if (this.rangeCount) {
-                var ranges = this.getAllRanges();
-                if (ranges.length) {
-                    this.removeAllRanges();
-                    for (var i = 0, len = ranges.length; i < len; ++i) {
-                        ranges[i].deleteContents();
-                    }
-                    // The spec says nothing about what the selection should contain after calling deleteContents on each
-                    // range. Firefox moves the selection to where the final selected range was, so we emulate that
-                    this.addRange(ranges[len - 1]);
-                }
-            }
-        };
-
-        // The following are non-standard extensions
-        selProto.eachRange = function(func, returnValue) {
-            for (var i = 0, len = this._ranges.length; i < len; ++i) {
-                if ( func( this.getRangeAt(i) ) ) {
-                    return returnValue;
-                }
-            }
-        };
-
-        selProto.getAllRanges = function() {
-            var ranges = [];
-            this.eachRange(function(range) {
-                ranges.push(range);
-            });
-            return ranges;
-        };
-
-        selProto.setSingleRange = function(range, direction) {
-            this.removeAllRanges();
-            this.addRange(range, direction);
-        };
-
-        selProto.callMethodOnEachRange = function(methodName, params) {
-            var results = [];
-            this.eachRange( function(range) {
-                results.push( range[methodName].apply(range, params || []) );
-            } );
-            return results;
-        };
-
-        function createStartOrEndSetter(isStart) {
-            return function(node, offset) {
-                var range;
-                if (this.rangeCount) {
-                    range = this.getRangeAt(0);
-                    range["set" + (isStart ? "Start" : "End")](node, offset);
-                } else {
-                    range = api.createRange(this.win.document);
-                    range.setStartAndEnd(node, offset);
-                }
-                this.setSingleRange(range, this.isBackward());
-            };
-        }
-
-        selProto.setStart = createStartOrEndSetter(true);
-        selProto.setEnd = createStartOrEndSetter(false);
-
-        // Add select() method to Range prototype. Any existing selection will be removed.
-        api.rangePrototype.select = function(direction) {
-            getSelection( this.getDocument() ).setSingleRange(this, direction);
-        };
-
-        selProto.changeEachRange = function(func) {
-            var ranges = [];
-            var backward = this.isBackward();
-
-            this.eachRange(function(range) {
-                func(range);
-                ranges.push(range);
-            });
-
-            this.removeAllRanges();
-            if (backward && ranges.length == 1) {
-                this.addRange(ranges[0], "backward");
-            } else {
-                this.setRanges(ranges);
-            }
-        };
-
-        selProto.containsNode = function(node, allowPartial) {
-            return this.eachRange( function(range) {
-                return range.containsNode(node, allowPartial);
-            }, true ) || false;
-        };
-
-        selProto.getBookmark = function(containerNode) {
-            return {
-                backward: this.isBackward(),
-                rangeBookmarks: this.callMethodOnEachRange("getBookmark", [containerNode])
-            };
-        };
-
-        selProto.moveToBookmark = function(bookmark) {
-            var selRanges = [];
-            for (var i = 0, rangeBookmark, range; rangeBookmark = bookmark.rangeBookmarks[i++]; ) {
-                range = api.createRange(this.win);
-                range.moveToBookmark(rangeBookmark);
-                selRanges.push(range);
-            }
-            if (bookmark.backward) {
-                this.setSingleRange(selRanges[0], "backward");
-            } else {
-                this.setRanges(selRanges);
-            }
-        };
-
-        selProto.saveRanges = function() {
-            return {
-                backward: this.isBackward(),
-                ranges: this.callMethodOnEachRange("cloneRange")
-            };
-        };
-
-        selProto.restoreRanges = function(selRanges) {
-            this.removeAllRanges();
-            for (var i = 0, range; range = selRanges.ranges[i]; ++i) {
-                this.addRange(range, (selRanges.backward && i == 0));
-            }
-        };
-
-        selProto.toHtml = function() {
-            var rangeHtmls = [];
-            this.eachRange(function(range) {
-                rangeHtmls.push( DomRange.toHtml(range) );
-            });
-            return rangeHtmls.join("");
-        };
-
-        if (features.implementsTextRange) {
-            selProto.getNativeTextRange = function() {
-                var sel, textRange;
-                if ( (sel = this.docSelection) ) {
-                    var range = sel.createRange();
-                    if (isTextRange(range)) {
-                        return range;
-                    } else {
-                        throw module.createError("getNativeTextRange: selection is a control selection");
-                    }
-                } else if (this.rangeCount > 0) {
-                    return api.WrappedTextRange.rangeToTextRange( this.getRangeAt(0) );
-                } else {
-                    throw module.createError("getNativeTextRange: selection contains no range");
-                }
-            };
-        }
-
-        function inspect(sel) {
-            var rangeInspects = [];
-            var anchor = new DomPosition(sel.anchorNode, sel.anchorOffset);
-            var focus = new DomPosition(sel.focusNode, sel.focusOffset);
-            var name = (typeof sel.getName == "function") ? sel.getName() : "Selection";
-
-            if (typeof sel.rangeCount != "undefined") {
-                for (var i = 0, len = sel.rangeCount; i < len; ++i) {
-                    rangeInspects[i] = DomRange.inspect(sel.getRangeAt(i));
-                }
-            }
-            return "[" + name + "(Ranges: " + rangeInspects.join(", ") +
-                    ")(anchor: " + anchor.inspect() + ", focus: " + focus.inspect() + "]";
-        }
-
-        selProto.getName = function() {
-            return "WrappedSelection";
-        };
-
-        selProto.inspect = function() {
-            return inspect(this);
-        };
-
-        selProto.detach = function() {
-            actOnCachedSelection(this.win, "delete");
-            deleteProperties(this);
-        };
-
-        WrappedSelection.detachAll = function() {
-            actOnCachedSelection(null, "deleteAll");
-        };
-
-        WrappedSelection.inspect = inspect;
-        WrappedSelection.isDirectionBackward = isDirectionBackward;
-
-        api.Selection = WrappedSelection;
-
-        api.selectionPrototype = selProto;
-
-        api.addShimListener(function(win) {
-            if (typeof win.getSelection == "undefined") {
-                win.getSelection = function() {
-                    return getSelection(win);
-                };
-            }
-            win = null;
-        });
-    });
-    
-
-    /*----------------------------------------------------------------------------------------------------------------*/
-
-    // Wait for document to load before initializing
-    var docReady = false;
-
-    var loadHandler = function(e) {
-        if (!docReady) {
-            docReady = true;
-            if (!api.initialized && api.config.autoInitialize) {
-                init();
-            }
+        if (!sel.rangeCount) {
+            updateEmptySelection(sel);
         }
     };
 
-    if (isBrowser) {
-        // Test whether the document has already been loaded and initialize immediately if so
-        if (document.readyState == "complete") {
-            loadHandler();
-        } else {
-            if (isHostMethod(document, "addEventListener")) {
-                document.addEventListener("DOMContentLoaded", loadHandler, false);
-            }
+    if (implementsControlRange) {
+        selProto.removeRange = function(range) {
+            if (this.docSelection.type == CONTROL) {
+                var controlRange = this.docSelection.createRange();
+                var rangeElement = getSingleElementFromRange(range);
 
-            // Add a fallback in case the DOMContentLoaded event isn't supported
-            addListener(window, "load", loadHandler);
+                // Create a new ControlRange containing all the elements in the selected ControlRange minus the
+                // element contained by the supplied range
+                var doc = dom.getDocument(controlRange.item(0));
+                var newControlRange = dom.getBody(doc).createControlRange();
+                var el, removed = false;
+                for (var i = 0, len = controlRange.length; i < len; ++i) {
+                    el = controlRange.item(i);
+                    if (el !== rangeElement || removed) {
+                        newControlRange.add(controlRange.item(i));
+                    } else {
+                        removed = true;
+                    }
+                }
+                newControlRange.select();
+
+                // Update the wrapped selection based on what's now in the native selection
+                updateControlSelection(this);
+            } else {
+                removeRangeManually(this, range);
+            }
+        };
+    } else {
+        selProto.removeRange = function(range) {
+            removeRangeManually(this, range);
+        };
+    }
+
+    // Detecting if a selection is backwards
+    var selectionIsBackwards;
+    if (!useDocumentSelection && selectionHasAnchorAndFocus && api.features.implementsDomRange) {
+        selectionIsBackwards = function(sel) {
+            var backwards = false;
+            if (sel.anchorNode) {
+                backwards = (dom.comparePoints(sel.anchorNode, sel.anchorOffset, sel.focusNode, sel.focusOffset) == 1);
+            }
+            return backwards;
+        };
+
+        selProto.isBackwards = function() {
+            return selectionIsBackwards(this);
+        };
+    } else {
+        selectionIsBackwards = selProto.isBackwards = function() {
+            return false;
+        };
+    }
+
+    // Selection text
+    // This is conformant to the new WHATWG DOM Range draft spec but differs from WebKit and Mozilla's implementation
+    selProto.toString = function() {
+
+        var rangeTexts = [];
+        for (var i = 0, len = this.rangeCount; i < len; ++i) {
+            rangeTexts[i] = "" + this._ranges[i];
+        }
+        return rangeTexts.join("");
+    };
+
+    function assertNodeInSameDocument(sel, node) {
+        if (sel.anchorNode && (dom.getDocument(sel.anchorNode) !== dom.getDocument(node))) {
+            throw new DOMException("WRONG_DOCUMENT_ERR");
         }
     }
 
-    return api;
-}, this);
+    // No current browsers conform fully to the HTML 5 draft spec for this method, so Rangy's own method is always used
+    selProto.collapse = function(node, offset) {
+        assertNodeInSameDocument(this, node);
+        var range = api.createRange(dom.getDocument(node));
+        range.collapseToPoint(node, offset);
+        this.removeAllRanges();
+        this.addRange(range);
+        this.isCollapsed = true;
+    };
+
+    selProto.collapseToStart = function() {
+        if (this.rangeCount) {
+            var range = this._ranges[0];
+            this.collapse(range.startContainer, range.startOffset);
+        } else {
+            throw new DOMException("INVALID_STATE_ERR");
+        }
+    };
+
+    selProto.collapseToEnd = function() {
+        if (this.rangeCount) {
+            var range = this._ranges[this.rangeCount - 1];
+            this.collapse(range.endContainer, range.endOffset);
+        } else {
+            throw new DOMException("INVALID_STATE_ERR");
+        }
+    };
+
+    // The HTML 5 spec is very specific on how selectAllChildren should be implemented so the native implementation is
+    // never used by Rangy.
+    selProto.selectAllChildren = function(node) {
+        assertNodeInSameDocument(this, node);
+        var range = api.createRange(dom.getDocument(node));
+        range.selectNodeContents(node);
+        this.removeAllRanges();
+        this.addRange(range);
+    };
+
+    selProto.deleteFromDocument = function() {
+        // Sepcial behaviour required for Control selections
+        if (implementsControlRange && implementsDocSelection && this.docSelection.type == CONTROL) {
+            var controlRange = this.docSelection.createRange();
+            var element;
+            while (controlRange.length) {
+                element = controlRange.item(0);
+                controlRange.remove(element);
+                element.parentNode.removeChild(element);
+            }
+            this.refresh();
+        } else if (this.rangeCount) {
+            var ranges = this.getAllRanges();
+            this.removeAllRanges();
+            for (var i = 0, len = ranges.length; i < len; ++i) {
+                ranges[i].deleteContents();
+            }
+            // The HTML5 spec says nothing about what the selection should contain after calling deleteContents on each
+            // range. Firefox moves the selection to where the final selected range was, so we emulate that
+            this.addRange(ranges[len - 1]);
+        }
+    };
+
+    // The following are non-standard extensions
+    selProto.getAllRanges = function() {
+        return this._ranges.slice(0);
+    };
+
+    selProto.setSingleRange = function(range) {
+        this.setRanges( [range] );
+    };
+
+    selProto.containsNode = function(node, allowPartial) {
+        for (var i = 0, len = this._ranges.length; i < len; ++i) {
+            if (this._ranges[i].containsNode(node, allowPartial)) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    selProto.toHtml = function() {
+        var html = "";
+        if (this.rangeCount) {
+            var container = DomRange.getRangeDocument(this._ranges[0]).createElement("div");
+            for (var i = 0, len = this._ranges.length; i < len; ++i) {
+                container.appendChild(this._ranges[i].cloneContents());
+            }
+            html = container.innerHTML;
+        }
+        return html;
+    };
+
+    function inspect(sel) {
+        var rangeInspects = [];
+        var anchor = new DomPosition(sel.anchorNode, sel.anchorOffset);
+        var focus = new DomPosition(sel.focusNode, sel.focusOffset);
+        var name = (typeof sel.getName == "function") ? sel.getName() : "Selection";
+
+        if (typeof sel.rangeCount != "undefined") {
+            for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                rangeInspects[i] = DomRange.inspect(sel.getRangeAt(i));
+            }
+        }
+        return "[" + name + "(Ranges: " + rangeInspects.join(", ") +
+                ")(anchor: " + anchor.inspect() + ", focus: " + focus.inspect() + "]";
+
+    }
+
+    selProto.getName = function() {
+        return "WrappedSelection";
+    };
+
+    selProto.inspect = function() {
+        return inspect(this);
+    };
+
+    selProto.detach = function() {
+        this.win[windowPropertyName] = null;
+        this.win = this.anchorNode = this.focusNode = null;
+    };
+
+    WrappedSelection.inspect = inspect;
+
+    api.Selection = WrappedSelection;
+
+    api.selectionPrototype = selProto;
+
+    api.addCreateMissingNativeApiListener(function(win) {
+        if (typeof win.getSelection == "undefined") {
+            win.getSelection = function() {
+                return api.getSelection(this);
+            };
+        }
+        win = null;
+    });
+});
+
 /**
- * Selection save and restore module for Rangy.
+ * @license Selection save and restore module for Rangy.
  * Saves and restores user selections using marker invisible elements in the DOM.
  *
  * Part of Rangy, a cross-browser JavaScript range and selection library
- * https://github.com/timdown/rangy
+ * http://code.google.com/p/rangy/
  *
  * Depends on Rangy core.
  *
- * Copyright 2015, Tim Down
+ * Copyright 2012, Tim Down
  * Licensed under the MIT license.
- * Version: 1.3.0
- * Build date: 10 May 2015
+ * Version: 1.2.3
+ * Build date: 26 February 2012
  */
-(function(factory, root) {
-    if (typeof define == "function" && define.amd) {
-        // AMD. Register as an anonymous module with a dependency on Rangy.
-        define(["./rangy-core"], factory);
-    } else if (typeof module != "undefined" && typeof exports == "object") {
-        // Node/CommonJS style
-        module.exports = factory( require("rangy") );
-    } else {
-        // No AMD or CommonJS support so we use the rangy property of root (probably the global variable)
-        factory(root.rangy);
+rangy.createModule("SaveRestore", function(api, module) {
+    api.requireModules( ["DomUtil", "DomRange", "WrappedRange"] );
+
+    var dom = api.dom;
+
+    var markerTextChar = "\ufeff";
+
+    function gEBI(id, doc) {
+        return (doc || document).getElementById(id);
     }
-})(function(rangy) {
-    rangy.createModule("SaveRestore", ["WrappedRange"], function(api, module) {
-        var dom = api.dom;
-        var removeNode = dom.removeNode;
-        var isDirectionBackward = api.Selection.isDirectionBackward;
-        var markerTextChar = "\ufeff";
 
-        function gEBI(id, doc) {
-            return (doc || document).getElementById(id);
+    function insertRangeBoundaryMarker(range, atStart) {
+        var markerId = "selectionBoundary_" + (+new Date()) + "_" + ("" + Math.random()).slice(2);
+        var markerEl;
+        var doc = dom.getDocument(range.startContainer);
+
+        // Clone the Range and collapse to the appropriate boundary point
+        var boundaryRange = range.cloneRange();
+        boundaryRange.collapse(atStart);
+
+        // Create the marker element containing a single invisible character using DOM methods and insert it
+        markerEl = doc.createElement("span");
+        markerEl.id = markerId;
+        markerEl.style.lineHeight = "0";
+        markerEl.style.display = "none";
+        markerEl.className = "rangySelectionBoundary";
+        markerEl.appendChild(doc.createTextNode(markerTextChar));
+
+        boundaryRange.insertNode(markerEl);
+        boundaryRange.detach();
+        return markerEl;
+    }
+
+    function setRangeBoundary(doc, range, markerId, atStart) {
+        var markerEl = gEBI(markerId, doc);
+        if (markerEl) {
+            range[atStart ? "setStartBefore" : "setEndBefore"](markerEl);
+            markerEl.parentNode.removeChild(markerEl);
+        } else {
+            module.warn("Marker element has been removed. Cannot restore selection.");
         }
+    }
 
-        function insertRangeBoundaryMarker(range, atStart) {
-            var markerId = "selectionBoundary_" + (+new Date()) + "_" + ("" + Math.random()).slice(2);
-            var markerEl;
-            var doc = dom.getDocument(range.startContainer);
+    function compareRanges(r1, r2) {
+        return r2.compareBoundaryPoints(r1.START_TO_START, r1);
+    }
 
-            // Clone the Range and collapse to the appropriate boundary point
-            var boundaryRange = range.cloneRange();
-            boundaryRange.collapse(atStart);
-
-            // Create the marker element containing a single invisible character using DOM methods and insert it
-            markerEl = doc.createElement("span");
-            markerEl.id = markerId;
-            markerEl.style.lineHeight = "0";
-            markerEl.style.display = "none";
-            markerEl.className = "rangySelectionBoundary";
-            markerEl.appendChild(doc.createTextNode(markerTextChar));
-
-            boundaryRange.insertNode(markerEl);
-            return markerEl;
+    function saveSelection(win) {
+        win = win || window;
+        var doc = win.document;
+        if (!api.isSelectionValid(win)) {
+            module.warn("Cannot save selection. This usually happens when the selection is collapsed and the selection document has lost focus.");
+            return;
         }
+        var sel = api.getSelection(win);
+        var ranges = sel.getAllRanges();
+        var rangeInfos = [], startEl, endEl, range;
 
-        function setRangeBoundary(doc, range, markerId, atStart) {
-            var markerEl = gEBI(markerId, doc);
-            if (markerEl) {
-                range[atStart ? "setStartBefore" : "setEndBefore"](markerEl);
-                removeNode(markerEl);
-            } else {
-                module.warn("Marker element has been removed. Cannot restore selection.");
-            }
-        }
+        // Order the ranges by position within the DOM, latest first
+        ranges.sort(compareRanges);
 
-        function compareRanges(r1, r2) {
-            return r2.compareBoundaryPoints(r1.START_TO_START, r1);
-        }
-
-        function saveRange(range, direction) {
-            var startEl, endEl, doc = api.DomRange.getRangeDocument(range), text = range.toString();
-            var backward = isDirectionBackward(direction);
-
+        for (var i = 0, len = ranges.length; i < len; ++i) {
+            range = ranges[i];
             if (range.collapsed) {
                 endEl = insertRangeBoundaryMarker(range, false);
-                return {
-                    document: doc,
+                rangeInfos.push({
                     markerId: endEl.id,
                     collapsed: true
-                };
+                });
             } else {
                 endEl = insertRangeBoundaryMarker(range, false);
                 startEl = insertRangeBoundaryMarker(range, true);
 
-                return {
-                    document: doc,
+                rangeInfos[i] = {
                     startMarkerId: startEl.id,
                     endMarkerId: endEl.id,
                     collapsed: false,
-                    backward: backward,
-                    toString: function() {
-                        return "original text: '" + text + "', new text: '" + range.toString() + "'";
-                    }
+                    backwards: ranges.length == 1 && sel.isBackwards()
                 };
             }
         }
 
-        function restoreRange(rangeInfo, normalize) {
-            var doc = rangeInfo.document;
-            if (typeof normalize == "undefined") {
-                normalize = true;
-            }
-            var range = api.createRange(doc);
-            if (rangeInfo.collapsed) {
-                var markerEl = gEBI(rangeInfo.markerId, doc);
-                if (markerEl) {
-                    markerEl.style.display = "inline";
-                    var previousNode = markerEl.previousSibling;
-
-                    // Workaround for issue 17
-                    if (previousNode && previousNode.nodeType == 3) {
-                        removeNode(markerEl);
-                        range.collapseToPoint(previousNode, previousNode.length);
-                    } else {
-                        range.collapseBefore(markerEl);
-                        removeNode(markerEl);
-                    }
-                } else {
-                    module.warn("Marker element has been removed. Cannot restore selection.");
-                }
+        // Now that all the markers are in place and DOM manipulation over, adjust each range's boundaries to lie
+        // between its markers
+        for (i = len - 1; i >= 0; --i) {
+            range = ranges[i];
+            if (range.collapsed) {
+                range.collapseBefore(gEBI(rangeInfos[i].markerId, doc));
             } else {
-                setRangeBoundary(doc, range, rangeInfo.startMarkerId, true);
-                setRangeBoundary(doc, range, rangeInfo.endMarkerId, false);
+                range.setEndBefore(gEBI(rangeInfos[i].endMarkerId, doc));
+                range.setStartAfter(gEBI(rangeInfos[i].startMarkerId, doc));
             }
-
-            if (normalize) {
-                range.normalizeBoundaries();
-            }
-
-            return range;
         }
 
-        function saveRanges(ranges, direction) {
-            var rangeInfos = [], range, doc;
-            var backward = isDirectionBackward(direction);
+        // Ensure current selection is unaffected
+        sel.setRanges(ranges);
+        return {
+            win: win,
+            doc: doc,
+            rangeInfos: rangeInfos,
+            restored: false
+        };
+    }
 
-            // Order the ranges by position within the DOM, latest first, cloning the array to leave the original untouched
-            ranges = ranges.slice(0);
-            ranges.sort(compareRanges);
-
-            for (var i = 0, len = ranges.length; i < len; ++i) {
-                rangeInfos[i] = saveRange(ranges[i], backward);
-            }
-
-            // Now that all the markers are in place and DOM manipulation over, adjust each range's boundaries to lie
-            // between its markers
-            for (i = len - 1; i >= 0; --i) {
-                range = ranges[i];
-                doc = api.DomRange.getRangeDocument(range);
-                if (range.collapsed) {
-                    range.collapseAfter(gEBI(rangeInfos[i].markerId, doc));
-                } else {
-                    range.setEndBefore(gEBI(rangeInfos[i].endMarkerId, doc));
-                    range.setStartAfter(gEBI(rangeInfos[i].startMarkerId, doc));
-                }
-            }
-
-            return rangeInfos;
-        }
-
-        function saveSelection(win) {
-            if (!api.isSelectionValid(win)) {
-                module.warn("Cannot save selection. This usually happens when the selection is collapsed and the selection document has lost focus.");
-                return null;
-            }
-            var sel = api.getSelection(win);
-            var ranges = sel.getAllRanges();
-            var backward = (ranges.length == 1 && sel.isBackward());
-
-            var rangeInfos = saveRanges(ranges, backward);
-
-            // Ensure current selection is unaffected
-            if (backward) {
-                sel.setSingleRange(ranges[0], backward);
-            } else {
-                sel.setRanges(ranges);
-            }
-
-            return {
-                win: win,
-                rangeInfos: rangeInfos,
-                restored: false
-            };
-        }
-
-        function restoreRanges(rangeInfos) {
+    function restoreSelection(savedSelection, preserveDirection) {
+        if (!savedSelection.restored) {
+            var rangeInfos = savedSelection.rangeInfos;
+            var sel = api.getSelection(savedSelection.win);
             var ranges = [];
 
             // Ranges are in reverse order of appearance in the DOM. We want to restore earliest first to avoid
             // normalization affecting previously restored ranges.
-            var rangeCount = rangeInfos.length;
-
-            for (var i = rangeCount - 1; i >= 0; i--) {
-                ranges[i] = restoreRange(rangeInfos[i], true);
-            }
-
-            return ranges;
-        }
-
-        function restoreSelection(savedSelection, preserveDirection) {
-            if (!savedSelection.restored) {
-                var rangeInfos = savedSelection.rangeInfos;
-                var sel = api.getSelection(savedSelection.win);
-                var ranges = restoreRanges(rangeInfos), rangeCount = rangeInfos.length;
-
-                if (rangeCount == 1 && preserveDirection && api.features.selectionHasExtend && rangeInfos[0].backward) {
-                    sel.removeAllRanges();
-                    sel.addRange(ranges[0], true);
-                } else {
-                    sel.setRanges(ranges);
-                }
-
-                savedSelection.restored = true;
-            }
-        }
-
-        function removeMarkerElement(doc, markerId) {
-            var markerEl = gEBI(markerId, doc);
-            if (markerEl) {
-                removeNode(markerEl);
-            }
-        }
-
-        function removeMarkers(savedSelection) {
-            var rangeInfos = savedSelection.rangeInfos;
-            for (var i = 0, len = rangeInfos.length, rangeInfo; i < len; ++i) {
+            for (var len = rangeInfos.length, i = len - 1, rangeInfo, range; i >= 0; --i) {
                 rangeInfo = rangeInfos[i];
+                range = api.createRange(savedSelection.doc);
                 if (rangeInfo.collapsed) {
-                    removeMarkerElement(savedSelection.doc, rangeInfo.markerId);
+                    var markerEl = gEBI(rangeInfo.markerId, savedSelection.doc);
+                    if (markerEl) {
+                        markerEl.style.display = "inline";
+                        var previousNode = markerEl.previousSibling;
+
+                        // Workaround for issue 17
+                        if (previousNode && previousNode.nodeType == 3) {
+                            markerEl.parentNode.removeChild(markerEl);
+                            range.collapseToPoint(previousNode, previousNode.length);
+                        } else {
+                            range.collapseBefore(markerEl);
+                            markerEl.parentNode.removeChild(markerEl);
+                        }
+                    } else {
+                        module.warn("Marker element has been removed. Cannot restore selection.");
+                    }
                 } else {
-                    removeMarkerElement(savedSelection.doc, rangeInfo.startMarkerId);
-                    removeMarkerElement(savedSelection.doc, rangeInfo.endMarkerId);
+                    setRangeBoundary(savedSelection.doc, range, rangeInfo.startMarkerId, true);
+                    setRangeBoundary(savedSelection.doc, range, rangeInfo.endMarkerId, false);
                 }
+
+                // Normalizing range boundaries is only viable if the selection contains only one range. For example,
+                // if the selection contained two ranges that were both contained within the same single text node,
+                // both would alter the same text node when restoring and break the other range.
+                if (len == 1) {
+                    range.normalizeBoundaries();
+                }
+                ranges[i] = range;
+            }
+            if (len == 1 && preserveDirection && api.features.selectionHasExtend && rangeInfos[0].backwards) {
+                sel.removeAllRanges();
+                sel.addRange(ranges[0], true);
+            } else {
+                sel.setRanges(ranges);
+            }
+
+            savedSelection.restored = true;
+        }
+    }
+
+    function removeMarkerElement(doc, markerId) {
+        var markerEl = gEBI(markerId, doc);
+        if (markerEl) {
+            markerEl.parentNode.removeChild(markerEl);
+        }
+    }
+
+    function removeMarkers(savedSelection) {
+        var rangeInfos = savedSelection.rangeInfos;
+        for (var i = 0, len = rangeInfos.length, rangeInfo; i < len; ++i) {
+            rangeInfo = rangeInfos[i];
+            if (rangeInfo.collapsed) {
+                removeMarkerElement(savedSelection.doc, rangeInfo.markerId);
+            } else {
+                removeMarkerElement(savedSelection.doc, rangeInfo.startMarkerId);
+                removeMarkerElement(savedSelection.doc, rangeInfo.endMarkerId);
             }
         }
+    }
 
-        api.util.extend(api, {
-            saveRange: saveRange,
-            restoreRange: restoreRange,
-            saveRanges: saveRanges,
-            restoreRanges: restoreRanges,
-            saveSelection: saveSelection,
-            restoreSelection: restoreSelection,
-            removeMarkerElement: removeMarkerElement,
-            removeMarkers: removeMarkers
-        });
-    });
-    
-    return rangy;
-}, this);
+    api.saveSelection = saveSelection;
+    api.restoreSelection = restoreSelection;
+    api.removeMarkerElement = removeMarkerElement;
+    api.removeMarkers = removeMarkers;
+});
+
 /*
 @license textAngular
 Author : Austin Anderson
@@ -64262,9 +63567,9 @@ angular.module('ngProgress', ['ngProgress.directive', 'ngProgress.provider']);
 }));
 
 /**
- * angular-spinner version 0.6.1
+ * angular-spinner version 0.6.2
  * License: MIT.
- * Copyright (C) 2013, 2014, Uri Shaked and contributors.
+ * Copyright (C) 2013, 2014, 2015, Uri Shaked and contributors.
  */
 
 (function (root) {
@@ -67962,6 +67267,64 @@ angular.module('gi.security').controller('usersController', [
   }
 ]);
 
+angular.module('gi.security').filter('permissionRestriction', [
+  'Permission', function(Permission) {
+    return function(permission) {
+      var result;
+      result = "N/A";
+      if (permission && permission.restriction) {
+        angular.forEach(Permission.restrictions, function(res) {
+          if (res.value === permission.restriction) {
+            return result = res.name;
+          }
+        });
+      }
+      return result;
+    };
+  }
+]);
+
+angular.module('gi.security').filter('permissionUser', [
+  '$filter', function($filter) {
+    return function(permission) {
+      var result;
+      result = 'Unknown';
+      if (permission && permission.userId) {
+        result = $filter('userName')(permission.userId);
+      }
+      return result;
+    };
+  }
+]);
+
+angular.module("gi.security").run(["$templateCache", function($templateCache) {$templateCache.put("gi-login.html","<div class=\"hero-unit\">\n  <div class=\"alert alert-danger\" ng-if=\"loginStatus.failed\">\n    <button type=\"button\" \n            class=\"close dismissLogin\" \n            ng-click=\"dismissLoginAlert()\">&times;</button>\n    <strong>Login Failed!</strong>: Username / Password was incorrect\n  </div>\n  <h3>Please Login</h3>\n  <div  class=\"well form-inline\">\n    <input  type=\"text\" \n            ng-model=\"cred.username\" \n            class=\"input\" \n            placeholder=\"Email\">\n    <input  type=\"password\" \n            ng-model=\"cred.password\" \n            class=\"input-small\" \n            placeholder=\"Password\">\n    <button ng-disabled=\"!cred.username || !cred.password\" \n            class=\"btn btn-primary basicLogin\" \n            ng-click=\"login()\">Login</button>\n  </div>\n  <div class=\"well form loginWithFacebook\" ng-if=\"allowFacebookLogin\">\n    <button ng-click=\"loginWithFacebook()\"><img src=\"/img/login-with-facebook.png\" width=\"154\" height=\"22\"></button> \n  </div>\n</div>");
+$templateCache.put("gi-logout.html","<div class=\"hero-unit\">\n  <h3>You have been securely logged out</h3>\n  <a href=\"/login\" class=\"btn btn-primary\">Log Back In</a>\n</div>");
+$templateCache.put("gi-permissionForm.html","<div class=\"well form\">\n  <div class=\"form-group\"\n    <label>User:</label>\n    <gi-select2 options=\"users\" selection=\"selectedUser\" field=\"firstName\" style=\"width:100%\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Resource Type:</label>\n    <gi-select2 options=\"resourceTypes\" selection=\"selectedResourceType\" field=\"name\" style=\"width:100%\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Restriction:</label>\n    <select class=\"form-control\" \n            ng-model=\"permission.restriction\" \n            ng-options=\"r.value as r.name for r in restrictions\"></select>\n  </div>\n  <div class=\"form-group\">\n    <label>{{permission.resourceType.name}}</label>\n    <label>Keys:</label>\n    <gi-select2 tags custom options=\"keys\" selection=\"selectedKeys\" field=\"name\" style=\"width:100%\"/>\n  </div>\n  <button class=\"btn btn-primary\" ng-click=\"save()\">\n    {{submitText}}\n  </button>\n  <button ng-show=\"showDelete\" class=\"btn btn-danger\" ng-click=\"confirmDelete()\" >\n    <span class=\"glyphicon glyphicon-trash white\"></span>\n  </button>\n\n</div>\n<gi-modal visible=\"showDeleteModal\"\n        title=\"Please Confirm Delete Action\">\n  <div class=\"body\">\n    <p>Delete this permission - are you sure?</p>\n    <p>Please continue only if you are 100% \n      you understand what you\'re deleting.  \n      There is no way to retrieve the data after this point.</p>\n  </div>\n  <div class=\"footer\">\n    <button ng-click=\"deletePermission()\"\n            class=\"btn btn-danger\">\n      Delete It!\n    </button>\n  </div>\n</gi-modal>");
+$templateCache.put("gi-permissions.html","<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-6\">\n      <gi-datatable items=\"permissions\" \n                 selected-items=\"selectedPermissions\"\n                 options=\"options\" >\n        <div class=\"header\">\n          <label>User</label>\n          <label>Resource</label>\n          <label>Restriction</label>\n        </div>\n        <div class=\"body\">\n          <label class=\"filter\">permissionUser</label>\n          <label class=\"property\">resourceType</label>\n          <label class=\"filter\">permissionRestriction</label>\n        </div>\n      </gi-datatable>\n    </div>\n    <div class=\"col-md-6\">\n      <permission-form permission=\"permission\" submit-text=\"{{submitText}}\" submit=\"savePermission(permission)\"></permission-form>\n    </div>\n  </div>\n</div>");
+$templateCache.put("gi-role.html","<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-2\">\n      <ul class=\"nav nav-pills nav-stacked\">\n        <li ng-class=\"{active: currentView == \'list\' }\">\n          <a ng-click=\"show(\'list\')\">All Roles</a>\n        </li>\n        <li ng-class=\"{active: currentView == \'form\' }\">\n          <a ng-click=\"show(\'form\')\">New Role</a>\n        </li>\n      </ul>\n    </div>\n    <div class=\"col-md-10\">\n      <div>\n        <div ng-show=\"selectedRole\" >\n          <div class=\"col-md-6\">\n            <h4>Roles</h4>\n            <ul class=\"nav nav-pills nav-stacked\" ng-repeat=\"role in roles\" >\n              <li ng-class=\"{active: role.name == selectedRole.name}\" >\n                <a \n                 ng-click=\"selectRole(role)\">{{role.name}}</a>\n              </li>\n            </ul>\n            <div>\n              <h4>Role Members</h4>\n              <div ng-repeat=\"user in roleUsers\">{{user.firstName}}</div>\n            </div>\n          </div>\n          <div ng-show=\"currentView == \'list\'\" class=\"col-md-6\">\n            <h4>Role Details</h4>\n            <role-form role=\"selectedRole\" title=\"Role Details\" submit-text=\"Update Role\" submit=\"saveRole(role)\" destroy=\"deleteRole(role)\"></role-form>\n\n          </div>\n          <div ng-show=\"currentView == \'form\'\" class=\"col-md-6\">\n            <role-form role=\"newRole\" title=\"Role Details\" submit-text=\"Create Role\" submit=\"saveRole(role)\"></role-form>\n          </div>\n        </div>      \n        <div ng-hide=\"selectedRole\">\n          <div class=\"col-md-6\">\n            <h4>Roles</h4>\n            No Roles found for this organisation.\n            You can create one by entering the details on this page.\n          </div>\n          <div class=\"col-md-6\">\n            <role-form title=\"New Role\" role=\"newRole\" submit-text=\"Create Role\" submit=\"saveRole(role)\"></role-form>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>");
+$templateCache.put("gi-roleForm.html","<div class=\"well form\" role=\"form\">\n  <input type=\"hidden\" id=\"hiddenSiteId\" ng-model=\"role._id\"/>\n  <div class=\"form-group\">\n    <label  >Name:</label>\n    <input  type=\"text\" class=\"form-control\" \n            name=\"name\" ng-model=\"role.name\"/>\n  </div>\n  <button class=\"btn btn-primary\" \n            ng-click=\"submit({role: role})\">\n      {{submitText}}\n  </button>\n  <button ng-show=\"showDelete\" \n          class=\"btn btn-danger\" \n          ng-click=\"confirmDelete()\" >\n    <span class=\"glyphicon glyphicon-trash white\"></span>\n  </button>\n</div>\n<gi-modal visible=\"showDeleteModal\"\n        title=\"Please Confirm Delete Action\">\n  <div class=\"body\">\n    <p>Delete a role - are you sure?</p>\n    <p>Please continue only if you are 100% \n      you understand what you\'re deleting.  \n      There is no way to retrieve the data after this point.</p>\n  </div>\n  <div class=\"footer\">\n    <button ng-click=\"deleteRole()\"\n            class=\"btn btn-danger\">\n      Delete It!\n    </button>\n  </div>\n</gi-modal>");
+$templateCache.put("gi-user.html","<div class=\"form\" role=\"form\">\n  <div class=\"form-group\">\n    <label name=\"userName\">Name: {{user.firstName}} {{ user.lastName }}</label>\n  </div>\n  <div class=\"form-group\">\n    <label name=\"userId\">Id: {{user._id}}</label>\n  </div>\n  <div class=\"form-group\">\n    <label name=\"apiSecret\">API Secret: {{user.apiSecret}}</label>\n  </div>\n  <div class=\"form-group\">\n    <button class=\"btn btn-primary\" ng-click=\"resetApi()\">Create API Secret</button>\n  </div>\n</div>");
+$templateCache.put("gi-userForm.html","<div class=\"well form\">\n  <h4>Profile</h4>\n  <div class=\"form-group\">\n    <label>First Name:</label>\n    <input  type=\"text\" name=\"name\" class=\"form-control\" \n            ng-model=\"user.firstName\" ng-change=\"checkForChanges()\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Surname:</label>\n    <input  type=\"text\" name=\"lastName\" class=\"form-control\" \n            ng-model=\"user.lastName\" ng-change=\"checkForChanges()\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Email:</label>\n    <input  type=\"text\" name=\"email\" class=\"form-control\" \n            ng-model=\"user.email\" ng-change=\"checkForChanges()\" />\n  </div>\n  <div class=\"form-group\">\n    <label>Password:</label>\n    <input  type=\"password\" name=\"password\" class=\"form-control\" \n            ng-model=\"user.password\" ng-change=\"checkForChanges()\" />\n  </div>\n  <h4>Roles</h4>\n  <div class=\"form-group\">\n    <h4>Assigned Roles</h4>\n    <div class=\"col-md-12\" ng-repeat=\"role in userRoles\">\n      <label>{{role.name}}</label>\n      <button class=\"btn btn-danger\"\n              ng-click=\"removeFromRole(role)\" >\n        <span class=\"glyphicon glyphicon-trash white\"></span>\n      </button>\n    </div>\n    <div ng-if=\"notUserRoles.length > 0\">\n      <h4>Available Roles</h4>\n      <select class=\"form-control\"\n              ng-model=\"selectedRole\" \n              ng-options=\"role.name for role in notUserRoles\">\n      </select>\n      <button ng-click=\"addToRole(selectedRole)\" \n              class=\"btn btn-primary\">Assign</button>\n    </div>\n  </div>\n  <div class=\"form-group\">\n    <button ng-disabled=\"!unsavedChanges\" \n            class=\"btn btn-primary\" \n            ng-click=\"save()\">\n        {{submitText}}\n    </button>\n    <button ng-show=\"showDelete\" \n            class=\"btn btn-danger\" \n            ng-click=\"confirmDelete()\" >\n      <span class=\"glyphicon glyphicon-trash white\"></span>\n    </button>\n  </div>\n</div>\n\n<gi-modal visible=\"showDeleteModal\"\n        title=\"Please Confirm Delete Action\">\n  <div class=\"body\">\n    <p>Delete a user - are you sure?</p>\n    <p>Please continue only if you are 100% \n      you understand what you\'re deleting.  \n      There is no way to retrieve the data after this point.</p>\n  </div>\n  <div class=\"footer\">\n    <button ng-click=\"deleteUser()\" \\\n            class=\"btn btn-danger\">\n      Delete It!\n    </button>\n  </div>\n</gi-modal>");
+$templateCache.put("gi-userManagement.html","<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-2\">\n      <ul class=\"nav nav-pills nav-stacked\">\n        <li ng-class=\"{active: currentView == \'list\' }\">\n          <a ng-click=\"show(\'list\')\">All Users</a>\n        </li>\n        <li ng-class=\"{active: currentView == \'form\' }\">\n          <a ng-click=\"show(\'form\')\">New User</a>\n        </li>\n      </ul>\n    </div>\n    <div class=\"col-md-10\">\n      <div>\n        <div ng-show=\"selectedUser\" >\n          <div class=\"col-md-4\">\n            <h4>Users</h4>\n            <ul class=\"nav nav-pills nav-stacked\" ng-repeat=\"user in users\" >\n              <li ng-class=\"{active: user._id == selectedUser._id}\" >\n                <a \n                 ng-click=\"selectUser(user)\">{{user.firstName}}</a>\n              </li>\n            </ul>\n          </div>\n          <div ng-show=\"currentView == \'list\'\" class=\"col-md-8\">\n            <user-form user=\"selectedUser\" title=\"User Details\" submit-text=\"Save Changes\" submit=\"saveUser(user)\" destroy=\"deleteUser(user)\"></user-form>\n          </div>\n          <div ng-show=\"currentView == \'form\'\" class=\"col-md-8\">\n            <user-form title=\"New User\" user=\"newUser\" submit-text=\"Create User\" submit=\"saveUser(user)\"></user-form>\n          </div>\n        </div>      \n        <div ng-hide=\"selectedUser\">\n          <div class=\"col-md-4\">\n            <h4>Users</h4>\n            No Users found for this organisation.\n            You can create one by entering the details on this page.\n          </div>\n          <div class=\"col-md-4\">\n            <h4>Create New User</h4>\n            <user-form title=\"New User\" user=\"newUser\" submit-text=\"Create User\" submit=\"saveUser(user)\"></user-form>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>");
+$templateCache.put("giRolePicker.html","<div class=\"row\">\n  <div id=\"board\">\n    <div id=\"columns\" >\n      <div class=\"column col-md-6\">\n        <div class=\"columnHeader\">\n          <span>Available</span>\n        </div>\n        <ul class=\"cards card-list\" as-sortable\n        ng-model=\"model.availableItems\">\n          <li as-sortable-item class=\"card\"\n          ng-repeat=\"item in model.availableItems\">\n            <div as-sortable-item-handle>{{item.name}}</div>\n          </li>\n        </ul>\n      </div>\n      <div class=\"column col-md-6\">\n        <div class=\"columnHeader\">\n          <span>Selected</span>\n        </div>\n        <ul class=\"cards card-list\" as-sortable=\"dragControlListeners\"\n        ng-model=\"model.chosenItems\">\n          <li as-sortable-item class=\"card\"\n          ng-repeat=\"item in model.chosenItems\">\n            <div as-sortable-item-handle>{{item.name}}</div>\n          </li>\n        </ul>\n      </div>\n    </div>\n  </div>\n</div>\n");}]);
+angular.module('gi.security').filter('userName', [
+  'giUser', function(User) {
+    return function(id) {
+      var result, user;
+      result = 'Missing User Id';
+      if (id) {
+        user = User.getSync(id);
+        if (user) {
+          result = user.firstName;
+        } else {
+          result = id;
+        }
+      }
+      return result;
+    };
+  }
+]);
+
 angular.module('gi.security').directive('auth', [
   '$location', '$rootScope', function($location, $rootScope) {
     var link;
@@ -68032,16 +67395,6 @@ angular.module('gi.security').directive('giRolePicker', [
   }
 ]);
 
-angular.module("gi.security").run(["$templateCache", function($templateCache) {$templateCache.put("gi-login.html","<div class=\"hero-unit\">\n  <div class=\"alert alert-danger\" ng-if=\"loginStatus.failed\">\n    <button type=\"button\" \n            class=\"close dismissLogin\" \n            ng-click=\"dismissLoginAlert()\">&times;</button>\n    <strong>Login Failed!</strong>: Username / Password was incorrect\n  </div>\n  <h3>Please Login</h3>\n  <div  class=\"well form-inline\">\n    <input  type=\"text\" \n            ng-model=\"cred.username\" \n            class=\"input\" \n            placeholder=\"Email\">\n    <input  type=\"password\" \n            ng-model=\"cred.password\" \n            class=\"input-small\" \n            placeholder=\"Password\">\n    <button ng-disabled=\"!cred.username || !cred.password\" \n            class=\"btn btn-primary basicLogin\" \n            ng-click=\"login()\">Login</button>\n  </div>\n  <div class=\"well form loginWithFacebook\" ng-if=\"allowFacebookLogin\">\n    <button ng-click=\"loginWithFacebook()\"><img src=\"/img/login-with-facebook.png\" width=\"154\" height=\"22\"></button> \n  </div>\n</div>");
-$templateCache.put("gi-logout.html","<div class=\"hero-unit\">\n  <h3>You have been securely logged out</h3>\n  <a href=\"/login\" class=\"btn btn-primary\">Log Back In</a>\n</div>");
-$templateCache.put("gi-permissionForm.html","<div class=\"well form\">\n  <div class=\"form-group\"\n    <label>User:</label>\n    <gi-select2 options=\"users\" selection=\"selectedUser\" field=\"firstName\" style=\"width:100%\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Resource Type:</label>\n    <gi-select2 options=\"resourceTypes\" selection=\"selectedResourceType\" field=\"name\" style=\"width:100%\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Restriction:</label>\n    <select class=\"form-control\" \n            ng-model=\"permission.restriction\" \n            ng-options=\"r.value as r.name for r in restrictions\"></select>\n  </div>\n  <div class=\"form-group\">\n    <label>{{permission.resourceType.name}}</label>\n    <label>Keys:</label>\n    <gi-select2 tags custom options=\"keys\" selection=\"selectedKeys\" field=\"name\" style=\"width:100%\"/>\n  </div>\n  <button class=\"btn btn-primary\" ng-click=\"save()\">\n    {{submitText}}\n  </button>\n  <button ng-show=\"showDelete\" class=\"btn btn-danger\" ng-click=\"confirmDelete()\" >\n    <span class=\"glyphicon glyphicon-trash white\"></span>\n  </button>\n\n</div>\n<gi-modal visible=\"showDeleteModal\"\n        title=\"Please Confirm Delete Action\">\n  <div class=\"body\">\n    <p>Delete this permission - are you sure?</p>\n    <p>Please continue only if you are 100% \n      you understand what you\'re deleting.  \n      There is no way to retrieve the data after this point.</p>\n  </div>\n  <div class=\"footer\">\n    <button ng-click=\"deletePermission()\"\n            class=\"btn btn-danger\">\n      Delete It!\n    </button>\n  </div>\n</gi-modal>");
-$templateCache.put("gi-permissions.html","<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-6\">\n      <gi-datatable items=\"permissions\" \n                 selected-items=\"selectedPermissions\"\n                 options=\"options\" >\n        <div class=\"header\">\n          <label>User</label>\n          <label>Resource</label>\n          <label>Restriction</label>\n        </div>\n        <div class=\"body\">\n          <label class=\"filter\">permissionUser</label>\n          <label class=\"property\">resourceType</label>\n          <label class=\"filter\">permissionRestriction</label>\n        </div>\n      </gi-datatable>\n    </div>\n    <div class=\"col-md-6\">\n      <permission-form permission=\"permission\" submit-text=\"{{submitText}}\" submit=\"savePermission(permission)\"></permission-form>\n    </div>\n  </div>\n</div>");
-$templateCache.put("gi-role.html","<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-2\">\n      <ul class=\"nav nav-pills nav-stacked\">\n        <li ng-class=\"{active: currentView == \'list\' }\">\n          <a ng-click=\"show(\'list\')\">All Roles</a>\n        </li>\n        <li ng-class=\"{active: currentView == \'form\' }\">\n          <a ng-click=\"show(\'form\')\">New Role</a>\n        </li>\n      </ul>\n    </div>\n    <div class=\"col-md-10\">\n      <div>\n        <div ng-show=\"selectedRole\" >\n          <div class=\"col-md-6\">\n            <h4>Roles</h4>\n            <ul class=\"nav nav-pills nav-stacked\" ng-repeat=\"role in roles\" >\n              <li ng-class=\"{active: role.name == selectedRole.name}\" >\n                <a \n                 ng-click=\"selectRole(role)\">{{role.name}}</a>\n              </li>\n            </ul>\n            <div>\n              <h4>Role Members</h4>\n              <div ng-repeat=\"user in roleUsers\">{{user.firstName}}</div>\n            </div>\n          </div>\n          <div ng-show=\"currentView == \'list\'\" class=\"col-md-6\">\n            <h4>Role Details</h4>\n            <role-form role=\"selectedRole\" title=\"Role Details\" submit-text=\"Update Role\" submit=\"saveRole(role)\" destroy=\"deleteRole(role)\"></role-form>\n\n          </div>\n          <div ng-show=\"currentView == \'form\'\" class=\"col-md-6\">\n            <role-form role=\"newRole\" title=\"Role Details\" submit-text=\"Create Role\" submit=\"saveRole(role)\"></role-form>\n          </div>\n        </div>      \n        <div ng-hide=\"selectedRole\">\n          <div class=\"col-md-6\">\n            <h4>Roles</h4>\n            No Roles found for this organisation.\n            You can create one by entering the details on this page.\n          </div>\n          <div class=\"col-md-6\">\n            <role-form title=\"New Role\" role=\"newRole\" submit-text=\"Create Role\" submit=\"saveRole(role)\"></role-form>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>");
-$templateCache.put("gi-roleForm.html","<div class=\"well form\" role=\"form\">\n  <input type=\"hidden\" id=\"hiddenSiteId\" ng-model=\"role._id\"/>\n  <div class=\"form-group\">\n    <label  >Name:</label>\n    <input  type=\"text\" class=\"form-control\" \n            name=\"name\" ng-model=\"role.name\"/>\n  </div>\n  <button class=\"btn btn-primary\" \n            ng-click=\"submit({role: role})\">\n      {{submitText}}\n  </button>\n  <button ng-show=\"showDelete\" \n          class=\"btn btn-danger\" \n          ng-click=\"confirmDelete()\" >\n    <span class=\"glyphicon glyphicon-trash white\"></span>\n  </button>\n</div>\n<gi-modal visible=\"showDeleteModal\"\n        title=\"Please Confirm Delete Action\">\n  <div class=\"body\">\n    <p>Delete a role - are you sure?</p>\n    <p>Please continue only if you are 100% \n      you understand what you\'re deleting.  \n      There is no way to retrieve the data after this point.</p>\n  </div>\n  <div class=\"footer\">\n    <button ng-click=\"deleteRole()\"\n            class=\"btn btn-danger\">\n      Delete It!\n    </button>\n  </div>\n</gi-modal>");
-$templateCache.put("gi-user.html","<div class=\"form\" role=\"form\">\n  <div class=\"form-group\">\n    <label name=\"userName\">Name: {{user.firstName}} {{ user.lastName }}</label>\n  </div>\n  <div class=\"form-group\">\n    <label name=\"userId\">Id: {{user._id}}</label>\n  </div>\n  <div class=\"form-group\">\n    <label name=\"apiSecret\">API Secret: {{user.apiSecret}}</label>\n  </div>\n  <div class=\"form-group\">\n    <button class=\"btn btn-primary\" ng-click=\"resetApi()\">Create API Secret</button>\n  </div>\n</div>");
-$templateCache.put("gi-userForm.html","<div class=\"well form\">\n  <h4>Profile</h4>\n  <div class=\"form-group\">\n    <label>First Name:</label>\n    <input  type=\"text\" name=\"name\" class=\"form-control\" \n            ng-model=\"user.firstName\" ng-change=\"checkForChanges()\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Surname:</label>\n    <input  type=\"text\" name=\"lastName\" class=\"form-control\" \n            ng-model=\"user.lastName\" ng-change=\"checkForChanges()\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Email:</label>\n    <input  type=\"text\" name=\"email\" class=\"form-control\" \n            ng-model=\"user.email\" ng-change=\"checkForChanges()\" />\n  </div>\n  <div class=\"form-group\">\n    <label>Password:</label>\n    <input  type=\"password\" name=\"password\" class=\"form-control\" \n            ng-model=\"user.password\" ng-change=\"checkForChanges()\" />\n  </div>\n  <h4>Roles</h4>\n  <div class=\"form-group\">\n    <h4>Assigned Roles</h4>\n    <div class=\"col-md-12\" ng-repeat=\"role in userRoles\">\n      <label>{{role.name}}</label>\n      <button class=\"btn btn-danger\"\n              ng-click=\"removeFromRole(role)\" >\n        <span class=\"glyphicon glyphicon-trash white\"></span>\n      </button>\n    </div>\n    <div ng-if=\"notUserRoles.length > 0\">\n      <h4>Available Roles</h4>\n      <select class=\"form-control\"\n              ng-model=\"selectedRole\" \n              ng-options=\"role.name for role in notUserRoles\">\n      </select>\n      <button ng-click=\"addToRole(selectedRole)\" \n              class=\"btn btn-primary\">Assign</button>\n    </div>\n  </div>\n  <div class=\"form-group\">\n    <button ng-disabled=\"!unsavedChanges\" \n            class=\"btn btn-primary\" \n            ng-click=\"save()\">\n        {{submitText}}\n    </button>\n    <button ng-show=\"showDelete\" \n            class=\"btn btn-danger\" \n            ng-click=\"confirmDelete()\" >\n      <span class=\"glyphicon glyphicon-trash white\"></span>\n    </button>\n  </div>\n</div>\n\n<gi-modal visible=\"showDeleteModal\"\n        title=\"Please Confirm Delete Action\">\n  <div class=\"body\">\n    <p>Delete a user - are you sure?</p>\n    <p>Please continue only if you are 100% \n      you understand what you\'re deleting.  \n      There is no way to retrieve the data after this point.</p>\n  </div>\n  <div class=\"footer\">\n    <button ng-click=\"deleteUser()\" \\\n            class=\"btn btn-danger\">\n      Delete It!\n    </button>\n  </div>\n</gi-modal>");
-$templateCache.put("gi-userManagement.html","<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-2\">\n      <ul class=\"nav nav-pills nav-stacked\">\n        <li ng-class=\"{active: currentView == \'list\' }\">\n          <a ng-click=\"show(\'list\')\">All Users</a>\n        </li>\n        <li ng-class=\"{active: currentView == \'form\' }\">\n          <a ng-click=\"show(\'form\')\">New User</a>\n        </li>\n      </ul>\n    </div>\n    <div class=\"col-md-10\">\n      <div>\n        <div ng-show=\"selectedUser\" >\n          <div class=\"col-md-4\">\n            <h4>Users</h4>\n            <ul class=\"nav nav-pills nav-stacked\" ng-repeat=\"user in users\" >\n              <li ng-class=\"{active: user._id == selectedUser._id}\" >\n                <a \n                 ng-click=\"selectUser(user)\">{{user.firstName}}</a>\n              </li>\n            </ul>\n          </div>\n          <div ng-show=\"currentView == \'list\'\" class=\"col-md-8\">\n            <user-form user=\"selectedUser\" title=\"User Details\" submit-text=\"Save Changes\" submit=\"saveUser(user)\" destroy=\"deleteUser(user)\"></user-form>\n          </div>\n          <div ng-show=\"currentView == \'form\'\" class=\"col-md-8\">\n            <user-form title=\"New User\" user=\"newUser\" submit-text=\"Create User\" submit=\"saveUser(user)\"></user-form>\n          </div>\n        </div>      \n        <div ng-hide=\"selectedUser\">\n          <div class=\"col-md-4\">\n            <h4>Users</h4>\n            No Users found for this organisation.\n            You can create one by entering the details on this page.\n          </div>\n          <div class=\"col-md-4\">\n            <h4>Create New User</h4>\n            <user-form title=\"New User\" user=\"newUser\" submit-text=\"Create User\" submit=\"saveUser(user)\"></user-form>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>");
-$templateCache.put("giRolePicker.html","<div class=\"row\">\n  <div id=\"board\">\n    <div id=\"columns\" >\n      <div class=\"column col-md-6\">\n        <div class=\"columnHeader\">\n          <span>Available</span>\n        </div>\n        <ul class=\"cards card-list\" as-sortable\n        ng-model=\"model.availableItems\">\n          <li as-sortable-item class=\"card\"\n          ng-repeat=\"item in model.availableItems\">\n            <div as-sortable-item-handle>{{item.name}}</div>\n          </li>\n        </ul>\n      </div>\n      <div class=\"column col-md-6\">\n        <div class=\"columnHeader\">\n          <span>Selected</span>\n        </div>\n        <ul class=\"cards card-list\" as-sortable=\"dragControlListeners\"\n        ng-model=\"model.chosenItems\">\n          <li as-sortable-item class=\"card\"\n          ng-repeat=\"item in model.chosenItems\">\n            <div as-sortable-item-handle>{{item.name}}</div>\n          </li>\n        </ul>\n      </div>\n    </div>\n  </div>\n</div>\n");}]);
 angular.module('gi.security').directive('giPassword', [
   'giUser', function(User) {
     return {
@@ -68366,54 +67719,6 @@ angular.module('gi.security').directive('giUsername', [
         };
         return linkFn;
       }
-    };
-  }
-]);
-
-angular.module('gi.security').filter('permissionRestriction', [
-  'Permission', function(Permission) {
-    return function(permission) {
-      var result;
-      result = "N/A";
-      if (permission && permission.restriction) {
-        angular.forEach(Permission.restrictions, function(res) {
-          if (res.value === permission.restriction) {
-            return result = res.name;
-          }
-        });
-      }
-      return result;
-    };
-  }
-]);
-
-angular.module('gi.security').filter('permissionUser', [
-  '$filter', function($filter) {
-    return function(permission) {
-      var result;
-      result = 'Unknown';
-      if (permission && permission.userId) {
-        result = $filter('userName')(permission.userId);
-      }
-      return result;
-    };
-  }
-]);
-
-angular.module('gi.security').filter('userName', [
-  'giUser', function(User) {
-    return function(id) {
-      var result, user;
-      result = 'Missing User Id';
-      if (id) {
-        user = User.getSync(id);
-        if (user) {
-          result = user.firstName;
-        } else {
-          result = id;
-        }
-      }
-      return result;
     };
   }
 ]);
@@ -69426,21 +68731,45 @@ angular.module('gi.commerce').directive('giCustomerInfo', [
   }
 ]);
 
-angular.module('gi.commerce').directive('giMarketForm', [
-  '$q', 'giCrud', 'giMarket', function($q, Crud, Model) {
-    return Crud.formDirectiveFactory('Market', Model);
+angular.module('gi.commerce').directive('giDiscountAdmin', [
+  'giDiscountCode', function(giDiscountCode) {
+    return {
+      restrict: 'E',
+      templateUrl: 'gi.commerce.discountAdmin.html',
+      link: function($scope, elem, attrs) {
+        $scope.selected = false;
+        $scope.code = {};
+        $scope.editCode = {};
+        $scope.editIndex = '';
+        giDiscountCode.all().then(function(data) {
+          return $scope.currentCodes = data;
+        });
+        $scope.create = function(code) {
+          code.active = 'Active';
+          giDiscountCode.save(code);
+          return $scope.code = {};
+        };
+        $scope["delete"] = function(code) {
+          return giDiscountCode.destroy(code._id).then(function(data) {});
+        };
+        $scope.edit = function(code, index) {
+          $scope.editIndex = index;
+          $scope.selected = true;
+          return $scope.editCode = angular.copy(code);
+        };
+        return $scope.save = function(code) {
+          return giDiscountCode.save(code).then(function() {});
+        };
+      }
+    };
   }
 ]);
 
-angular.module('gi.commerce').directive('giOrderSummary', [
-  'giCart', function(Cart) {
-    return {
-      restrict: 'E',
-      templateUrl: 'gi.commerce.orderSummary.html',
-      link: function($scope, elem, attrs) {
-        return $scope.cart = Cart;
-      }
-    };
+
+
+angular.module('gi.commerce').directive('giMarketForm', [
+  '$q', 'giCrud', 'giMarket', function($q, Crud, Model) {
+    return Crud.formDirectiveFactory('Market', Model);
   }
 ]);
 
@@ -69453,11 +68782,24 @@ $templateCache.put("gi.commerce.countryForm.html","<div ng-form name=\"countryFo
 $templateCache.put("gi.commerce.currencyForm.html","<div ng-form name=\"currencyForm\" class=\"well form\">\n  <div class=\"form-group\">\n    <label>Name:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"currencyName\"\n           ng-model=\"item.name\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Code:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"currencyCode\"\n           ng-model=\"item.code\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Symbol:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"currencySymbol\"\n           ng-model=\"item.symbol\"/>\n  </div>\n  <div class=\"form-group\">\n    <button class=\"form-control btn btn-primary btn-save-asset\"\n            ng-click=\"save()\">{{submitText}}</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"currencyForm.$dirty || item._id\">\n    <button class=\"form-control btn btn-warning\"\n            ng-click=\"clear()\">Cancel</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"item._id\">\n    <button class=\"form-control btn btn-danger\" ng-click=\"destroy()\">\n      Delete <span ng-if=\"confirm\">- Are you sure? Click again to confirm</span>\n    </button>\n  </div>\n</div>\n");
 $templateCache.put("gi.commerce.customerForm.html","<div ng-form name=\"customerForm\" class=\"well form\">\n  <div class=\"row\">\n    <div class=\"col-md-12\">\n      <div class=\"form-group\" ng-if=\"model.me.loggedIn\">\n        Hi {{model.me.user.firstName}} welcome back. We will e-mail confirmation of your order to your e-mail address:\n        <strong>{{model.me.user.email}}</strong>\n      </div>\n      <div class=\"form-group\" ng-if=\"!model.me.loggedIn\">\n        Already have an account? <a ng-click=\"requestLogin()\">Please Sign In</a>\n      </div>\n      <div class=\"form-group\">\n        <div class=\"checkbox checkbox-success checkbox-circle\">\n          <input type=\"checkbox\" ng-model=\"cart.business\" tabindex=\"1\" autofocus>\n          <label ng-click=\"cart.business = !cart.business\">Buying for a company?  </label>\n        </div>\n      </div>\n    </div>\n    <div class=\"col-md-12\" ng-if=\"!model.me.loggedIn\"  >\n      <div class=\"form-group\" ng-class=\"{\'has-error\': isPropertyValidationError(\'firstName\'), \'has-success\': isPropertyValidationSuccess(\'firstName\')}\">\n        <label class=\"control-label\">First Name:</label>\n        <input type=\"text\"\n               class=\"form-control\"\n               name=\"firstName\"\n               ng-model=\"item.firstName\"\n               required tabindex=\"1\"/>\n         <p class=\"control-label\" ng-show=\"isPropertyValidationError(\'firstName\')\">\n            Please enter your first name.\n         </p>\n      </div>\n      <div class=\"form-group\" ng-class=\"{\'has-error\': isPropertyValidationError(\'lastName\'), \'has-success\': isPropertyValidationSuccess(\'lastName\')}\">\n        <label class=\"control-label\">Last Name:</label>\n        <input type=\"text\"\n               class=\"form-control\"\n               name=\"lastName\"\n               ng-model=\"item.lastName\"\n               required tabindex=\"1\"/>\n         <p class=\"control-label\" ng-show=\"isPropertyValidationError(\'lastName\')\">\n            Please enter your last name.\n         </p>\n      </div>\n      <div class=\"form-group\" ng-class=\"{\'has-error\': isPropertyValidationError(\'email\'), \'has-success\': isPropertyValidationSuccess(\'email\')}\">\n        <label class=\"control-label\">Email:</label>\n        <input type=\"email\"\n               class=\"form-control\"\n               name=\"email\"\n               ng-model=\"item.email\"\n               required\n               gi-username\n               ng-pattern=\"emailRegex\" tabindex=\"1\"/>\n         <p class=\"control-label\" ng-show=\"isEmailInvalid()\">\n            Please enter a valid e-mail.\n         </p>\n         <p class=\"control-label\" ng-show=\"isUsernameTaken()\">\n            Username already taken.\n         </p>\n      </div>\n      <div class=\"form-group\"  ng-class=\"{\'has-error\': isPropertyValidationError(\'password\'), \'has-success\': isPropertyValidationSuccess(\'password\')}\">\n        <label class=\"control-label\">Password:</label>\n        <input type=\"password\"\n               class=\"form-control\"\n               name=\"password\"\n               ng-model=\"item.password\"\n               ng-required=\"!model.me.loggedIn\"\n               gi-password tabindex=\"1\" />\n         <p class=\"control-label\" ng-show=\"isPropertyValidationError(\'password\')\">\n            Password does not meet minimum requirements (8 characters, at least one number)\n         </p>\n      </div>\n      <div class=\"form-group\" ng-class=\"{\'has-error\': isPropertyValidationError(\'confirm\'), \'has-success\': isConfirmPasswordSuccess(\'confirm\')}\">\n        <label class=\"control-label\">Confirm Password:</label>\n        <input type=\"password\"\n               class=\"form-control\"\n               name=\"confirm\"\n               ng-model=\"item.confirm\"\n               ng-required=\"!model.me.loggedIn\"\n               gi-match=\"item.password\"  tabindex=\"1\"/>\n        <p class=\"control-label\" ng-show=\"isPropertyValidationError(\'confirm\')\">\n           Passwords do not match\n        </p>\n      </div>\n    </div>\n    <div class=\"col-md-12\">\n      <div class=\"form-group\" >\n        <label>Company Name:</label>\n        <input type=\"text\"\n               class=\"form-control\"\n               name=\"companyName\"\n               ng-model=\"cart.company.name\"\n               ng-disabled=\"!cart.business\" tabindex=\"1\"/>\n      </div>\n      <div ng-if=\"cart.isTaxApplicable()\" class=\"form-group\" ng-class=\"{\'has-error\': isPropertyValidationError(\'vat\'), \'has-success\': isPropertyValidationSuccess(\'vat\')}\">\n        <label class=\"control-label\">{{cart.taxName()}} Number (optional):</label>\n        <input type=\"text\"\n               class=\"form-control\"\n               name=\"vat\"\n               ng-model=\"cart.company.VAT\"\n               ng-disabled=\"!cart.business\"\n               gi-vat tabindex=\"2\"/>\n         <p class=\"control-label\" ng-show=\"isPropertyValidationError(\'vat\')\">\n            {{cart.taxName()}} Number is invalid (have you included the 2 digit country code?)\n         </p>\n      </div>\n    </div>\n  </div>\n</div>\n");
 $templateCache.put("gi.commerce.customerInfo.html","<div class=\"row medium-gap\">\n  <div class=\"col-md-4 col-md-push-8\">\n    <gi-order-summary></gi-order-summary>\n  </div>\n  <div class=\"col-md-8 col-md-pull-4\">\n    <gi-customer-form item=\"cart.customerInfo\" model=\"model\" stage=\"{{stage}}-1\"><gi-customer-form>\n  </div>\n</div>\n<div class=\"row\">\n  <div class=\"col-md-8\">\n    <div ng-form name=\"addressForm\" class=\"form well\">\n        <div ng-if=\"cart.needsShipping()\" class=\"col-md-12\">\n          <div class=\"form-group\">\n            <div class=\"checkbox checkbox-success checkbox-circle\">\n              <input type=\"checkbox\" ng-model=\"cart.differentShipping\" tabindex=\"2\">\n              <label>Ship to different address?  </label>\n            </div>\n          </div>\n        </div>\n        <gi-address-form-fields item=\"cart.billingAddress\"\n                         model=\"model\"\n                         title=\"Please enter your billing address\"\n                         prefix=\"billing\"\n                         form=\"addressForm\"\n                         options=\"billingAddressOptions\">\n        </gi-address-form-fields>\n\n        <div ng-if=\"cart.differentShipping\">\n          <gi-address-form-fields item=\"cart.shippingAddress\"\n                           model=\"model\"\n                           title=\"Please enter your shipping address\"\n                           prefix=\"shipping\"\n                           form=\"addressForm\"\n                           options=\"shippingAddressOptions\">\n          </gi-address-form-fields>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n");
+$templateCache.put("gi.commerce.discountAdmin.html","<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-4\">\n      <h3> Create a new Code </h3>\n      <label for=\"code\"> Discount Code Keyword: </label>\n      <input type=\"text\" class=\"form-control\" style=\"border-radius: 0;\"id=\"code\" ng-model=\"code.code\">\n\n      <label for=\"percent\" style=\"margin-top: 10px;\"> Discount Code Percentage: </label>\n      <input type=\"number\"  class=\"form-control\" style=\"border-radius: 0;\" id=\"percent\" ng-model=\"code.percent\">\n      <!-- <label for=\"sd\" style=\"margin-top: 10px;\"> Start Date: </label>\n      <input type=\"date\"  class=\"form-control\" style=\"border-radius: 0;\" id=\"sd\" ng-model=\"code.startDate\">\n      <label for=\"ed\" style=\"margin-top: 10px;\"> End Date: </label>\n      <input type=\"date\"  class=\"form-control\" style=\"border-radius: 0;\" id=\"ed\" ng-model=\"code.endDate\"> -->\n\n      <button style=\"margin-top: 10px; border-radius: 0;\" ng-click=\"create(code)\"class=\"btn btn-success form-control\"> Create </button>\n\n    </div>\n    <div class=\"col-md-8\" ng-if=\"selected\">\n      <h3> Edit Code </h3>\n      <label for=\"code\"> Discount Code Keyword: </label>\n      <input type=\"text\" class=\"form-control\" style=\"border-radius: 0;\"id=\"code\" ng-model=\"editCode.code\">\n\n      <label for=\"percent\" style=\"margin-top: 10px;\"> Discount Code Percentage: </label>\n      <input type=\"text\" class=\"form-control\" style=\"border-radius: 0;\"id=\"percent\" ng-model=\"editCode.percent\">\n      <!-- <label for=\"sd\" style=\"margin-top: 10px;\"> Start Date: </label>\n      <input type=\"date\"  class=\"form-control\" style=\"border-radius: 0;\" id=\"sd\" ng-model=\"editCode.startDate\">\n      <label for=\"ed\" style=\"margin-top: 10px;\"> End Date: </label>\n      <input type=\"date\"  class=\"form-control\" style=\"border-radius: 0;\" id=\"ed\" ng-model=\"editCode.endDate\"> -->\n\n      <button style=\"margin-top: 10px; border-radius: 0;\" ng-click=\"save(editCode)\"class=\"btn btn-success form-control\"> Save </button>\n\n\n    </div>\n  </div>\n  <div class=\"row\">\n    <div class=\"container\">\n      <h3> Current Codes </h3>\n      <table class=\"table table-striped\">\n        <tr>\n          <th>Keyword</th>\n          <th>Percentage</th>\n          <th>Active</th>\n          <th>Tools</th>\n\n        </tr>\n        <tr class=\"code-row\" ng-repeat=\"c in currentCodes\">\n          <td>{{c.code}}</td>\n          <td>{{c.percent}}</td>\n          <td>{{c.active}}</td>\n          <td><a ng-click=\"delete(c, $index)\"><i class=\"fa fa-trash-o del-code\" style=\"color: black\"></i></a><a style=\"margin-left: 20px\" ng-click=\"edit(c, index)\"><i style=\"color:black;\" class=\"fa fa-pencil edit-code\"></i></a></td>\n\n        </tr>\n      </table>\n    </div>\n  </div>\n</div>\n");
 $templateCache.put("gi.commerce.marketForm.html","<div ng-form name=\"marketForm\" class=\"well form\">\n  <div class=\"form-group\">\n    <label>Name:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"marketName\"\n           ng-model=\"model.selectedItem.name\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Code:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"marketCode\"\n           ng-model=\"model.selectedItem.code\"/>\n  </div>\n  <div class=\"form-group\">\n    <label class=\"control-label\">Currency:</label>\n    <ui-select ng-model=\"model.selectedItem.currencyId\">\n      <ui-select-match>{{$select.selected.name}}</ui-select-match>\n      <ui-select-choices repeat=\"c._id as c in model.currencies  | filter: $select.search\">\n        <div ng-bind-html=\"c.name | highlight: $select.search\"></div>\n      </ui-select-choices>\n    </ui-select>\n  </div>\n  <div class=\"form-group\">\n    <div class=\"checkbox\">\n      <label>\n        <input type=\"checkbox\" ng-model=\"model.selectedItem.default\"> Use as Default Market?\n      </label>\n    </div>\n  </div>\n  <div class=\"form-group\">\n    <button class=\"form-control btn btn-primary btn-save-asset\"\n            ng-click=\"save()\">{{submitText}}</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"countryForm.$dirty || model.selectedItem._id\">\n    <button class=\"form-control btn btn-warning\"\n            ng-click=\"clear()\">Cancel</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"model.selectedItem._id\">\n    <button class=\"form-control btn btn-danger\" ng-click=\"destroy()\">\n      Delete <span ng-if=\"confirm\">- Are you sure? Click again to confirm</span>\n    </button>\n  </div>\n</div>\n");
 $templateCache.put("gi.commerce.orderSummary.html","<div class = \"form-inline well hidden-sm hidden-xs\">\n  <div class=\"row\">\n    <div class=\"col-md-2\"></div>\n    <div class=\"col-md-8\">\n      <legend>Order Summary</legend>\n    </div>\n  </div>\n\n  <div class=\"row \">\n    <div class=\"col-md-2\">\n    </div>\n    <div class=\"col-md-4\">\n      <label class=\"order-summary\">Amount:</label>\n    </div>\n    <div class=\"col-md-4\">\n      <div class=\"pull-right\">\n        <label class=\"order-summary\">{{ cart.getSubTotal() | giCurrency:cart.getCurrencySymbol }}</label>\n      </div>\n    </div>\n  </div>\n  <div class=\"row\">\n    <div class=\"col-md-2\">\n    </div>\n    <div class=\"col-md-4\" ng-if=\"cart.isTaxApplicable()\">\n      <label class=\"order-summary\">Tax:</label>\n    </div>\n    <div class=\"col-md-4\" ng-if=\"cart.isTaxApplicable()\">\n      <div class=\"pull-right\">\n        <label class=\"order-summary\">{{ cart.getTaxTotal() | giCurrency:cart.getCurrencySymbol }}</label>\n      </div>\n    </div>\n  </div>\n  <div class=\"row\">\n    <div class=\"col-md-2\">\n    </div>\n    <div class=\"col-md-4\">\n      <label>Total:</label>\n    </div>\n    <div class=\"col-md-4\">\n      <div class=\"pull-right\">\n        <label>{{ cart.totalCost() | giCurrency:cart.getCurrencySymbol }}</label>\n      </div>\n    </div>\n\n  </div>\n</div>\n<div class=\"visible-sm visible-xs\">\n<div class = \"form-inline well\" style=\"height: 140px; \">\n  <div class=\"row\">\n    <div class=\"col-md-2\">\n\n    </div>\n    <div class=\"col-md-8\">\n      <legend>Order Summary</legend>\n    </div>\n  </div>\n\n    <div style=\"margin-top: -10px;\">\n    <div class=\"col-xs-6\" >\n      <label class=\"pull-right\">Amount:\n      </label>\n    </div>\n    <div class=\"col-xs-6\">\n      <label><span class=\"\">{{ cart.getSubTotal() | giCurrency:cart.getCurrencySymbol }}</span></label>\n    </div>\n    <div class=\"col-xs-6\" ng-if=\"cart.isTaxApplicable()\">\n      <label class=\"pull-right\">Tax:\n      </label>\n    </div>\n    <div class=\"col-xs-6\" ng-if=\"cart.isTaxApplicable()\">\n      <label><span class=\"\">{{ cart.getTaxTotal() | giCurrency:cart.getCurrencySymbol }}</span></label>\n    </div>\n    <div class=\"col-xs-6\">\n      <label class=\"pull-right\">Total:\n      </label>\n    </div>\n    <div class=\"col-xs-6\">\n      <label>{{ cart.totalCost() | giCurrency:cart.getCurrencySymbol }}</label>\n    </div>\n    </div>\n  </div>\n</div>\n");
 $templateCache.put("gi.commerce.paymentInfo.html","<div class=\"row\">\n  <div class=\"col-xs-12\">\n    <span us-spinner=\"{radius:30, width:8, length: 16}\" spinner-key=\"gi-cart-spinner-1\"></span>\n    <div ng-form name=\"cardForm\" class=\"well form\">\n      <legend>Please enter your card details</legend>\n      <div class=\"form-group\" ng-class=\"{\'has-error\': isPropertyValidationError(\'cardNumber\'), \'has-success\': isPropertyValidationSuccess(\'cardNumber\')}\">\n        <label class=\"control-label\">Card Number:</label>\n        <div class=\"input-group\">\n          <input type=\"text\"\n               class=\"form-control\"\n               name=\"cardNumber\"\n               ng-model=\"cart.card.number\"\n               placeholder=\"Card Number\"\n               gi-cc-num\n               cc-eager-type tabindex=\"6\" />\n          <span class=\"input-group-addon\"><i class=\"fa fa-lg\" ng-class=\"getCreditFont()\"></i></span>\n        </div>\n        <p class=\"control-label\" ng-show=\"isPropertyValidationError(\'cardNumber\')\">\n          Not a valid card number!\n        </p>\n      </div>\n      <div class=\"form-group\" ng-class=\"{\'has-error\': isPropertyValidationError(\'cardExpiry\'), \'has-success\': isPropertyValidationSuccess(\'cardExpiry\')}\">\n        <label class=\"control-label\">Expiry Date:</label>\n        <div class=\"input-group\">\n          <input type=\"text\"\n                 class=\"form-control\"\n                 name=\"cardExpiry\"\n                 placeholder=\"MM/YY\"\n                 ng-model=\"cart.card.expiry\"\n                 gi-cc-exp tabindex=\"7\"/>\n          <span class=\"input-group-addon\"><i class=\"fa fa-lg\" ng-class=\"getPropertyFont(\'cardExpiry\')\"></i></span>\n        </div>\n        <p class=\"control-label\" ng-show=\"isPropertyValidationError(\'cardExpiry\')\">\n          Not a valid expiry date!\n        </p>\n      </div>\n      <div class=\"form-group\"  ng-class=\"{\'has-error\': isPropertyValidationError(\'cardSecurity\'), \'has-success\': isPropertyValidationSuccess(\'cardSecurity\')}\">\n        <label class=\"control-label\">CVC:</label>\n        <div class=\"input-group\">\n          <input type=\"text\"\n                 class=\"form-control\"\n                 name=\"cardSecurity\"\n                 ng-model=\"cart.card.security\"\n                 placeholder=\"CVC\"\n                 gi-cc-cvc\n                 gi-cc-type=\"cardForm.cardNumber.$giCcType\" tabindex=\"9\"/>\n          <span class=\"input-group-addon\"><i class=\"fa fa-lg\" ng-class=\"getPropertyFont(\'cardSecurity\')\"></i></span>\n        </div>\n        <p class=\"control-label\" ng-show=\"isPropertyValidationError(\'cardSecurity\')\">\n          Not a valid cvc number!\n        </p>\n\n      </div>\n    </div>\n  </div>\n</div>\n");
 $templateCache.put("gi.commerce.priceForm.html","<div ng-form name=\"priceForm\" class=\"well form\">\n  <div class=\"form-group\">\n    <label>Name:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"priceListName\"\n           ng-model=\"model.selectedItem.name\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Call To Action Text:</label>\n    <input type=\"text\"\n           class=\"form-control\"\n           name=\"ctaText\"\n           ng-model=\"model.selectedItem.ctaText\"/>\n  </div>\n  <div class=\"form-group\">\n    <label>Prices:</label>\n    <div ng-repeat=\"(code, price) in model.selectedItem.prices\">\n      <div class=\"input-group\">\n         <div class=\"input-group-addon market\">{{code}}</div>\n         <input type=\"text\" class=\"form-control\" id=\"exampleInputAmount\" placeholder=\"Amount\" ng-model=\"model.selectedItem.prices[code]\"/>\n         <div class=\"input-group-addon\" ng-click=\"removePriceForMarket(code)\">  <span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></div>\n       </div>\n    </div>\n  </div>\n  <div class=\"form-group\">\n    <div class=\"input-group\">\n      <div class=\"input-group-addon market\" style=\"\">\n        <ui-select ng-model=\"local.code\">\n           <ui-select-match>{{$select.selected.code}}</ui-select-match>\n           <ui-select-choices repeat=\"c.code as c in model.markets  | filter: $select.search\">\n             <div ng-bind-html=\"c.code | highlight: $select.search\"></div>\n           </ui-select-choices>\n        </ui-select>\n      </div>\n      <input type=\"text\" class=\"form-control market-pick\" id=\"exampleInputAmount\" placeholder=\"Enter Amount\" ng-model=\"local.price\"/>\n      <div class=\"input-group-addon\" ng-click=\"savePriceForMarket(local.code)\">  <span class=\"glyphicon glyphicon-save\" aria-hidden=\"true\"></span></div>\n     </div>\n  </div>\n  <div class=\"form-group\">\n    <button class=\"form-control btn btn-success btn-save-asset\"\n            ng-click=\"save()\">{{submitText}}</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"priceForm.$dirty || model.selectedItem._id\">\n    <button class=\"form-control btn btn-warning\"\n            ng-click=\"clear()\">Cancel</button>\n  </div>\n  <div class=\"form-group\" ng-show=\"model.selectedItem._id\">\n    <button class=\"form-control btn btn-danger\" ng-click=\"destroy()\">\n      Delete <span ng-if=\"confirm\">- Are you sure? Click again to confirm</span>\n    </button>\n  </div>\n</div>\n");
 $templateCache.put("gi.commerce.summary.html","<div class=\"row\">\n  <div class=\"col-xs-5\">\n    <span class=\"fa fa-shopping-cart fa-lg\"></span>\n  </div>\n  <div class=\"col-xs-7\">\n    <span class=\"badge\">{{ giCart.totalQuantity() }}</span>\n  </div>\n</div>\n");}]);
+angular.module('gi.commerce').directive('giOrderSummary', [
+  'giCart', function(Cart) {
+    return {
+      restrict: 'E',
+      templateUrl: 'gi.commerce.orderSummary.html',
+      link: function($scope, elem, attrs) {
+        return $scope.cart = Cart;
+      }
+    };
+  }
+]);
+
 angular.module('gi.commerce').directive('giPaymentInfo', [
   '$window', 'giCart', function($window, Cart) {
     return {
@@ -70325,6 +69667,12 @@ angular.module('gi.commerce').factory('giCountry', [
 angular.module('gi.commerce').factory('giCurrency', [
   '$filter', 'giCrud', 'giCountry', function($filter, Crud, Country) {
     return Crud.factory('currency');
+  }
+]);
+
+angular.module('gi.commerce').factory('giDiscountCode', [
+  'giCrud', function(Crud) {
+    return Crud.factory('discountCode');
   }
 ]);
 
