@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.10.6
+- use latest gi-commerce
+
 v0.10.5
 - use latest gi-commerce
 
