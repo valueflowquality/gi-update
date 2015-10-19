@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.10.9
+- fixup
+
 v0.10.8
 - use latest gi-security
 
