@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.10.8
+- use latest gi-security
+
 v0.10.7
 - use latest gi-commerce
 
