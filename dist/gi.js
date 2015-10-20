@@ -65857,7 +65857,7 @@ angular.module('ngProgress', ['ngProgress.directive', 'ngProgress.provider']);
     ]);
 })();
 
-angular.module('gi.ui', ['gi.util', 'textAngular', 'ngProgress', 'ui.select', 'ui.bootstrap', 'ui.tree', 'angularSpinner', 'ngFileUpload']);
+angular.module('gi.ui', ['gi.util', 'textAngular', 'ui.sortable', 'ngProgress', 'ui.select', 'ui.bootstrap', 'ui.tree', 'angularSpinner', 'ngFileUpload']);
 
 angular.module('gi.ui').directive('giDtproperty', [
   '$compile', '$timeout', function($compile, $timeout) {

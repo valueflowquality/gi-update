@@ -2,6 +2,9 @@
 ---
 
 ### Release Notes
+v0.10.10
+- use latest gi-security and gi-ui
+
 v0.10.9
 - fixup
 
