@@ -1,6 +1,6 @@
-util = require 'gi-util'
-security = require 'gi-security'
-commerce = require 'gi-commerce'
+util = require 'gi-util-updated'
+security = require 'gi-security-updated'
+commerce = require 'gi-commerce-updated'
 
 configure = (app, dal, options) ->
   security.configure app, dal, options

@@ -12,15 +12,15 @@ gulp.task 'styles', (cb) ->
   cb()
 
 gulp.task 'fonts', () ->
-  gulp.src(['bower_components/gi-ui/dist/fonts/*'])
+  gulp.src(['bower_components/gi-ui-updated/dist/fonts/*'])
   .pipe(gulp.dest(buildDir + '/fonts'))
 
 gulp.task 'build', ['styles', 'fonts'], () ->
   gulp.src([
-    'bower_components/gi-util/dist/gi-util.js'
-    'bower_components/gi-ui/dist/gi-ui.js'
-    'bower_components/gi-security/dist/gi-security.js'
-    'bower_components/gi-commerce/dist/gi-commerce.js'
+    'bower_components/gi-util-updated/dist/gi-util.js'
+    'bower_components/gi-ui-updated/dist/gi-ui.js'
+    'bower_components/gi-security-updated/dist/gi-security.js'
+    'bower_components/gi-commerce-updated/dist/gi-commerce.js'
     'client/gi.js'
     ])
   .pipe(concat(moduleName + '.js'))
