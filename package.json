@@ -1,6 +1,6 @@
 {
   "name": "goinc-updated",
-  "version": "0.10.24",
+  "version": "0.10.25",
   "description": "go incremental node / angular stack",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,7 @@
   "dependencies": {
     "gi-security-updated": "^1.4.23",
     "gi-util-updated": "^1.9.84",
-    "gi-commerce-updated": "0.7.22"
+    "gi-commerce-updated": "^0.7.22"
   },
   "devDependencies": {
     "gulp": "^3.8.11",
